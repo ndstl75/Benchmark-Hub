@@ -1,6 +1,6 @@
 # PhamDrugBench
 
-Web dashboard for benchmarking pharmacy AI agents.
+Pharmacy AI agent benchmarking dashboard.
 
 **Live demo:** https://aichemist-lab.github.io/Benchmark-Hub/
 
@@ -11,23 +11,21 @@ npm install
 npm run build:pages
 ```
 
-This outputs the static site to `dist/public/` (with `404.html` and `.nojekyll` for SPA routing).
+Output: `dist/public/` (includes `data/benchmark.json`, `404.html`, `.nojekyll`).
 
-Preview it locally:
+Preview locally:
 
 ```bash
 npm run preview:pages
-# open http://localhost:4173/Benchmark-Hub/
+# http://localhost:4173/Benchmark-Hub/
 ```
 
 ## Deploy
 
-Push to `main` and GitHub Actions deploys automatically via [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml):
+Push to `main` — GitHub Actions deploys automatically.
 
-```bash
-git push origin main
-```
+**Settings → Pages → Source: GitHub Actions**
 
-One-time setup: in GitHub, go to **Settings → Pages → Source: GitHub Actions**.
+## Data
 
-See [docs/github-pages.md](docs/github-pages.md) for details.
+Edit [`data/benchmark.json`](data/benchmark.json) (demo models, scores, tasks), then rebuild and push.
