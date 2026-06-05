@@ -1,52 +1,33 @@
 # PhamDrugBench
 
-Web platform for benchmarking pharmacy AI agents on autonomous medication tasks (CMM, DDI, MedMatch, and adversarial confabulation checks).
+Web dashboard for benchmarking pharmacy AI agents.
 
-## Stack
+**Live demo:** https://aichemist-lab.github.io/Benchmark-Hub/
 
-- **Frontend:** React 19, Vite, Tailwind CSS 4, shadcn-style UI, TanStack Query, Recharts
-- **Backend:** Express 5, TypeScript
-- **Database:** PostgreSQL, Drizzle ORM
-
-## Quick start
+## Build for GitHub Pages
 
 ```bash
-cp .env.example .env
-# Edit .env if needed (DATABASE_URL, optional OPENAI_API_KEY)
-
-docker compose up --build -d
-# App: http://localhost:7693
-```
-
-Local development (Postgres on host port 5434 via Compose):
-
-```bash
-docker compose up -d db
 npm install
-npm run db:push
-npm run db:reseed
-npm run dev
+npm run build:pages
 ```
 
-## Scripts
+This outputs the static site to `dist/public/` (with `404.html` and `.nojekyll` for SPA routing).
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | API + Vite on port 7693 |
-| `npm run build` | Production client + server bundle |
-| `npm run db:push` | Apply Drizzle schema |
-| `npm run db:reseed` | Reload data from `server/data/benchmark.json` |
-| `npm run generate:benchmark` | Regenerate `benchmark.json` from `docs/seed-tasks-table.txt` |
+Preview it locally:
 
-## Project layout
+```bash
+npm run preview:pages
+# open http://localhost:4173/Benchmark-Hub/
+```
 
-- `client/src/pages/Home.tsx` — Dashboard, leaderboard, Agent Doctor, tasks
-- `server/routes.ts` — REST API under `/api`
-- `server/data/benchmark.json` — Seed data
-- `shared/schema.ts` — Database schema
+## Deploy
 
-See [docs/architecture.md](docs/architecture.md) and [docs/docker.md](docs/docker.md).
+Push to `main` and GitHub Actions deploys automatically via [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml):
 
-## Security
+```bash
+git push origin main
+```
 
-See [SECURITY.md](SECURITY.md). Never commit `.env`.
+One-time setup: in GitHub, go to **Settings → Pages → Source: GitHub Actions**.
+
+See [docs/github-pages.md](docs/github-pages.md) for details.

@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Inter', 'Roboto Mono', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+
+  --color-background: 210 20% 98%; /* #F9FAFB */
+  --color-foreground: 222 47% 11%; /* #111827 */
+  
+  --color-card: 0 0% 100%; /* #FFFFFF */
+  --color-card-foreground: 222 47% 11%;
+  
+  --color-popover: 0 0% 100%;
+  --color-popover-foreground: 222 47% 11%;
+  
+  --color-primary: 160 84% 39%; /* #10B981 - Green Evaluator */
+  --color-primary-foreground: 0 0% 100%;
+  
+  --color-secondary: 271 91% 65%; /* #A855F7 - Purple Target */
+  --color-secondary-foreground: 0 0% 100%;
+  
+  --color-muted: 210 40% 96.1%;
+  --color-muted-foreground: 215.4 16.3% 46.9%;
+  
+  --color-accent: 217 91% 60%; /* #3B82F6 - Blue Accent */
+  --color-accent-foreground: 0 0% 100%;
+  
+  --color-destructive: 0 84.2% 60.2%;
+  --color-destructive-foreground: 210 40% 98%;
+  
+  --color-border: 214.3 31.8% 91.4%;
+  --color-input: 214.3 31.8% 91.4%;
+  --color-ring: 160 84% 39%;
+  
+  --color-success: 160 84% 39%; /* #34D399 */
+  --color-warning: 38 92% 50%; /* #FBBF24 */
+
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+}
+
+/* PhysicianBench-inspired leaderboard page */
+.physicianbench-page {
+  --pb-accent: #0d9488;
+  --pb-accent-light: #ccfbf1;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+.physicianbench-page .failure-segment:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.physicianbench-page .failure-segment:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-[hsl(var(--color-background))] text-[hsl(var(--color-foreground))] antialiased font-sans;
+  }
+}
