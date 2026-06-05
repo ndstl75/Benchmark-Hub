@@ -1,0 +1,4 @@
+Task,GPT-5-Chat,GPT-4o-mini,MedGemma-27B,LLaMA3-70B,Qwen3-32B,DrugGPT
+DDI ID,80.6,61.0,50.1,59.8,66.7,50.1
+DDI 3-Drug Combo,93.6,86.6,84.9,81.5,84.0,93.7
+DDI Multi-Drug,88.4,71.3,80.0,68.6,76.1,92.6

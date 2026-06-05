@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" fill="none">
+  <rect width="480" height="280" rx="12" fill="#F8FAFC"/>
+  <text x="24" y="32" fill="#334155" font-family="system-ui,sans-serif" font-size="14" font-weight="700">LLM-Uncertainty-DDI · Verification</text>
+  <rect x="40" y="56" width="160" height="72" rx="8" fill="#F5F3FF" stroke="#C4B5FD"/>
+  <text x="56" y="80" fill="#5B21B6" font-size="10" font-weight="600">Drug pair + proposed</text>
+  <text x="56" y="96" fill="#5B21B6" font-size="10" font-weight="600">interaction category</text>
+  <text x="56" y="116" fill="#78716C" font-size="9">Hedging / default prompt</text>
+  <path d="M210 92 L270 92" stroke="#8B5CF6" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="280" y="56" width="160" height="72" rx="8" fill="#EDE9FE" stroke="#A78BFA"/>
+  <text x="296" y="84" fill="#5B21B6" font-size="11" font-weight="700">Verify A or B</text>
+  <text x="296" y="104" fill="#78716C" font-size="9">Correct vs incorrect</text>
+  <text x="296" y="118" fill="#78716C" font-size="9">interaction assessment</text>
+  <rect x="80" y="160" width="320" height="88" rx="10" fill="#FAF5FF" stroke="#DDD6FE"/>
+  <text x="240" y="188" fill="#6D28D9" font-size="11" font-weight="600" text-anchor="middle">Correct answer rate · Refusal rate</text>
+  <text x="240" y="208" fill="#78716C" font-size="10" text-anchor="middle">Correct given attempted · Uncertainty hedging</text>
+  <text x="240" y="232" fill="#78716C" font-size="9" text-anchor="middle">github.com/AIChemist-Lab/LLM-Uncertainty-DDI</text>
+  <defs><marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8B5CF6"/></marker></defs>
+</svg>

@@ -1,0 +1,1341 @@
+{
+  "models": [
+    {
+      "name": "GPT-4o-mini",
+      "type": "Standard",
+      "provider": "OpenAI",
+      "access": "API",
+      "winRate": 0.617,
+      "costPer1mTokens": "$0.15",
+      "latency": "2.1s",
+      "isCustom": false
+    },
+    {
+      "name": "GPT-5 Chat",
+      "type": "Reasoning",
+      "provider": "OpenAI",
+      "access": "API",
+      "winRate": 0.663,
+      "costPer1mTokens": "$1.10",
+      "latency": "8.2s",
+      "isCustom": false
+    },
+    {
+      "name": "Gemma 3 27B",
+      "type": "Standard",
+      "provider": "Google",
+      "access": "Open Weights",
+      "winRate": 0.613,
+      "costPer1mTokens": "$0.15",
+      "latency": "1.8s",
+      "isCustom": false
+    },
+    {
+      "name": "Llama 3.3 70B",
+      "type": "Standard",
+      "provider": "Meta",
+      "access": "Open Weights",
+      "winRate": 0.615,
+      "costPer1mTokens": "$0.70",
+      "latency": "3.2s",
+      "isCustom": false
+    },
+    {
+      "name": "Qwen3 32B",
+      "type": "Standard",
+      "provider": "Alibaba",
+      "access": "Open Weights",
+      "winRate": 0.626,
+      "costPer1mTokens": "$0.20",
+      "latency": "2.5s",
+      "isCustom": false
+    },
+    {
+      "name": "DrugGPT",
+      "type": "Standard",
+      "provider": "DrugGPT",
+      "access": "Specialized",
+      "winRate": 0.218,
+      "costPer1mTokens": "N/A",
+      "latency": "N/A",
+      "isCustom": false
+    }
+  ],
+  "benchmarkResults": [
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Formulation Matching",
+      "earned": 92,
+      "failed": 8
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 60,
+      "failed": 40
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Route Matching",
+      "earned": 92,
+      "failed": 8
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch Route Selection",
+      "earned": 90,
+      "failed": 10
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "DDI ID",
+      "earned": 61,
+      "failed": 39
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "DDI 3-Drug Combo",
+      "earned": 87,
+      "failed": 13
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "DDI Multi-Drug",
+      "earned": 71,
+      "failed": 29
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "DDI Verification",
+      "earned": 65,
+      "failed": 35
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Renal Dose ID",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Drug-Indication",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch (Oral Solid)",
+      "earned": 94,
+      "failed": 6
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch (Oral Liq)",
+      "earned": 91,
+      "failed": 9
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch (IV Intermit)",
+      "earned": 97,
+      "failed": 3
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch (IV Push)",
+      "earned": 96,
+      "failed": 4
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch (Continuous Titrate)",
+      "earned": 84,
+      "failed": 16
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "MedMatch (Continuous Non-Titrate)",
+      "earned": 80,
+      "failed": 20
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Pok\u00e9mon (Generic)",
+      "earned": 2,
+      "failed": 98
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Pok\u00e9mon (Brand)",
+      "earned": 1,
+      "failed": 99
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Formulation Matching",
+      "earned": 89,
+      "failed": 11
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 63,
+      "failed": 37
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Route Matching",
+      "earned": 100,
+      "failed": 0
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch Route Selection",
+      "earned": 98,
+      "failed": 2
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "DDI ID",
+      "earned": 81,
+      "failed": 19
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "DDI 3-Drug Combo",
+      "earned": 94,
+      "failed": 6
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "DDI Multi-Drug",
+      "earned": 88,
+      "failed": 12
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "DDI Verification",
+      "earned": 83,
+      "failed": 17
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Renal Dose ID",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Drug-Indication",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch (Oral Solid)",
+      "earned": 95,
+      "failed": 5
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch (Oral Liq)",
+      "earned": 90,
+      "failed": 10
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch (IV Intermit)",
+      "earned": 96,
+      "failed": 4
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch (IV Push)",
+      "earned": 95,
+      "failed": 5
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch (Continuous Titrate)",
+      "earned": 86,
+      "failed": 14
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "MedMatch (Continuous Non-Titrate)",
+      "earned": 81,
+      "failed": 19
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Pok\u00e9mon (Generic)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Pok\u00e9mon (Brand)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Formulation Matching",
+      "earned": 86,
+      "failed": 14
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 57,
+      "failed": 43
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Route Matching",
+      "earned": 100,
+      "failed": 0
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch Route Selection",
+      "earned": 86,
+      "failed": 14
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "DDI ID",
+      "earned": 50,
+      "failed": 50
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "DDI 3-Drug Combo",
+      "earned": 85,
+      "failed": 15
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "DDI Multi-Drug",
+      "earned": 80,
+      "failed": 20
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "DDI Verification",
+      "earned": 66,
+      "failed": 34
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Renal Dose ID",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Drug-Indication",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch (Oral Solid)",
+      "earned": 94,
+      "failed": 6
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch (Oral Liq)",
+      "earned": 91,
+      "failed": 9
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch (IV Intermit)",
+      "earned": 97,
+      "failed": 3
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch (IV Push)",
+      "earned": 95,
+      "failed": 5
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch (Continuous Titrate)",
+      "earned": 88,
+      "failed": 12
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch (Continuous Non-Titrate)",
+      "earned": 83,
+      "failed": 17
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Pok\u00e9mon (Generic)",
+      "earned": 4,
+      "failed": 96
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "Pok\u00e9mon (Brand)",
+      "earned": 2,
+      "failed": 98
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Formulation Matching",
+      "earned": 88,
+      "failed": 12
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 55,
+      "failed": 45
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Route Matching",
+      "earned": 85,
+      "failed": 15
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch Route Selection",
+      "earned": 81,
+      "failed": 19
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "DDI ID",
+      "earned": 60,
+      "failed": 40
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "DDI 3-Drug Combo",
+      "earned": 82,
+      "failed": 18
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "DDI Multi-Drug",
+      "earned": 69,
+      "failed": 31
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "DDI Verification",
+      "earned": 74,
+      "failed": 26
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Renal Dose ID",
+      "earned": 90,
+      "failed": 10
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Drug-Indication",
+      "earned": 90,
+      "failed": 10
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch (Oral Solid)",
+      "earned": 95,
+      "failed": 5
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch (Oral Liq)",
+      "earned": 84,
+      "failed": 16
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch (IV Intermit)",
+      "earned": 94,
+      "failed": 6
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch (IV Push)",
+      "earned": 94,
+      "failed": 6
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch (Continuous Titrate)",
+      "earned": 78,
+      "failed": 22
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "MedMatch (Continuous Non-Titrate)",
+      "earned": 81,
+      "failed": 19
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Pok\u00e9mon (Generic)",
+      "earned": 14,
+      "failed": 86
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Pok\u00e9mon (Brand)",
+      "earned": 8,
+      "failed": 92
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Formulation Matching",
+      "earned": 86,
+      "failed": 14
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 61,
+      "failed": 39
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Route Matching",
+      "earned": 100,
+      "failed": 0
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch Route Selection",
+      "earned": 84,
+      "failed": 16
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "DDI ID",
+      "earned": 67,
+      "failed": 33
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "DDI 3-Drug Combo",
+      "earned": 84,
+      "failed": 16
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "DDI Multi-Drug",
+      "earned": 76,
+      "failed": 24
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "DDI Verification",
+      "earned": 59,
+      "failed": 41
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Renal Dose ID",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Drug-Indication",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch (Oral Solid)",
+      "earned": 95,
+      "failed": 5
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch (Oral Liq)",
+      "earned": 89,
+      "failed": 11
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch (IV Intermit)",
+      "earned": 96,
+      "failed": 4
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch (IV Push)",
+      "earned": 95,
+      "failed": 5
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch (Continuous Titrate)",
+      "earned": 88,
+      "failed": 12
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "MedMatch (Continuous Non-Titrate)",
+      "earned": 83,
+      "failed": 17
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Pok\u00e9mon (Generic)",
+      "earned": 2,
+      "failed": 98
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Pok\u00e9mon (Brand)",
+      "earned": 1,
+      "failed": 99
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Formulation Matching",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Route Matching",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch Route Selection",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "DDI ID",
+      "earned": 50,
+      "failed": 50
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "DDI 3-Drug Combo",
+      "earned": 94,
+      "failed": 6
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "DDI Multi-Drug",
+      "earned": 93,
+      "failed": 7
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "DDI Verification",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Renal Dose ID",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Drug-Indication",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch (Oral Solid)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch (Oral Liq)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch (IV Intermit)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch (IV Push)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch (Continuous Titrate)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "MedMatch (Continuous Non-Titrate)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Pok\u00e9mon (Generic)",
+      "earned": 0,
+      "failed": 100
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Pok\u00e9mon (Brand)",
+      "earned": 0,
+      "failed": 100
+    }
+  ],
+  "leaderboardScores": [
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.617"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.816"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.730"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "0.904"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "0.018"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "$0.15"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "2.1s"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "OpenAI"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "API"
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Standard"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.663"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.862"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.875"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "0.916"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "0.000"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "$1.10"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "8.2s"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "OpenAI"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "API"
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Reasoning"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.613"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.798"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.717"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "0.905"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "0.032"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "$0.15"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "1.8s"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "Google"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "Open Weights"
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Standard"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.615"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.782"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.700"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "0.868"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "0.111"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "$0.70"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "3.2s"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "Meta"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "Open Weights"
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Standard"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.626"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.832"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.756"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "0.901"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "0.014"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "$0.20"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "2.5s"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "Alibaba"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "Open Weights"
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Standard"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.218"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.083"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.788"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "0.000"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "0.000"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "N/A"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "N/A"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "DrugGPT"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "Specialized"
+    },
+    {
+      "modelName": "DrugGPT",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Standard"
+    }
+  ],
+  "taskDefinitions": [
+    {
+      "name": "Formulation Matching",
+      "prompt": "Generic drug name (e.g., amlodipine). List all FDA-approved dosage forms. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "response": "Complete and correct list of formulations.",
+      "humanAnnotation": "Complete and correct list of formulations.",
+      "agreement": "96%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Correctness consistency"
+      ]
+    },
+    {
+      "name": "Drug Order Gen (Sig)",
+      "prompt": "Generic drug name (e.g., carvedilol). Generate one clinically appropriate complete oral medication order (sig). Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "response": "One clinically appropriate complete medication order.",
+      "humanAnnotation": "Clinically appropriate complete medication order.",
+      "agreement": "98%",
+      "metrics": [
+        "Exact match",
+        "HAMeC score",
+        "Correctness consistency"
+      ]
+    },
+    {
+      "name": "Route Matching",
+      "prompt": "Generic drug name (e.g., prednisolone). List all safe routes of administration. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "response": "Complete and correct list of routes.",
+      "humanAnnotation": "Complete and correct list of routes.",
+      "agreement": "95%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Correctness consistency"
+      ]
+    },
+    {
+      "name": "DDI ID",
+      "prompt": "Pointwise two-drug classification: identify clinically significant interacting pair (Category C, D, or X) from a medication list with full dosing. Rx-LLM: 250 cases. DDI paper: part of 750-scenario multi-format suite. DDI identification paper: 750 clinician-annotated DDI scenarios. Zero-shot; precision, recall, F1, accuracy, self-consistency.",
+      "response": "Correct interacting drug pair.",
+      "humanAnnotation": "Correct interacting drug pair.",
+      "agreement": "94%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Self-consistency"
+      ]
+    },
+    {
+      "name": "Renal Dose ID",
+      "prompt": "Generic drug name (e.g., vancomycin). Determine if renal dose adjustment is required (Yes/No). Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "response": "Yes or No.",
+      "humanAnnotation": "Yes or No.",
+      "agreement": "99%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Exact match",
+        "Correctness consistency"
+      ]
+    },
+    {
+      "name": "Drug-Indication",
+      "prompt": "Drug name. Identify FDA-approved clinical indications. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "response": "Correct list of FDA-approved indications.",
+      "humanAnnotation": "Correct list of FDA-approved indications.",
+      "agreement": "93%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Correctness consistency"
+      ]
+    },
+    {
+      "name": "DDI Verification",
+      "prompt": "Drug pair with proposed interaction category and clinical action. Verify whether the proposed interaction assessment is correct (hedging/default prompt). Source: LLM-Uncertainty-DDI supplement.",
+      "response": "\"A\" (Correct) or \"B\" (Incorrect).",
+      "humanAnnotation": "\"A\" (Correct) or \"B\" (Incorrect).",
+      "agreement": "97%",
+      "metrics": [
+        "Correct answer rate",
+        "Refusal rate",
+        "Correct given attempted"
+      ]
+    },
+    {
+      "name": "DDI 3-Drug Combo",
+      "prompt": "Pairwise three-drug discrimination: identify interacting pair(s) from three medications with full dosing. DDI identification paper: 750 clinician-annotated DDI scenarios. Zero-shot; precision, recall, F1, accuracy, self-consistency.",
+      "response": "Correct interacting pair(s).",
+      "humanAnnotation": "Correct interacting pair(s).",
+      "agreement": "90%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Self-consistency"
+      ]
+    },
+    {
+      "name": "DDI Multi-Drug",
+      "prompt": "Listwise 4\u20136 drug selection: identify all interacting pairs from a polypharmacy regimen. DDI identification paper: 750 clinician-annotated DDI scenarios. Zero-shot; precision, recall, F1, accuracy, self-consistency.",
+      "response": "All correct interacting drug pairs.",
+      "humanAnnotation": "All correct interacting drug pairs.",
+      "agreement": "82%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Self-consistency"
+      ]
+    },
+    {
+      "name": "MedMatch (Oral Solid)",
+      "prompt": "Convert free-text medication order to standardized MedMatch JSON slot format per administration class. Oral solid (n=40). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots.",
+      "response": "[drug name][numerical dose][abbreviated unit strength of dose][amount][formulation] by mouth [frequency]",
+      "humanAnnotation": "Exact JSON slot match for oral solid MedMatch format.",
+      "agreement": "91%",
+      "metrics": [
+        "MedMatch score (exact field match)",
+        "Micro-F1"
+      ]
+    },
+    {
+      "name": "MedMatch (Oral Liq)",
+      "prompt": "Convert free-text medication order to standardized MedMatch JSON slot format per administration class. Oral liquid (n=10). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots.",
+      "response": "[drug name][numerical dose][abbreviated unit strength of dose][numerical volume][abbreviated unit strength of volume] of the [concentration][formulation unit] [formulation] by mouth [frequency]",
+      "humanAnnotation": "Exact JSON slot match for oral liquid MedMatch format.",
+      "agreement": "90%",
+      "metrics": [
+        "MedMatch score (exact field match)",
+        "Micro-F1"
+      ]
+    },
+    {
+      "name": "MedMatch (IV Intermit)",
+      "prompt": "Convert free-text medication order to standardized MedMatch JSON slot format per administration class. IV intermittent (n=17). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots.",
+      "response": "[drug name][numerical dose][abbreviated unit strength of dose][amount of diluent volume][volume unit][compatible diluent type] intravenously infused over [infusion time] [frequency]",
+      "humanAnnotation": "Exact JSON slot match for IV intermittent MedMatch format.",
+      "agreement": "88%",
+      "metrics": [
+        "MedMatch score (exact field match)",
+        "Micro-F1"
+      ]
+    },
+    {
+      "name": "MedMatch (IV Push)",
+      "prompt": "Convert free-text medication order to standardized MedMatch JSON slot format per administration class. IV push (n=17). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots.",
+      "response": "[drug name][numerical dose][abbreviated unit strength of dose][amount of volume][volume unit] of the [concentration][concentration unit][formulation] intravenous push [frequency]",
+      "humanAnnotation": "Exact JSON slot match for IV push MedMatch format.",
+      "agreement": "89%",
+      "metrics": [
+        "MedMatch score (exact field match)",
+        "Micro-F1"
+      ]
+    },
+    {
+      "name": "MedMatch (Continuous Titrate)",
+      "prompt": "Convert free-text medication order to standardized MedMatch JSON slot format per administration class. IV continuous titratable (n=11). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots.",
+      "response": "[drug name][numerical dose][abbreviated unit strength of dose] \"in\" [diluent volume][volume unit][compatible diluent type] \"continuous intravenous infusion starting at\" [starting rate][unit of measure] \"titrated by\" [titration dose][titration unit] [titration frequency] to achieve [titration goal]",
+      "humanAnnotation": "Exact JSON slot match for continuous titratable infusion.",
+      "agreement": "85%",
+      "metrics": [
+        "MedMatch score (exact field match)",
+        "Micro-F1"
+      ]
+    },
+    {
+      "name": "MedMatch (Continuous Non-Titrate)",
+      "prompt": "Convert free-text medication order to standardized MedMatch JSON slot format per administration class. IV continuous non-titratable (n=6). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots.",
+      "response": "[drug name][numerical dose][abbreviated unit strength of dose][diluent volume][volume unit]\"in\"[compatible diluent type] \"continuous intravenous infusion at\" [rate][unit of measure]",
+      "humanAnnotation": "Exact JSON slot match for continuous non-titratable infusion.",
+      "agreement": "87%",
+      "metrics": [
+        "MedMatch score (exact field match)",
+        "Micro-F1"
+      ]
+    },
+    {
+      "name": "MedMatch Route Selection",
+      "prompt": "Route omitted from medication prompt. Classify order into administration route category: oral solid, oral liquid, IV intermittent, IV push, or IV continuous (titratable/non-titratable). MedMatch paper (PMC12870651): 100 clinician-annotated medication prompts; one-shot prompting; triplicate runs; MedMatch score = exact match on all JSON slots. Dataset posted at github.com/AIChemist-Lab/MedMatch.",
+      "response": "Correct route category (by mouth, IV push, IV intermittent, or IV continuous).",
+      "humanAnnotation": "Correct route category assignment.",
+      "agreement": "88%",
+      "metrics": [
+        "Route accuracy",
+        "MedMatch score"
+      ]
+    },
+    {
+      "name": "Pok\u00e9mon (Generic)",
+      "prompt": "250 medication vignettes: 4\u20136 real generic medications plus one fabricated Pok\u00e9mon medication with complete dosing (drug, dose, unit, route, frequency). Task: provide dosing range or indication. Drug or Pok\u00e9mon? paper (PMC12870567).",
+      "response": "Suspects fictitious | Inherited confabulation (answered as if real drug) | Epistemic confabulation (replaced fictitious drug with real medication)",
+      "humanAnnotation": "Suspects fictitious | Inherited confabulation (answered as if real drug) | Epistemic confabulation (replaced fictitious drug with real medication)",
+      "agreement": "86%",
+      "metrics": [
+        "LLM-as-a-judge",
+        "Confabulation rate"
+      ]
+    },
+    {
+      "name": "Pok\u00e9mon (Brand)",
+      "prompt": "250 medication vignettes: 4\u20136 real brand medications plus one fabricated Pok\u00e9mon medication with complete dosing. Task: provide dosing range or indication. Drug or Pok\u00e9mon? paper (PMC12870567).",
+      "response": "Suspects fictitious | Inherited confabulation (answered as if real drug) | Epistemic confabulation (replaced fictitious drug with real medication)",
+      "humanAnnotation": "Suspects fictitious | Inherited confabulation (answered as if real drug) | Epistemic confabulation (replaced fictitious drug with real medication)",
+      "agreement": "85%",
+      "metrics": [
+        "LLM-as-a-judge",
+        "Confabulation rate"
+      ]
+    }
+  ],
+  "meta": {
+    "papers": {
+      "rxLlm": {
+        "title": "Rx-LLM",
+        "doi": "10.64898/2025.12.01.25341004",
+        "url": "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2"
+      },
+      "ddiIdentification": {
+        "title": "Drug-drug interaction identification using large language models",
+        "doi": "10.64898/2025.12.03.25341549",
+        "url": "https://www.medrxiv.org/content/10.64898/2025.12.03.25341549v2"
+      },
+      "pokemon": {
+        "title": "Drug or Pok\u00e9mon?",
+        "pmc": "PMC12870567",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12870567/"
+      },
+      "medMatch": {
+        "title": "MedMatch: a first step for the automation of large language model performance benchmarking for medication-related tasks",
+        "doi": "10.64898/2026.01.13.26343949",
+        "pmc": "PMC12870651",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12870651/",
+        "github": "https://github.com/AIChemist-Lab/MedMatch"
+      }
+    },
+    "sources": [
+      "Rx-LLM medRxiv 10.64898/2025.12.01.25341004",
+      "DDI identification medRxiv 10.64898/2025.12.03.25341549",
+      "MedMatch medRxiv 10.64898/2026.01.13.26343949 / PMC12870651",
+      "Drug or Pok\u00e9mon? PMC12870567",
+      "github.com/AIChemist-Lab/MedMatch, LLM-Uncertainty-DDI appendix tables"
+    ],
+    "supportedModels": [
+      "GPT-4o-mini",
+      "GPT-5 Chat",
+      "Gemma 3 27B",
+      "Llama 3.3 70B",
+      "Qwen3 32B",
+      "DrugGPT"
+    ],
+    "note": "Mean Win Rate is the macro-average of the four paper scores (Rx-LLM, DDI Identification, MedMatch, Drug or Pok\u00e9mon?). DrugGPT scores are from DDI identification Table 3 only; other tasks are not reported for DrugGPT in the appendix sources. Renal Dose ID and Drug-Indication use MedMatch micro-F1 proxy until Rx-LLM supplementary tables are uploaded. DDI Verification remains from LLM-Uncertainty-DDI table_4_results.csv. GPT-5 Chat was not evaluated in the Pokemon paper."
+  }
+}
