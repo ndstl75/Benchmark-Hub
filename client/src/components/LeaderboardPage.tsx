@@ -443,20 +443,11 @@ export function LeaderboardPage({ models, leaderboardScores, taskDefs }: Leaderb
 
       <footer className="border-t border-slate-200 bg-white py-8 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-          <div className="flex items-center gap-3">
-            <img
-              src="/cuanschutz-logo.png"
-              alt="University of Colorado Anschutz Medical Campus"
-              width={120}
-              height={32}
-              className="h-7 w-auto object-contain opacity-90"
-            />
-            <div className="flex items-center gap-2 border-l border-slate-200 pl-3">
-              <img src="/logo.png" alt="" width={20} height={20} className="rounded" />
-              <span className="font-semibold text-slate-700">PharmDrugBench</span>
-              <span className="text-slate-300">·</span>
-              <span>v1</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="" width={20} height={20} className="rounded" />
+            <span className="font-semibold text-slate-700">PharmDrugBench</span>
+            <span className="text-slate-300">·</span>
+            <span>v1</span>
           </div>
           <p className="text-xs text-center">
             Built for advancing medication-safety LLM evaluation · Dataset and leaderboard open to the community
@@ -491,20 +482,11 @@ function HomeView({
               {PHAMDRUGBENCH_INTRO.subheadline}
             </p>
           </div>
-          <div className="flex items-center gap-5 sm:gap-6 max-w-2xl pt-1">
-            <img
-              src="/cuanschutz-logo.png"
-              alt="University of Colorado Anschutz Medical Campus"
-              width={160}
-              height={56}
-              className="h-12 sm:h-14 md:h-16 w-auto object-contain shrink-0"
-            />
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-slate-800">{PHAMDRUGBENCH_INTRO.institution}</p>
-              <p className="text-[11px] sm:text-xs text-slate-600 leading-[1.55]">
-                {PHAMDRUGBENCH_INTRO.authors}
-              </p>
-            </div>
+          <div className="max-w-2xl pt-1">
+            <p className="text-sm font-semibold text-slate-800">{PHAMDRUGBENCH_INTRO.institution}</p>
+            <p className="text-[11px] sm:text-xs text-slate-600 leading-[1.55]">
+              {PHAMDRUGBENCH_INTRO.authors}
+            </p>
           </div>
           <p className="text-slate-600 leading-relaxed text-[14px] max-w-xl">
             {PHAMDRUGBENCH_INTRO.summary}
