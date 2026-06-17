@@ -74,7 +74,7 @@ export const DATASET_PROJECTS = [
     title: "Rx-LLM CMM Benchmark Suite",
     category: "Comprehensive Medication Management",
     description:
-      "Six clinician-annotated CMM benchmarks with 250 cases each: formulation, drug order, route, DDI ID, renal dose, and drug-indication tasks.",
+      "Six clinician-annotated CMM benchmark definitions with 250 cases each. Public performance cells stay N/A until the supplementary score tables are added.",
     githubUrl: "https://github.com/AIChemist-Lab",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     tasks: 6,
@@ -125,12 +125,12 @@ export const DATASET_PROJECTS = [
 export const LEADERBOARD_ACCURACY_METRICS = [
   {
     name: "Mean Win Rate",
-    subtitle: "Macro-average across 4 benchmark papers",
+    subtitle: "Mean over reported source-backed papers",
     highlight: true,
   },
   {
     name: "Rx-LLM (CMM)",
-    subtitle: "6 CMM tasks · 250 cases each",
+    subtitle: "Score table pending · tasks listed",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
   },
   {
@@ -151,14 +151,14 @@ export const LEADERBOARD_ACCURACY_METRICS = [
 ] as const;
 
 export const PHAMDRUGBENCH_INTRO = {
-  headline: "PhamDrugBench",
+  headline: "PharmDrugBench",
   subheadline: "Evaluating LLM performance on medication-safety tasks in clinical workflows",
   institution: "University of Colorado Anschutz Medical Campus",
   affiliation: "AIChemist-Lab",
   authors:
     "AIChemist-Lab · University of Colorado Anschutz Medical Campus · medication-safety LLM evaluation consortium",
   summary:
-    "PhamDrugBench aggregates clinician-annotated benchmarks from Rx-LLM (Comprehensive Medication Management), multi-format drug-drug interaction identification, the MedMatch structured formatting suite, and Drug-or-Pokémon adversarial confabulation tests. Scores are drawn from published appendix tables and the MedMatch codebase.",
+    "PharmDrugBench aggregates clinician-annotated benchmarks from Rx-LLM (Comprehensive Medication Management), multi-format drug-drug interaction identification, the MedMatch structured formatting suite, and Drug-or-Pokémon adversarial confabulation tests. Public scores use source-backed study values only; unavailable performance is shown as N/A.",
   stats: [
     { label: "Benchmark papers", value: "4", icon: BookOpen },
     { label: "CMM benchmarks", value: "6", icon: Activity },
@@ -788,19 +788,19 @@ export const METHODOLOGY_STEPS = [
     step: "02",
     title: "Paper-aligned evaluation suites",
     description:
-      "Scores are grouped by source publication — Rx-LLM CMM, DDI identification, MedMatch formatting, and Drug-or-Pokémon adversarial safety — so models can be compared on the exact evaluation source.",
+      "Scores are grouped by source publication — DDI identification, MedMatch formatting, and Drug-or-Pokémon adversarial safety where public values are available, with Rx-LLM task definitions held as N/A until source tables are added.",
   },
   {
     step: "03",
     title: "Multi-metric grading",
     description:
-      "Tasks are evaluated by exact match, agreement with clinician annotations, and domain-specific rubrics. Macro win rate averages across all four benchmark papers.",
+      "Tasks are evaluated by exact match, agreement with clinician annotations, and domain-specific rubrics. Reported Mean excludes N/A cells and is paired with source coverage.",
   },
   {
     step: "04",
     title: "Reproducible appendix data",
     description:
-      "Leaderboard scores are seeded from published appendix tables and the MedMatch codebase. Dataset cards link each source project to its paper, GitHub repository, and evaluation files.",
+      "Leaderboard scores are generated from public appendix/source tables and MedMatch source-derived aggregates. Dataset cards link each source project to its paper, repository, and evaluation files.",
   },
 ] as const;
 
@@ -875,7 +875,7 @@ export const CITATION_BIBTEX = PAPER_CITATIONS.map((c) => c.bibtex).join("\n\n")
 
 /** Domain columns for subgroup heatmap */
 export const SUBGROUP_COLUMNS = [
-  { key: "Rx-LLM (CMM)", label: "Rx-LLM", n: 6 },
+  { key: "Rx-LLM (CMM)", label: "Rx-LLM", n: "N/A" },
   { key: "DDI Identification", label: "DDI ID", n: 3 },
   { key: "MedMatch", label: "MedMatch", n: 7 },
   { key: "Drug or Pokémon?", label: "Adversarial", n: 2 },

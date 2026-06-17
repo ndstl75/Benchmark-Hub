@@ -296,11 +296,10 @@ def parse_pct(value: str) -> float:
     return float(value.strip().replace("%", ""))
 
 
-def load_entity_table() -> tuple[dict[str, dict[str, list[float]]], dict[str, dict[str, list[float]]]]:
-    """Returns category_field_avgs, formulation_by_model."""
+def load_entity_table() -> dict[str, dict[str, float]]:
+    """Returns MedMatch category field-average scores by model."""
     path = SOURCES / "entity_accuracy_table.csv"
     category_avgs: dict[str, dict[str, list[float]]] = {}
-    formulation: dict[str, list[float]] = {m["name"]: [] for m in MODELS}
     cur = None
     with path.open(newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
@@ -323,42 +322,11 @@ def load_entity_table() -> tuple[dict[str, dict[str, list[float]]], dict[str, di
                         continue
                     val = parse_pct(row[idx])
                     category_avgs[cur][model["name"]].append(val)
-                    if entity.lower() == "formulation":
-                        formulation[model["name"]].append(val)
     category_means = {
         cat: {m: round(mean(vals), 1) if vals else 0.0 for m, vals in per_model.items()}
         for cat, per_model in category_avgs.items()
     }
-    formulation_means = {
-        m: round(mean(vals), 1) if vals else 0.0 for m, vals in formulation.items()
-    }
-    return category_means, formulation_means
-
-
-def load_route_entity_means() -> dict[str, float]:
-    """Rx-LLM Route Matching: mean Route entity accuracy across MedMatch categories."""
-    path = SOURCES / "entity_accuracy_table.csv"
-    per_model: dict[str, list[float]] = {m["name"]: [] for m in MODELS}
-    cur = None
-    with path.open(newline="", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        col_index = {name: i for i, name in enumerate(header)}
-        for row in reader:
-            if not row or not row[0]:
-                continue
-            if row[0].endswith(")"):
-                cur = row[0]
-                continue
-            if cur is None or row[0].strip().lower() != "route":
-                continue
-            for model in MODELS:
-                for col in model["entity_cols"]:
-                    idx = col_index.get(col)
-                    if idx is None or not row[idx].strip():
-                        continue
-                    per_model[model["name"]].append(parse_pct(row[idx]))
-    return {m: round(mean(vals), 1) if vals else 0.0 for m, vals in per_model.items()}
+    return category_means
 
 
 def load_route_table() -> dict[str, float]:
@@ -378,22 +346,6 @@ def load_route_table() -> dict[str, float]:
                         continue
                     per_model[model["name"]].append(parse_pct(row[idx]))
     return {m: round(mean(vals), 1) if vals else 0.0 for m, vals in per_model.items()}
-
-
-def load_medmatch_eval() -> dict[str, dict[str, float]]:
-    data = json.loads((SOURCES / "evaluation_results.json").read_text())
-    out: dict[str, dict[str, float]] = {}
-    key_by_eval = {m["eval_key"]: m["name"] for m in MODELS}
-    for eval_key, stats in data.items():
-        name = key_by_eval.get(eval_key)
-        if not name:
-            continue
-        out[name] = {
-            "micro_f1": round(stats["micro_f1_mean"] * 100, 1),
-            "perfect_ratio": round(stats["perfect_ratio_mean"] * 100, 1),
-            "macro_f1": round(stats["macro_f1_mean"] * 100, 1),
-        }
-    return out
 
 
 def load_ddi_identification_table3() -> dict[str, dict[str, float]]:
@@ -448,10 +400,8 @@ def earned_failed(score: float) -> dict[str, float]:
 
 
 def build() -> dict:
-    category_means, formulation_means = load_entity_table()
-    route_entity_means = load_route_entity_means()
+    category_means = load_entity_table()
     route_selection_means = load_route_table()
-    medmatch = load_medmatch_eval()
     ddi_paper_acc = load_ddi_identification_table3()
     ddi_verification_acc = load_ddi_verification_accuracy()
 
@@ -459,38 +409,28 @@ def build() -> dict:
 
     for model in MODELS:
         name = model["name"]
-        task_scores[name]["Formulation Matching"] = formulation_means.get(name, 0.0)
-        task_scores[name]["Drug Order Gen (Sig)"] = medmatch.get(name, {}).get("perfect_ratio", 0.0)
-        task_scores[name]["Route Matching"] = route_entity_means.get(name, 0.0)
-        task_scores[name]["MedMatch Route Selection"] = route_selection_means.get(name, 0.0)
+        if model["route_cols"]:
+            task_scores[name]["MedMatch Route Selection"] = route_selection_means[name]
         for ddi_task in ["DDI ID", "DDI 3-Drug Combo", "DDI Multi-Drug"]:
-            task_scores[name][ddi_task] = ddi_paper_acc.get(name, {}).get(ddi_task, 0.0)
-        task_scores[name]["DDI Verification"] = ddi_verification_acc.get(name, 0.0)
-        # Benchmarking-paper tasks without public per-task tables: use MedMatch micro-F1 proxy.
-        proxy = medmatch.get(name, {}).get("micro_f1", 0.0)
-        task_scores[name]["Renal Dose ID"] = proxy
-        task_scores[name]["Drug-Indication"] = proxy
-        for cat, task in MEDMATCH_CATEGORY_MAP.items():
-            task_scores[name][task] = category_means.get(cat, {}).get(name, 0.0)
+            if ddi_task in ddi_paper_acc.get(name, {}):
+                task_scores[name][ddi_task] = ddi_paper_acc[name][ddi_task]
+        if name in ddi_verification_acc:
+            task_scores[name]["DDI Verification"] = ddi_verification_acc[name]
+        if model["entity_cols"]:
+            for cat, task in MEDMATCH_CATEGORY_MAP.items():
+                task_scores[name][task] = category_means[cat][name]
         pokemon = POKEMON_CONFAB_DEFAULT_DOSING.get(name)
         if pokemon:
             task_scores[name]["Pokémon (Generic)"] = round(100 - pokemon["generic"], 1)
             task_scores[name]["Pokémon (Brand)"] = round(100 - pokemon["brand"], 1)
-        else:
-            task_scores[name]["Pokémon (Generic)"] = 0.0
-            task_scores[name]["Pokémon (Brand)"] = 0.0
 
-    def avg_tasks(name: str, tasks: list[str]) -> float:
-        return round(mean(task_scores[name][t] for t in tasks) / 100, 3)
+    def avg_tasks(name: str, tasks: list[str]) -> float | None:
+        vals = [task_scores[name][t] for t in tasks if t in task_scores[name]]
+        return round(mean(vals) / 100, 3) if vals else None
 
-    rx_llm_tasks = [
-        "Formulation Matching",
-        "Drug Order Gen (Sig)",
-        "Route Matching",
-        "DDI ID",
-        "Renal Dose ID",
-        "Drug-Indication",
-    ]
+    def score_value(score: float | None) -> str:
+        return f"{score:.3f}" if score is not None else "N/A"
+
     ddi_paper_tasks = ["DDI ID", "DDI 3-Drug Combo", "DDI Multi-Drug"]
     medmatch_tasks = list(MEDMATCH_CATEGORY_MAP.values()) + ["MedMatch Route Selection"]
     pokemon_tasks = ["Pokémon (Generic)", "Pokémon (Brand)"]
@@ -498,11 +438,12 @@ def build() -> dict:
     models_out = []
     for model in MODELS:
         name = model["name"]
-        rx_llm_score = avg_tasks(name, rx_llm_tasks)
+        rx_llm_score = None
         ddi_score = avg_tasks(name, ddi_paper_tasks)
         medmatch_score = avg_tasks(name, medmatch_tasks)
         pokemon_score = avg_tasks(name, pokemon_tasks)
-        win_rate = round(mean([rx_llm_score, ddi_score, medmatch_score, pokemon_score]), 3)
+        reported_scores = [s for s in [rx_llm_score, ddi_score, medmatch_score, pokemon_score] if s is not None]
+        win_rate = round(mean(reported_scores), 3) if reported_scores else 0.0
         models_out.append({
             "name": name,
             "type": model["type"],
@@ -529,18 +470,20 @@ def build() -> dict:
     leaderboard_scores = []
     for model in MODELS:
         name = model["name"]
-        rx_llm_score = avg_tasks(name, rx_llm_tasks)
+        rx_llm_score = None
         ddi_score = avg_tasks(name, ddi_paper_tasks)
         medmatch_score = avg_tasks(name, medmatch_tasks)
         pokemon_score = avg_tasks(name, pokemon_tasks)
-        macro_win = round(mean([rx_llm_score, ddi_score, medmatch_score, pokemon_score]), 3)
+        reported_scores = [s for s in [rx_llm_score, ddi_score, medmatch_score, pokemon_score] if s is not None]
+        macro_win = round(mean(reported_scores), 3) if reported_scores else None
+        source_coverage = f"{len(reported_scores)}/4"
 
         accuracy_rows = {
-            "Mean Win Rate": f"{macro_win:.3f}",
-            "Rx-LLM (CMM)": f"{rx_llm_score:.3f}",
-            "DDI Identification": f"{ddi_score:.3f}",
-            "MedMatch": f"{medmatch_score:.3f}",
-            "Drug or Pokémon?": f"{pokemon_score:.3f}",
+            "Mean Win Rate": score_value(macro_win),
+            "Rx-LLM (CMM)": score_value(rx_llm_score),
+            "DDI Identification": score_value(ddi_score),
+            "MedMatch": score_value(medmatch_score),
+            "Drug or Pokémon?": score_value(pokemon_score),
         }
         efficiency_rows = {
             "Cost (per 1M tokens)": model["costPer1mTokens"],
@@ -550,6 +493,7 @@ def build() -> dict:
             "Provider": model["provider"],
             "Access": model["access"],
             "Model Type": model["type"],
+            "Source Coverage": source_coverage,
         }
         for metric, value in accuracy_rows.items():
             leaderboard_scores.append({"modelName": name, "metricName": metric, "tab": "Accuracy", "value": value})
@@ -596,7 +540,13 @@ def build() -> dict:
                 "github.com/AIChemist-Lab/MedMatch, LLM-Uncertainty-DDI appendix tables",
             ],
             "supportedModels": [m["name"] for m in MODELS],
-            "note": "Mean Win Rate is the macro-average of the four paper scores (Rx-LLM, DDI Identification, MedMatch, Drug or Pokémon?). DrugGPT scores are from DDI identification Table 3 only; other tasks are not reported for DrugGPT in the appendix sources. Renal Dose ID and Drug-Indication use MedMatch micro-F1 proxy until Rx-LLM supplementary tables are uploaded. DDI Verification remains from LLM-Uncertainty-DDI table_4_results.csv. GPT-5 Chat was not evaluated in the Pokemon paper.",
+            "scorePolicy": {
+                "reportedMean": "Mean Win Rate averages only source-backed paper scores and excludes N/A cells.",
+                "sourceCoverage": "Number of primary papers with source-backed performance for the model out of four.",
+                "rxLlm": "Rx-LLM task definitions are shown, but performance cells are N/A until public supplementary score tables are added.",
+                "pokemon": "Drug or Pokémon? scores are suspicion detected = 100 - default-dosing confabulation rate; unreported models are N/A, not zero.",
+            },
+            "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) performance is N/A until public supplementary score tables are added. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pokémon? source table. Gemma 3 27B's DDI Identification value is the mean of the DDI Table 3 accuracy rows under the MedGemma-27B column (a medically fine-tuned Gemma), not base Gemma 3 27B. Cost and Latency are indicative estimates and are not source-backed.",
         },
     }
 

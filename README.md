@@ -1,4 +1,4 @@
-# PhamDrugBench
+# PharmDrugBench
 
 A web-based pharmacy agent benchmarking platform that evaluates AI agents on autonomous
 pharmacy tasks. Benchmark data is loaded from `server/data/benchmark.json` and seeded into
@@ -75,6 +75,7 @@ All settings come from `.env` (copy from `.env.example`):
 | ---------------- | -------- | -------------------------------------------------------- |
 | `PORT`           | no       | Port the server listens on (default `8447`).             |
 | `DATABASE_URL`   | yes      | PostgreSQL connection string.                            |
+| `ADMIN_API_TOKEN`| no       | Token required for write/admin API routes. Without it, public deployments are read-only. |
 | `OPENAI_API_KEY` | no       | Only needed when evaluating OpenAI models.               |
 | `OPENAI_MODEL`   | no       | OpenAI model to use (default `gpt-5-mini`).              |
 
@@ -118,11 +119,15 @@ docs/                    Docker + appendix/data-source notes
 | Method   | Path                              | Description                          |
 | -------- | --------------------------------- | ------------------------------------ |
 | `GET`    | `/api/models`                     | List all models                      |
-| `POST`   | `/api/models`                     | Add a custom model                   |
-| `DELETE` | `/api/models/:id`                 | Remove a model                       |
 | `GET`    | `/api/benchmark-results/:modelId` | Benchmark results for a model        |
 | `GET`    | `/api/leaderboard?tab=`           | Leaderboard scores (optional tab)    |
 | `GET`    | `/api/tasks`                      | List task definitions                |
+| `POST`   | `/api/models`                     | Admin-only: add a custom model       |
+| `DELETE` | `/api/models/:id`                 | Admin-only: remove a model and its scores |
+| `GET/POST/PATCH/DELETE` | `/api/evaluators*`     | Admin-only evaluator management/export |
+
+Admin routes require `x-admin-token: <ADMIN_API_TOKEN>` or
+`Authorization: Bearer <ADMIN_API_TOKEN>`.
 
 ## Updating benchmark data
 

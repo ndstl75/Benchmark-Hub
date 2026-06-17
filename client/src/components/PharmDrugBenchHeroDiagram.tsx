@@ -1,16 +1,16 @@
-/** PhysicianBench-inspired hero diagram for PhamDrugBench leaderboard. */
+/** PhysicianBench-inspired hero diagram for PharmDrugBench leaderboard. */
 
-type PhamDrugBenchHeroDiagramProps = {
+type PharmDrugBenchHeroDiagramProps = {
   className?: string;
 };
 
-export function PhamDrugBenchHeroDiagram({ className = "" }: PhamDrugBenchHeroDiagramProps) {
+export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHeroDiagramProps) {
   return (
     <svg
       viewBox="0 0 920 340"
       className={`w-full max-w-6xl mx-auto ${className}`}
       role="img"
-      aria-label="PhamDrugBench agent loop: LLM receives medication prompts, responds, and is scored with paper-aligned benchmark metrics"
+      aria-label="PharmDrugBench agent loop: LLM receives medication prompts, responds, and is scored with paper-aligned benchmark metrics"
     >
       <defs>
         <style>{`
@@ -243,7 +243,7 @@ export function PhamDrugBenchHeroDiagram({ className = "" }: PhamDrugBenchHeroDi
         <circle cx="384" cy="58" r="5" fill="#86EFAC" />
 
         <text x="610" y="62" fill="#0F172A" fontSize="13" fontWeight="800" textAnchor="middle" fontFamily="system-ui,sans-serif">
-          PhamDrugBench
+          PharmDrugBench
         </text>
         <text x="610" y="76" fill="#64748B" fontSize="9" fontWeight="600" textAnchor="middle" fontFamily="system-ui,sans-serif" letterSpacing="0.1em">
           BENCHMARK ENVIRONMENT

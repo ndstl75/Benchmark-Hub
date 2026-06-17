@@ -9,9 +9,14 @@ process.on("uncaughtException", (err) => {
 import express, { type Request, Response, NextFunction } from "express";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { apiRateLimit, securityHeaders } from "./security";
 
 const app = express();
 const httpServer = createServer(app);
+app.set("trust proxy", 1);
+
+app.use(securityHeaders);
+app.use("/api", apiRateLimit);
 
 declare module "http" {
   interface IncomingMessage {
@@ -21,13 +26,14 @@ declare module "http" {
 
 app.use(
   express.json({
+    limit: "1mb",
     verify: (req, _res, buf) => {
       req.rawBody = buf;
     },
   }),
 );
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -43,23 +49,11 @@ export function log(message: string, source = "express") {
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
 
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      log(logLine);
+      log(`${req.method} ${path} ${res.statusCode} in ${duration}ms`);
     }
   });
 
@@ -78,7 +72,7 @@ app.use((req, res, next) => {
 
     app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
+      const message = status >= 500 ? "Internal Server Error" : err.message || "Request failed";
 
       console.error("Internal Server Error:", err);
 
@@ -115,9 +109,7 @@ app.use((req, res, next) => {
     console.error("Startup failed:", err);
     app.use((_req, res) => {
       res.status(503).json({
-        error: "Startup failed",
-        message: err instanceof Error ? err.message : String(err),
-        hint: "Check DATABASE_URL in .env and docker compose env_file",
+        error: "Service unavailable",
       });
     });
     const port = parseInt(process.env.PORT || "8447", 10);

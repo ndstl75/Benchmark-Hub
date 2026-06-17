@@ -1,11 +1,11 @@
 # Docker
 
-PhamDrugBench runs on port **8447** in Docker.
+PharmDrugBench runs on port **8447** in Docker.
 
 ## Build
 
 ```bash
-docker build -t phamdrugbench .
+docker build -t pharmdrugbench .
 ```
 
 ## Run
@@ -13,7 +13,7 @@ docker build -t phamdrugbench .
 Requires `DATABASE_URL` (e.g. Neon Postgres). For OpenAI models, set `OPENAI_API_KEY` and optionally `OPENAI_MODEL` (default: `gpt-5-mini`) in the environment or in `.env` when using docker-compose.
 
 ```bash
-docker run -e DATABASE_URL="postgresql://..." -p 8447:8447 phamdrugbench
+docker run -e DATABASE_URL="postgresql://..." -p 8447:8447 pharmdrugbench
 ```
 
 App is available at http://localhost:8447.

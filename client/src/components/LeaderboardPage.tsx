@@ -1,48 +1,128 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueries } from "@tanstack/react-query";
 import type { Model, LeaderboardScore, TaskDefinition, BenchmarkResult } from "@shared/schema";
-import {
-  Award,
-  BookOpen,
-  ChevronRight,
-  ExternalLink,
-  Github,
-  LayoutDashboard,
-  ArrowUpDown,
-} from "lucide-react";
+import { BookOpen, ChevronRight, ExternalLink, Github, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  CITATION_BIBTEX,
   FAILURE_CATEGORIES,
   LEADERBOARD_ACCURACY_METRICS,
-  METHODOLOGY_STEPS,
-  PAPER_CITATIONS,
   PHAMDRUGBENCH_INTRO,
-  SUBGROUP_COLUMNS,
   TASK_TAXONOMY,
 } from "@/data/benchmarkContent";
-import { PhamDrugBenchHeroDiagram } from "@/components/PhamDrugBenchHeroDiagram";
-import { TaskExplorer } from "@/components/TaskExplorer";
-import { TrajectoryViewer } from "@/components/TrajectoryViewer";
+import { PharmDrugBenchHeroDiagram } from "@/components/PharmDrugBenchHeroDiagram";
 
 type LeaderboardPageProps = {
   models: Model[];
   leaderboardScores: LeaderboardScore[];
   taskDefs: TaskDefinition[];
-  onNavigateTab: (tab: string) => void;
 };
 
-type ModelFilter = "all" | "proprietary" | "open" | "specialized";
-type SortMetric = "Mean Win Rate" | "Rx-LLM (CMM)" | "DDI Identification" | "MedMatch" | "Drug or Pokémon?";
+type RouteId = "home" | "leaderboard" | "errors" | "models" | "scenarios" | "runs";
+type ScoreTab = "Accuracy" | "Efficiency" | "General information";
+type FailureByModel = {
+  model: Model;
+  totalFailed: number;
+  totalEvaluated: number;
+  overallRate: number | null;
+  domains: Array<(typeof FAILURE_CATEGORIES)[number] & { failed: number; total: number; rate: number | null }>;
+};
 
-const NAV_SECTIONS = [
-  { id: "leaderboard", label: "Leaderboard" },
-  { id: "breakdowns", label: "Breakdowns" },
-  { id: "tasks", label: "Tasks" },
-  { id: "trajectory", label: "Trajectory" },
-  { id: "methodology", label: "Methodology" },
-] as const;
+const ROUTES: Array<{ id: Exclude<RouteId, "home">; label: string; hash: string }> = [
+  { id: "leaderboard", label: "Leaderboard", hash: "#/leaderboard" },
+  { id: "errors", label: "Errors", hash: "#/errors" },
+  { id: "models", label: "Models", hash: "#/models" },
+  { id: "scenarios", label: "Scenarios", hash: "#/scenarios" },
+  { id: "runs", label: "Predictions", hash: "#/runs" },
+];
+
+const SCORE_TABS: ScoreTab[] = ["Accuracy", "Efficiency", "General information"];
+
+const SCORE_ROWS: Record<
+  ScoreTab,
+  Array<{
+    key: string;
+    label: string;
+    metricName?: string;
+    tab?: string;
+    subtitle?: string;
+    kind?: "score" | "provider" | "access";
+  }>
+> = {
+  Accuracy: LEADERBOARD_ACCURACY_METRICS.map((metric) => ({
+    key: metric.name,
+    label: metric.name === "Mean Win Rate" ? "Reported Mean" : metric.name,
+    metricName: metric.name,
+    tab: "Accuracy",
+    subtitle: metric.subtitle,
+    kind: "score",
+  })),
+  Efficiency: [
+    {
+      key: "cost",
+      label: "Cost / 1M *",
+      metricName: "Cost (per 1M tokens)",
+      tab: "Efficiency",
+      subtitle: "Indicative estimate",
+      kind: "score",
+    },
+    {
+      key: "latency",
+      label: "Latency *",
+      metricName: "Latency (s / request)",
+      tab: "Efficiency",
+      subtitle: "Indicative estimate",
+      kind: "score",
+    },
+  ],
+  "General information": [
+    {
+      key: "coverage",
+      label: "Source Coverage",
+      metricName: "Source Coverage",
+      tab: "General information",
+      subtitle: "Reported papers out of 4",
+      kind: "score",
+    },
+    { key: "provider", label: "Provider", subtitle: "Model provider", kind: "provider" },
+    { key: "access", label: "Access", subtitle: "Public availability", kind: "access" },
+  ],
+};
+
+const DOMAIN_TASK_MAP = {
+  cmm: [
+    "Formulation Matching",
+    "Drug Order Gen (Sig)",
+    "Route Matching",
+    "Renal Dose ID",
+    "Drug-Indication",
+  ],
+  ddi: ["DDI ID", "DDI 3-Drug Combo", "DDI Multi-Drug", "DDI Verification"],
+  formatting: [
+    "MedMatch (Oral Solid)",
+    "MedMatch (Oral Liq)",
+    "MedMatch (IV Intermit)",
+    "MedMatch (IV Push)",
+    "MedMatch (Continuous Titrate)",
+    "MedMatch (Continuous Non-Titrate)",
+    "MedMatch Route Selection",
+  ],
+  adversarial: ["Pokémon (Generic)", "Pokémon (Brand)"],
+};
+
+function routeFromHash(hash: string): RouteId {
+  if (hash.startsWith("#/leaderboard")) return "leaderboard";
+  if (hash.startsWith("#/errors")) return "errors";
+  if (hash.startsWith("#/models")) return "models";
+  if (hash.startsWith("#/scenarios")) return "scenarios";
+  if (hash.startsWith("#/runs")) return "runs";
+  return "home";
+}
+
+function hashForRoute(route: RouteId): string {
+  if (route === "home") return "#/";
+  return ROUTES.find((r) => r.id === route)?.hash ?? "#/";
+}
 
 function formatScoreAsPercent(value: string | number | undefined): string {
   if (value == null || value === "-") return "—";
@@ -61,29 +141,48 @@ function getScore(
   return scores.find((s) => s.modelId === modelId && s.metricName === metricName && s.tab === tab)?.value ?? "-";
 }
 
-function heatmapColor(pct: number): string {
-  const clamped = Math.max(0, Math.min(100, pct));
-  const opacity = 0.15 + (clamped / 100) * 0.75;
-  return `rgba(13, 148, 136, ${opacity})`;
+function getRawScore(
+  scores: LeaderboardScore[],
+  modelId: number,
+  row: (typeof SCORE_ROWS)[ScoreTab][number],
+): string {
+  if (!row.metricName) return "-";
+  return getScore(scores, modelId, row.metricName, row.tab);
 }
 
-function providerBadgeClass(provider: string): string {
+function formatScoreCell(
+  scores: LeaderboardScore[],
+  model: Model,
+  row: (typeof SCORE_ROWS)[ScoreTab][number],
+): string {
+  if (row.kind === "provider") return model.provider;
+  if (row.kind === "access") return model.access;
+  const raw = getRawScore(scores, model.id, row);
+  if (row.tab === "Accuracy") return formatScoreAsPercent(raw);
+  return raw === "-" ? "—" : raw;
+}
+
+function scoreTone(value: string): string {
+  return value === "N/A" || value === "-" ? "text-slate-400 font-semibold" : "text-slate-700";
+}
+
+function errorRateColor(rate: number): string {
+  return rate > 0 ? "bg-rose-500" : "bg-slate-300";
+}
+
+function errorRateText(rate: number): string {
+  return rate > 0 ? "text-slate-900" : "text-slate-500";
+}
+
+function providerDotClass(provider: string): string {
   const map: Record<string, string> = {
-    OpenAI: "bg-emerald-50 text-emerald-700",
-    Google: "bg-blue-50 text-blue-700",
-    Meta: "bg-indigo-50 text-indigo-700",
-    Alibaba: "bg-orange-50 text-orange-700",
-    DrugGPT: "bg-violet-50 text-violet-700",
+    OpenAI: "bg-teal-500",
+    Google: "bg-blue-500",
+    Meta: "bg-indigo-500",
+    Alibaba: "bg-orange-500",
+    DrugGPT: "bg-violet-500",
   };
-  return map[provider] ?? "bg-slate-100 text-slate-600";
-}
-
-function modelMatchesFilter(model: Model, filter: ModelFilter): boolean {
-  if (filter === "all") return true;
-  if (filter === "proprietary") return model.access === "API";
-  if (filter === "open") return model.access === "Open Weights";
-  if (filter === "specialized") return model.access === "Specialized";
-  return true;
+  return map[provider] ?? "bg-slate-400";
 }
 
 function taskDomainForName(taskName: string): keyof typeof DOMAIN_TASK_MAP | null {
@@ -93,39 +192,43 @@ function taskDomainForName(taskName: string): keyof typeof DOMAIN_TASK_MAP | nul
   return null;
 }
 
-const DOMAIN_TASK_MAP = {
-  cmm: [
-    "Formulation Matching",
-    "Drug Order Gen (Sig)",
-    "Route Matching",
-    "DDI ID",
-    "Renal Dose ID",
-    "Drug-Indication",
-  ],
-  ddi: ["DDI ID", "DDI 3-Drug Combo", "DDI Multi-Drug", "DDI Verification"],
-  formatting: [
-    "MedMatch (Oral Solid)",
-    "MedMatch (Oral Liq)",
-    "MedMatch (IV Intermit)",
-    "MedMatch (IV Push)",
-    "MedMatch (Continuous Titrate)",
-    "MedMatch (Continuous Non-Titrate)",
-    "MedMatch Route Selection",
-  ],
-  adversarial: ["Pokémon (Generic)", "Pokémon (Brand)"],
-};
+function scenarioForTaskName(taskName: string): string {
+  return TASK_TAXONOMY.find((group) => (group.tasks as readonly string[]).includes(taskName))?.domain ?? "Unmapped scenario";
+}
 
-export function LeaderboardPage({
-  models,
-  leaderboardScores,
-  taskDefs,
-  onNavigateTab,
-}: LeaderboardPageProps) {
-  const [modelFilter, setModelFilter] = useState<ModelFilter>("all");
-  const [sortBy, setSortBy] = useState<SortMetric>("Mean Win Rate");
-  const [copied, setCopied] = useState(false);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [selectedTaskId, setSelectedTaskId] = useState("formulation_matching_ckd");
+function predictionQueryForMetric(modelName: string, metricName?: string): string {
+  if (!metricName || metricName === "Mean Win Rate" || metricName === "Source Coverage") return modelName;
+  if (metricName === "Rx-LLM (CMM)") return `${modelName} CMM`;
+  if (metricName === "DDI Identification") return `${modelName} DDI`;
+  if (metricName === "Drug or Pokémon?") return `${modelName} Pokémon`;
+  if (metricName === "Cost (per 1M tokens)" || metricName === "Latency (s / request)") return modelName;
+  return `${modelName} ${metricName}`;
+}
+
+function slug(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+export function LeaderboardPage({ models, leaderboardScores, taskDefs }: LeaderboardPageProps) {
+  const [activeRoute, setActiveRoute] = useState<RouteId>(() =>
+    typeof window === "undefined" ? "home" : routeFromHash(window.location.hash),
+  );
+  const [scoreTab, setScoreTab] = useState<ScoreTab>("Accuracy");
+  const [predictionQuery, setPredictionQuery] = useState("");
+  const [predictionRegex, setPredictionRegex] = useState(false);
+
+  useEffect(() => {
+    const handleHashChange = () => setActiveRoute(routeFromHash(window.location.hash));
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  const navigate = (route: RouteId) => {
+    setActiveRoute(route);
+    window.location.hash = hashForRoute(route);
+    window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
+  };
 
   const benchmarkQueries = useQueries({
     queries: models.map((m) => ({
@@ -138,6 +241,17 @@ export function LeaderboardPage({
     })),
   });
 
+  const rankedModels = useMemo(() => {
+    return [...models].sort((a, b) => {
+      const aVal = parseFloat(getScore(leaderboardScores, a.id, "Mean Win Rate"));
+      const bVal = parseFloat(getScore(leaderboardScores, b.id, "Mean Win Rate"));
+      if (Number.isNaN(aVal) && Number.isNaN(bVal)) return 0;
+      if (Number.isNaN(aVal)) return 1;
+      if (Number.isNaN(bVal)) return -1;
+      return bVal - aVal;
+    });
+  }, [models, leaderboardScores]);
+
   const allBenchmarkResults = useMemo(() => {
     const map = new Map<number, BenchmarkResult[]>();
     models.forEach((m, i) => {
@@ -145,25 +259,6 @@ export function LeaderboardPage({
     });
     return map;
   }, [models, benchmarkQueries]);
-
-  const rankedModels = useMemo(() => {
-    const filtered = models.filter((m) => modelMatchesFilter(m, modelFilter));
-    return [...filtered].sort((a, b) => {
-      const aVal = parseFloat(getScore(leaderboardScores, a.id, sortBy));
-      const bVal = parseFloat(getScore(leaderboardScores, b.id, sortBy));
-      if (Number.isNaN(aVal) && Number.isNaN(bVal)) return 0;
-      if (Number.isNaN(aVal)) return 1;
-      if (Number.isNaN(bVal)) return -1;
-      return bVal - aVal;
-    });
-  }, [models, modelFilter, sortBy, leaderboardScores]);
-
-  const filterCounts = useMemo(() => ({
-    all: models.length,
-    proprietary: models.filter((m) => m.access === "API").length,
-    open: models.filter((m) => m.access === "Open Weights").length,
-    specialized: models.filter((m) => m.access === "Specialized").length,
-  }), [models]);
 
   const failureByModel = useMemo(() => {
     return rankedModels.map((model) => {
@@ -178,503 +273,176 @@ export function LeaderboardPage({
         failed[domain] += r.failed;
       }
 
+      const totalEvaluated = Object.values(totals).reduce((a, b) => a + b, 0);
       const totalFailed = Object.values(failed).reduce((a, b) => a + b, 0);
-      if (totalFailed === 0) {
-        return { model, segments: [25, 25, 25, 25] };
-      }
 
       return {
         model,
-        segments: FAILURE_CATEGORIES.map((c) =>
-          Math.round((failed[c.key as keyof typeof failed] / totalFailed) * 100),
-        ),
+        totalFailed,
+        totalEvaluated,
+        overallRate: totalEvaluated > 0 ? (totalFailed / totalEvaluated) * 100 : null,
+        domains: FAILURE_CATEGORIES.map((c) => {
+          const key = c.key as keyof typeof failed;
+          const total = totals[key];
+          const fail = failed[key];
+          return {
+            ...c,
+            failed: fail,
+            total,
+            rate: total > 0 ? (fail / total) * 100 : null,
+          };
+        }),
       };
     });
   }, [rankedModels, allBenchmarkResults]);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const predictionRows = useMemo(() => {
+    return rankedModels.flatMap((model) => {
+      const results = allBenchmarkResults.get(model.id) ?? [];
+      return results.map((result) => {
+        const total = result.earned + result.failed;
+        const errorRate = total > 0 ? (result.failed / total) * 100 : null;
+        return {
+          run: `${slug(result.taskName)}:model=${slug(model.name)}`,
+          model,
+          scenario: scenarioForTaskName(result.taskName),
+          taskName: result.taskName,
+          earned: result.earned,
+          failed: result.failed,
+          total,
+          errorRate,
+        };
+      });
+    });
+  }, [rankedModels, allBenchmarkResults]);
+
+  const filteredPredictionRows = useMemo(() => {
+    const q = predictionQuery.trim();
+    if (!q) return predictionRows;
+    if (predictionRegex) {
+      try {
+        const re = new RegExp(q, "i");
+        return predictionRows.filter((row) => re.test(`${row.run} ${row.model.name} ${row.scenario} ${row.taskName}`));
+      } catch {
+        return [];
+      }
+    }
+    const lower = q.toLowerCase();
+    const tokens = lower.split(/\s+/).filter(Boolean);
+    return predictionRows.filter((row) => {
+      const haystack = `${row.run} ${row.model.name} ${row.model.provider} ${row.scenario} ${row.taskName}`.toLowerCase();
+      return tokens.every((token) => haystack.includes(token));
+    });
+  }, [predictionQuery, predictionRegex, predictionRows]);
+
+  const scenarioRows = useMemo(() => {
+    return TASK_TAXONOMY.flatMap((group) =>
+      group.tasks.map((taskName) => {
+        const definition = taskDefs.find((task) => task.name === taskName);
+        return {
+          key: `${group.domain}-${taskName}`,
+          scenario: group.domain,
+          taskName,
+          what: definition?.prompt ?? group.dataset,
+          who: "Clinician / evaluator",
+          when: "Medication-safety evaluation",
+          language: "English",
+          url: group.url,
+        };
+      }),
+    );
+  }, [taskDefs]);
+
+  const openPredictions = (query: string) => {
+    setPredictionQuery(query);
+    navigate("runs");
   };
 
-  const copyCitation = async (text?: string, id?: string) => {
-    await navigator.clipboard.writeText(text ?? CITATION_BIBTEX);
-    if (id) {
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } else {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  const scoreRows = SCORE_ROWS[scoreTab];
+
+  const bestByRow = useMemo(() => {
+    const max = new Map<string, number>();
+    for (const row of scoreRows) {
+      if (row.tab !== "Accuracy" || !row.metricName) continue;
+      const values = rankedModels
+        .map((model) => parseFloat(getRawScore(leaderboardScores, model.id, row)))
+        .filter((value) => !Number.isNaN(value));
+      if (values.length) max.set(row.key, Math.max(...values));
     }
-  };
+    return max;
+  }, [scoreRows, rankedModels, leaderboardScores]);
 
   return (
     <div className="physicianbench-page min-h-screen bg-[#fafafa] text-slate-900">
-      {/* Top nav — PhysicianBench style */}
       <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-16 flex items-center justify-between gap-2 lg:gap-4">
+          <button
+            type="button"
+            onClick={() => navigate("home")}
+            className="flex flex-shrink-0 items-center gap-2.5 cursor-pointer"
+          >
             <img src="/logo.png" alt="" width={28} height={28} className="rounded-md flex-shrink-0" />
-            <span className="font-bold text-sm tracking-tight truncate">PhamDrugBench</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-1">
-            {NAV_SECTIONS.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => scrollTo(s.id)}
-                className="px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-teal-700 rounded-md hover:bg-teal-50/60 transition-colors"
+            <span className="font-bold text-sm tracking-tight whitespace-nowrap">PharmDrugBench</span>
+          </button>
+          <nav className="hidden md:flex min-w-0 flex-1 items-center justify-center gap-0.5 overflow-x-auto lg:gap-1">
+            {ROUTES.map((route) => (
+              <a
+                key={route.id}
+                href={route.hash}
+                onClick={() => setActiveRoute(route.id)}
+                aria-current={activeRoute === route.id ? "page" : undefined}
+                className={`flex-shrink-0 px-2.5 lg:px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  activeRoute === route.id
+                    ? "bg-teal-50 text-teal-800"
+                    : "text-slate-600 hover:text-teal-700 hover:bg-teal-50/60"
+                }`}
               >
-                {s.label}
-              </button>
+                {route.label}
+              </a>
             ))}
           </nav>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-slate-600 hidden sm:flex"
-              onClick={() => onNavigateTab("Dashboard")}
-            >
-              <LayoutDashboard size={14} className="mr-1.5" />
-              Dashboard
-            </Button>
-            <Button variant="outline" size="sm" className="text-slate-600" asChild>
-              <a href="https://github.com/AIChemist-Lab" target="_blank" rel="noopener noreferrer">
-                <Github size={14} className="mr-1.5" />
-                GitHub
-              </a>
-            </Button>
-          </div>
+          <Button variant="outline" size="sm" className="flex-shrink-0 text-slate-600" asChild>
+            <a href="https://github.com/AIChemist-Lab" target="_blank" rel="noopener noreferrer">
+              <Github size={14} className="mr-1.5" />
+              GitHub
+            </a>
+          </Button>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-16 sm:space-y-20">
-        {/* Hero — PhysicianBench split: title left, diagram right */}
-        <section className="grid lg:grid-cols-[minmax(0,0.96fr)_minmax(500px,1.04fr)] gap-10 lg:gap-6 items-center overflow-visible">
-          <div className="text-left space-y-5">
-            <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] font-bold tracking-tight leading-[1.06]">
-                <span className="text-teal-800 block">{PHAMDRUGBENCH_INTRO.headline}:</span>
-                <span className="font-serif text-slate-900 block whitespace-nowrap">Evaluating LLM</span>
-                <span className="font-serif text-slate-900 block whitespace-nowrap">Agents on</span>
-              </h1>
-              <p className="text-2xl sm:text-3xl lg:text-[2.45rem] font-serif italic font-semibold text-teal-800 mt-1 leading-[1.05]">
-                Medication-Safety Benchmarks
-              </p>
-            </div>
-            {/* Stanford / PhysicianBench-style: logo left, affiliation text right */}
-            <div className="flex items-center gap-5 sm:gap-6 max-w-2xl pt-1">
-              <img
-                src="/cuanschutz-logo.png"
-                alt="University of Colorado Anschutz Medical Campus"
-                width={160}
-                height={56}
-                className="h-12 sm:h-14 md:h-16 w-auto object-contain shrink-0"
-              />
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-800">{PHAMDRUGBENCH_INTRO.institution}</p>
-                <p className="text-[11px] sm:text-xs text-slate-600 leading-[1.55]">
-                  {PHAMDRUGBENCH_INTRO.authors}
-                </p>
-              </div>
-            </div>
-            <p className="text-slate-600 leading-relaxed text-[14px] max-w-xl">
-              {PHAMDRUGBENCH_INTRO.summary}
-            </p>
-            <div className="flex flex-nowrap items-center gap-3">
-              <Button
-                size="lg"
-                className="bg-teal-700 hover:bg-teal-800 text-white rounded-lg px-6 shrink-0"
-                onClick={() => scrollTo("leaderboard")}
-              >
-                View Leaderboard
-                <ChevronRight size={16} className="ml-1" />
-              </Button>
-              <Button variant="outline" size="lg" className="rounded-lg shrink-0" onClick={() => scrollTo("tasks")}>
-                Explore Tasks
-              </Button>
-              <Button variant="outline" size="lg" className="rounded-lg shrink-0" asChild>
-                <a
-                  href="https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <BookOpen size={16} className="mr-2" />
-                  Read the Paper
-                </a>
-              </Button>
-            </div>
-          </div>
-
-          <div className="w-full lg:ml-0 xl:ml-2 flex justify-center lg:justify-end">
-            <PhamDrugBenchHeroDiagram className="w-full max-w-none lg:scale-[1.16] xl:scale-[1.25] 2xl:scale-[1.3] origin-center" />
-          </div>
-        </section>
-
-        {/* Leaderboard table */}
-        <section id="leaderboard" className="scroll-mt-20 space-y-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-teal-700 mb-1">Results</p>
-            <h2 className="text-2xl font-bold tracking-tight">Leaderboard</h2>
-            <p className="text-sm text-slate-600 mt-1">
-              Macro win rate and paper-aligned scores from published appendix tables.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="flex flex-wrap gap-2">
-              {(
-                [
-                  ["all", "All"],
-                  ["proprietary", "Proprietary"],
-                  ["open", "Open-Source"],
-                  ["specialized", "Specialized"],
-                ] as const
-              ).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => setModelFilter(key)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
-                    modelFilter === key
-                      ? "bg-teal-700 text-white border-teal-700"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-teal-300"
-                  }`}
-                >
-                  {label} ({filterCounts[key]})
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <ArrowUpDown size={14} className="text-slate-400" />
-              <span className="text-xs font-medium">sort by</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortMetric)}
-                className="text-xs font-semibold border border-slate-200 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-teal-500"
-              >
-                {LEADERBOARD_ACCURACY_METRICS.map((m) => (
-                  <option key={m.name} value={m.name}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm" data-testid="table-leaderboard">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <th className="px-4 py-3 text-left w-10">#</th>
-                    <th className="px-4 py-3 text-left min-w-[160px]">Model</th>
-                    <th className="px-4 py-3 text-left">Provider</th>
-                    <th className="px-4 py-3 text-center">Mean Win Rate</th>
-                    <th className="px-4 py-3 text-center">Rx-LLM</th>
-                    <th className="px-4 py-3 text-center">DDI ID</th>
-                    <th className="px-4 py-3 text-center">MedMatch</th>
-                    <th className="px-4 py-3 text-center">Pokémon</th>
-                    <th className="px-4 py-3 text-center">Cost / 1M</th>
-                    <th className="px-4 py-3 text-center">Latency</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {rankedModels.map((model, idx) => (
-                    <tr key={model.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-4 py-3.5 text-slate-400 font-mono text-xs">{idx + 1}</td>
-                      <td className="px-4 py-3.5 font-semibold text-slate-900">
-                        <div className="flex items-center gap-2">
-                          {idx === 0 && sortBy === "Mean Win Rate" && (
-                            <Award size={14} className="text-amber-500 flex-shrink-0" />
-                          )}
-                          {model.name}
-                          {model.type === "Reasoning" && (
-                            <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-purple-200 text-purple-600 bg-purple-50">
-                              reasoning
-                            </Badge>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${providerBadgeClass(model.provider)}`}>
-                          {model.provider}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-center font-bold text-slate-900">
-                        {formatScoreAsPercent(getScore(leaderboardScores, model.id, "Mean Win Rate"))}
-                      </td>
-                      <td className="px-4 py-3.5 text-center text-slate-700">
-                        {formatScoreAsPercent(getScore(leaderboardScores, model.id, "Rx-LLM (CMM)"))}
-                      </td>
-                      <td className="px-4 py-3.5 text-center text-slate-700">
-                        {formatScoreAsPercent(getScore(leaderboardScores, model.id, "DDI Identification"))}
-                      </td>
-                      <td className="px-4 py-3.5 text-center text-slate-700">
-                        {formatScoreAsPercent(getScore(leaderboardScores, model.id, "MedMatch"))}
-                      </td>
-                      <td className="px-4 py-3.5 text-center text-slate-700">
-                        {formatScoreAsPercent(getScore(leaderboardScores, model.id, "Drug or Pokémon?"))}
-                      </td>
-                      <td className="px-4 py-3.5 text-center font-mono text-xs text-slate-600">
-                        {getScore(leaderboardScores, model.id, "Cost (per 1M tokens)", "Efficiency")}
-                      </td>
-                      <td className="px-4 py-3.5 text-center font-mono text-xs text-slate-600">
-                        {getScore(leaderboardScores, model.id, "Latency (s / request)", "Efficiency")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <p className="text-xs text-slate-500 leading-relaxed">
-            <strong>Mean Win Rate</strong> macro-average across four benchmark papers. Domain columns show paper-aligned
-            aggregate scores. Cost and latency from model configuration.
-          </p>
-        </section>
-
-        {/* Performance by subgroup heatmap */}
-        <section id="breakdowns" className="scroll-mt-20 space-y-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-teal-700 mb-1">Where models succeed and fail</p>
-            <h2 className="text-2xl font-bold tracking-tight">Performance by Subgroup</h2>
-            <p className="text-sm text-slate-600 mt-1">
-              Paper-aligned domain scores. Darker teal cells indicate higher win rate within that subgroup.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50/80">
-                    <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500 min-w-[140px]">
-                      Model
-                    </th>
-                    {SUBGROUP_COLUMNS.map((col) => (
-                      <th key={col.key} className="px-3 py-3 text-center text-[11px] font-bold text-slate-500 min-w-[80px]">
-                        <div>{col.label}</div>
-                        <div className="font-normal text-slate-400 normal-case tracking-normal">n={col.n}</div>
-                      </th>
-                    ))}
-                    <th className="px-3 py-3 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                      Overall
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {rankedModels.map((model) => {
-                    const overall = parseFloat(getScore(leaderboardScores, model.id, "Mean Win Rate")) * 100;
-                    return (
-                      <tr key={model.id}>
-                        <td className="px-4 py-2.5 font-semibold text-slate-800 text-xs">{model.name}</td>
-                        {SUBGROUP_COLUMNS.map((col) => {
-                          const raw = getScore(leaderboardScores, model.id, col.key);
-                          const pct = parseFloat(raw) * 100;
-                          return (
-                            <td
-                              key={col.key}
-                              className="px-3 py-2.5 text-center text-xs font-semibold text-slate-800"
-                              style={{ backgroundColor: Number.isNaN(pct) ? undefined : heatmapColor(pct) }}
-                            >
-                              {Number.isNaN(pct) ? "—" : pct.toFixed(1)}
-                            </td>
-                          );
-                        })}
-                        <td
-                          className="px-3 py-2.5 text-center text-xs font-bold text-slate-900"
-                          style={{ backgroundColor: Number.isNaN(overall) ? undefined : heatmapColor(overall) }}
-                        >
-                          {Number.isNaN(overall) ? "—" : overall.toFixed(1)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        {/* Error analysis */}
-        <section className="space-y-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-teal-700 mb-1">Error analysis</p>
-            <h2 className="text-2xl font-bold tracking-tight">Where Do Failures Come From?</h2>
-            <p className="text-sm text-slate-600 mt-1">
-              Failed cases grouped by benchmark domain. DDI and adversarial tasks account for the largest share of failures across models.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-            {FAILURE_CATEGORIES.map((cat) => (
-              <div key={cat.key} className="rounded-lg border border-slate-200 bg-white p-3">
-                <p className="text-xs font-bold text-slate-800">{cat.label}</p>
-                <p className="text-[11px] text-slate-500 mt-1">{cat.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="space-y-3">
-            {failureByModel.map(({ model, segments }) => (
-              <div key={model.id} className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-slate-700 w-28 flex-shrink-0 truncate">{model.name}</span>
-                <div className="flex-1 flex h-6 rounded overflow-hidden border border-slate-100">
-                  {segments.map((pct, i) => (
-                    <div
-                      key={FAILURE_CATEGORIES[i].key}
-                      className="failure-segment flex items-center justify-center text-[9px] font-bold text-white/90"
-                      style={{
-                        width: `${Math.max(pct, 0)}%`,
-                        backgroundColor: ["#0d9488", "#14b8a6", "#2dd4bf", "#5eead4"][i],
-                        minWidth: pct > 0 ? "1.5rem" : 0,
-                      }}
-                      title={`${FAILURE_CATEGORIES[i].label}: ${pct}%`}
-                    >
-                      {pct >= 12 ? pct : ""}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Explore Tasks — PhysicianBench split-panel explorer */}
-        <section id="tasks" className="scroll-mt-20 space-y-5">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-teal-700 mb-1">Task pool</p>
-            <h2 className="text-2xl font-bold tracking-tight">Explore Tasks</h2>
-            <p className="text-sm text-slate-600 mt-1 max-w-3xl">
-              Browse all {taskDefs.length || 18} clinician-validated tasks grouped by benchmark paper — CMM Rx-LLM,
-              DDI Multi-Format, MedMatch Formatting, and Adversarial Drug or Pokémon — with checkpoint-level
-              evaluation rubrics.
-            </p>
-          </div>
-
-          <TaskExplorer
-            taskDefs={taskDefs}
-            selectedId={selectedTaskId}
-            onSelect={setSelectedTaskId}
-          />
-
-          <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-5">
-            <h3 className="text-sm font-bold text-slate-900 mb-3">Full task taxonomy by paper</h3>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {TASK_TAXONOMY.map((group) => (
-                <div key={group.domain} className="rounded-lg border border-slate-200 bg-white p-3">
-                  <p className="text-xs font-bold text-slate-800">{group.domain}</p>
-                  <p className="text-[10px] text-slate-500 mt-1">{group.tasks.length} tasks · {group.dataset}</p>
-                  <a
-                    href={group.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] font-semibold text-teal-700 mt-2 hover:underline"
-                  >
-                    View paper <ExternalLink size={10} />
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Trajectory viewer — adapted for prompt → response → benchmark evaluation */}
-        <section id="trajectory" className="scroll-mt-20 space-y-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-teal-700 mb-1">Watch agents work</p>
-            <h2 className="text-2xl font-bold tracking-tight">Trajectory Viewer</h2>
-            <p className="text-sm text-slate-600 mt-1 max-w-3xl">
-              Step through a model evaluation session with{" "}
-              <span className="font-semibold text-slate-700">GPT-4o-mini (gpt-5-mini eval)</span>. Each step shows
-              the clinical prompt, LLM response, and checkpoint-level evaluation reply — adapted from the{" "}
-              <a
-                href="https://healthrex.github.io/PhysicianBench/#leaderboard"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-teal-700 hover:underline"
-              >
-                PhysicianBench
-              </a>{" "}
-              trajectory replay for paper-aligned medication tasks.
-            </p>
-          </div>
-          <TrajectoryViewer taskId={selectedTaskId} />
-        </section>
-
-        {/* Methodology */}
-        <section id="methodology" className="scroll-mt-20 space-y-6">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-teal-700 mb-1">How it works</p>
-            <h2 className="text-2xl font-bold tracking-tight">Methodology</h2>
-            <p className="text-sm text-slate-600 mt-1">
-              Every design choice maximizes clinical realism while keeping evaluation reproducible.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-5">
-            {METHODOLOGY_STEPS.map((step) => (
-              <div key={step.step} className="rounded-xl border border-slate-200 bg-white p-5">
-                <p className="text-2xl font-black text-teal-100 leading-none mb-2">{step.step}</p>
-                <h3 className="text-sm font-bold text-slate-900 -mt-6 mb-2 relative">{step.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{step.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <blockquote className="rounded-xl border-l-4 border-teal-600 bg-teal-50/50 px-5 py-4 text-sm text-slate-700 italic">
-            End-to-end completion, not isolated atomic skills. Macro win rate averages performance across all four
-            benchmark papers — CMM, DDI, MedMatch, and adversarial safety.
-          </blockquote>
-
-          {/* Citations — all benchmark papers */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-5">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-teal-700">Cite</p>
-                <h3 className="text-lg font-bold">Citations</h3>
-                <p className="text-sm text-slate-600 mt-1">
-                  All five PhamDrugBench source papers and supplements.
-                </p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => copyCitation()}>
-                {copied ? "Copied all!" : "Copy all BibTeX"}
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {PAPER_CITATIONS.map((paper) => (
-                <div key={paper.id} className="rounded-lg border border-slate-100 bg-slate-50/50 p-4 space-y-2">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <a
-                        href={paper.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-semibold text-teal-800 hover:underline"
-                      >
-                        {paper.title}
-                      </a>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 text-xs"
-                      onClick={() => copyCitation(paper.bibtex, paper.id)}
-                    >
-                      {copiedId === paper.id ? "Copied!" : "Copy BibTeX"}
-                    </Button>
-                  </div>
-                  <pre className="text-[11px] bg-white border border-slate-200 rounded-lg p-3 overflow-x-auto text-slate-700 font-mono leading-relaxed">
-                    {paper.bibtex}
-                  </pre>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
+      {activeRoute === "home" ? (
+        <HomeView navigate={navigate} models={rankedModels} scores={leaderboardScores} />
+      ) : (
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+          {activeRoute === "leaderboard" && (
+            <LeaderboardView
+              scoreTab={scoreTab}
+              setScoreTab={setScoreTab}
+              rows={scoreRows}
+              models={rankedModels}
+              scores={leaderboardScores}
+              bestByRow={bestByRow}
+              openPredictions={openPredictions}
+            />
+          )}
+          {activeRoute === "errors" && <ErrorAnalysis failureByModel={failureByModel} />}
+          {activeRoute === "models" && <ModelsView models={rankedModels} />}
+          {activeRoute === "scenarios" && <ScenariosView rows={scenarioRows} />}
+          {activeRoute === "runs" && (
+            <PredictionsView
+              rows={filteredPredictionRows}
+              totalRows={predictionRows.length}
+              query={predictionQuery}
+              setQuery={setPredictionQuery}
+              regex={predictionRegex}
+              setRegex={setPredictionRegex}
+            />
+          )}
+        </main>
+      )}
 
       <footer className="border-t border-slate-200 bg-white py-8 mt-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
           <div className="flex items-center gap-3">
             <img
               src="/cuanschutz-logo.png"
@@ -685,7 +453,7 @@ export function LeaderboardPage({
             />
             <div className="flex items-center gap-2 border-l border-slate-200 pl-3">
               <img src="/logo.png" alt="" width={20} height={20} className="rounded" />
-              <span className="font-semibold text-slate-700">PhamDrugBench</span>
+              <span className="font-semibold text-slate-700">PharmDrugBench</span>
               <span className="text-slate-300">·</span>
               <span>v1</span>
             </div>
@@ -695,6 +463,542 @@ export function LeaderboardPage({
           </p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function HomeView({
+  navigate,
+  models,
+  scores,
+}: {
+  navigate: (route: RouteId) => void;
+  models: Model[];
+  scores: LeaderboardScore[];
+}) {
+  return (
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <section className="grid md:grid-cols-[minmax(0,0.92fr)_minmax(320px,1.08fr)] gap-8 lg:gap-12 items-center overflow-visible">
+        <div className="text-left space-y-5">
+          <div className="space-y-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-teal-700">
+              Medication-safety LLM benchmark
+            </p>
+            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-[1.04]">
+              {PHAMDRUGBENCH_INTRO.headline}
+            </h1>
+            <p className="text-lg sm:text-xl text-slate-600 leading-snug max-w-xl">
+              {PHAMDRUGBENCH_INTRO.subheadline}
+            </p>
+          </div>
+          <div className="flex items-center gap-5 sm:gap-6 max-w-2xl pt-1">
+            <img
+              src="/cuanschutz-logo.png"
+              alt="University of Colorado Anschutz Medical Campus"
+              width={160}
+              height={56}
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain shrink-0"
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-800">{PHAMDRUGBENCH_INTRO.institution}</p>
+              <p className="text-[11px] sm:text-xs text-slate-600 leading-[1.55]">
+                {PHAMDRUGBENCH_INTRO.authors}
+              </p>
+            </div>
+          </div>
+          <p className="text-slate-600 leading-relaxed text-[14px] max-w-xl">
+            {PHAMDRUGBENCH_INTRO.summary}
+          </p>
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <Button
+              size="lg"
+              type="button"
+              className="bg-teal-700 hover:bg-teal-800 text-white rounded-lg px-6 shrink-0 cursor-pointer"
+              onClick={() => navigate("leaderboard")}
+            >
+              Leaderboard
+              <ChevronRight size={16} className="ml-1" />
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              type="button"
+              className="rounded-lg shrink-0 border-slate-200 text-slate-700 cursor-pointer"
+              onClick={() => navigate("errors")}
+            >
+              Errors
+            </Button>
+            <Button variant="outline" size="lg" className="rounded-lg shrink-0 border-slate-200 text-slate-700" asChild>
+              <a href="https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2" target="_blank" rel="noopener noreferrer">
+                <BookOpen size={16} className="mr-2" />
+                Read the Paper
+              </a>
+            </Button>
+          </div>
+        </div>
+        <div className="w-full space-y-5">
+          <HomeRankingPreview models={models} scores={scores} navigate={navigate} />
+          <div className="w-full flex justify-center lg:justify-end">
+            <PharmDrugBenchHeroDiagram className="w-full max-w-[640px] opacity-95" />
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function HomeRankingPreview({
+  models,
+  scores,
+  navigate,
+}: {
+  models: Model[];
+  scores: LeaderboardScore[];
+  navigate: (route: RouteId) => void;
+}) {
+  return (
+    <section
+      aria-label="Current PharmDrugBench ranking"
+      className="max-w-xl overflow-hidden rounded-lg border border-slate-200/80 bg-white"
+    >
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+        <div>
+          <h2 className="text-sm font-bold text-slate-900">Current Ranking</h2>
+          <p className="text-[11px] text-slate-500">Reported Mean · source-backed values only</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate("leaderboard")}
+          className="text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline"
+        >
+          Full leaderboard
+        </button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-slate-50/70 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <th className="w-10 px-4 py-2 text-left">#</th>
+              <th className="px-3 py-2 text-left">Model</th>
+              <th className="px-3 py-2 text-right">Mean</th>
+              <th className="px-4 py-2 text-right">Coverage</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {models.map((model, index) => {
+              const mean = getScore(scores, model.id, "Mean Win Rate");
+              const coverage = getScore(scores, model.id, "Source Coverage", "General information");
+              return (
+                <tr key={model.id} className="hover:bg-slate-50/70">
+                  <td className="px-4 py-2.5 text-xs font-semibold text-slate-500">{index + 1}</td>
+                  <td className="px-3 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className={`h-1.5 w-1.5 rounded-full ${providerDotClass(model.provider)}`} />
+                      <span className="font-medium text-slate-900">{model.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-semibold tabular-nums text-slate-900">
+                    {formatScoreAsPercent(mean)}
+                  </td>
+                  <td className="px-4 py-2.5 text-right text-xs tabular-nums text-slate-500">{coverage}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function LeaderboardView({
+  scoreTab,
+  setScoreTab,
+  rows,
+  models,
+  scores,
+  bestByRow,
+  openPredictions,
+}: {
+  scoreTab: ScoreTab;
+  setScoreTab: (tab: ScoreTab) => void;
+  rows: typeof SCORE_ROWS[ScoreTab];
+  models: Model[];
+  scores: LeaderboardScore[];
+  bestByRow: Map<string, number>;
+  openPredictions: (query: string) => void;
+}) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Leaderboard: PharmDrugBench Scenarios</h1>
+        <p className="text-slate-600 mt-2">Medication-safety benchmarks with source-backed public values.</p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="border-b border-slate-200">
+          <div className="flex flex-wrap gap-1" role="tablist" aria-label="Leaderboard metric tabs">
+            {SCORE_TABS.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={scoreTab === tab}
+                onClick={() => setScoreTab(tab)}
+                className={`border border-b-0 px-4 py-2 text-sm font-medium transition-colors ${
+                  scoreTab === tab
+                    ? "border-slate-200 bg-white text-slate-900"
+                    : "border-transparent text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[980px] text-sm" data-testid="table-leaderboard">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="sticky left-0 z-10 w-[220px] bg-slate-50/95 px-4 py-3 text-left">Metric</th>
+                  {models.map((model) => (
+                    <th key={model.id} className="min-w-[140px] px-4 py-3 text-left normal-case tracking-normal">
+                      <div className="font-semibold text-slate-700">{model.name}</div>
+                      <div className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-medium text-slate-400">
+                        <span className={`h-1.5 w-1.5 rounded-full ${providerDotClass(model.provider)}`} />
+                        {model.provider}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {rows.map((row) => (
+                  <tr key={row.key} className="hover:bg-slate-50/70">
+                    <td className="sticky left-0 z-10 bg-white px-4 py-3">
+                      <div className="font-medium text-slate-900">{row.label}</div>
+                      {row.subtitle && <div className="mt-0.5 text-xs text-slate-500">{row.subtitle}</div>}
+                    </td>
+                    {models.map((model) => {
+                      const raw = getRawScore(scores, model.id, row);
+                      const n = parseFloat(raw);
+                      const isBest =
+                        row.tab === "Accuracy" &&
+                        bestByRow.has(row.key) &&
+                        !Number.isNaN(n) &&
+                        n === bestByRow.get(row.key);
+                      const clickable = row.kind === "score" && raw !== "N/A" && raw !== "-";
+                      return (
+                        <td key={model.id} className="px-4 py-3 tabular-nums">
+                          {clickable ? (
+                            <button
+                              type="button"
+                              onClick={() => openPredictions(predictionQueryForMetric(model.name, row.metricName))}
+                              className={`inline-flex items-center gap-1 hover:underline ${isBest ? "font-bold text-slate-950" : scoreTone(raw)}`}
+                            >
+                              {formatScoreCell(scores, model, row)}
+                              {model.name === "Gemma 3 27B" && row.metricName === "DDI Identification" && (
+                                  <sup
+                                    title="DDI Identification is the mean of the DDI Table 3 accuracy rows under MedGemma-27B, not base Gemma 3 27B."
+                                    className="text-[9px] font-semibold text-amber-600"
+                                  >
+                                  †
+                                </sup>
+                              )}
+                              <ExternalLink size={11} className="text-slate-300" />
+                            </button>
+                          ) : (
+                            <span className={row.kind === "score" ? scoreTone(raw) : "text-slate-700"}>
+                              {formatScoreCell(scores, model, row)}
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="space-y-1 text-xs text-slate-500 leading-relaxed">
+          <p>
+            <strong>Reported Mean</strong> averages only source-backed study scores. Coverage shows how many of the four primary papers contribute.
+          </p>
+          <p>
+            <span className="font-semibold text-amber-700">†</span> Gemma 3 27B’s DDI Identification value is the mean of the DDI paper Table 3 accuracy rows under the MedGemma-27B column.
+            <span className="ml-2 font-semibold">*</span> Cost and Latency are indicative estimates only.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ErrorAnalysis({ failureByModel }: { failureByModel: FailureByModel[] }) {
+  return (
+    <section className="space-y-4">
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Error Analysis</h1>
+        <p className="text-sm text-slate-600 mt-1">
+          Error rate by evaluated domain. Each cell shows failed normalized task-points over total evaluated task-points; unreported N/A tasks are excluded.
+        </p>
+      </div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        {FAILURE_CATEGORIES.map((cat) => (
+          <div key={cat.key} className="rounded-lg border border-slate-200/80 bg-white p-3">
+            <p className="text-xs font-bold text-slate-800">{cat.label}</p>
+            <p className="text-[11px] text-slate-500 mt-1">{cat.description}</p>
+          </div>
+        ))}
+      </div>
+      <div className="rounded-lg border border-slate-200/80 bg-white overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-200/80 bg-slate-50/50 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                <th className="px-4 py-2.5 text-left min-w-[150px]">Model</th>
+                {FAILURE_CATEGORIES.map((cat) => (
+                  <th key={cat.key} className="px-4 py-2.5 text-left min-w-[160px]">{cat.label}</th>
+                ))}
+                <th className="px-4 py-2.5 text-left min-w-[130px]">Overall Error</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {failureByModel.map(({ model, domains, overallRate, totalFailed, totalEvaluated }) => (
+                <tr key={model.id} className="align-top hover:bg-slate-50/70 transition-colors">
+                  <td className="px-4 py-3 font-semibold text-slate-900">{model.name}</td>
+                  {domains.map((domain) => (
+                    <td key={domain.key} className="px-4 py-3">
+                      {domain.rate == null ? (
+                        <div className="text-xs font-semibold text-slate-400">N/A</div>
+                      ) : (
+                        <ErrorCell rate={domain.rate} failed={domain.failed} total={domain.total} />
+                      )}
+                    </td>
+                  ))}
+                  <td className="px-4 py-3">
+                    {overallRate == null ? (
+                      <div className="text-xs font-semibold text-slate-400">N/A</div>
+                    ) : (
+                      <ErrorCell rate={overallRate} failed={totalFailed} total={totalEvaluated} />
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ErrorCell({ rate, failed, total }: { rate: number; failed: number; total: number }) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className={`text-sm font-bold ${errorRateText(rate)}`}>{rate.toFixed(1)}%</span>
+        <span className="text-[11px] font-mono text-slate-500">
+          {Math.round(failed)} / {Math.round(total)}
+        </span>
+      </div>
+      <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden" aria-hidden>
+        <div className={`h-full rounded-full ${errorRateColor(rate)}`} style={{ width: `${Math.max(2, Math.min(100, rate))}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function ModelsView({ models }: { models: Model[] }) {
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Models</h1>
+      </div>
+      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[760px] text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                <th className="px-4 py-3 text-left">Creator</th>
+                <th className="px-4 py-3 text-left">Model</th>
+                <th className="px-4 py-3 text-left">Description</th>
+                <th className="px-4 py-3 text-left">Access</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {models.map((model) => (
+                <tr key={model.id} className="hover:bg-slate-50/70">
+                  <td className="px-4 py-4 text-base text-slate-900">{model.provider}</td>
+                  <td className="px-4 py-4">
+                    <div className="text-xl font-medium leading-snug text-slate-900">{model.name}</div>
+                    <div className="text-xs text-slate-500">{model.type}</div>
+                  </td>
+                  <td className="px-4 py-4 max-w-lg text-slate-700">
+                    Public PharmDrugBench row with source-backed reported mean {formatScoreAsPercent(model.winRate)}.
+                    Cost estimate {model.costPer1mTokens}; latency estimate {model.latency}.
+                  </td>
+                  <td className="px-4 py-4">
+                    <Badge variant="outline" className={model.access === "Open Weights" ? "border-emerald-100 bg-emerald-50 text-emerald-700" : "border-amber-100 bg-amber-50 text-amber-700"}>
+                      {model.access}
+                    </Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScenariosView({
+  rows,
+}: {
+  rows: Array<{
+    key: string;
+    scenario: string;
+    taskName: string;
+    what: string;
+    who: string;
+    when: string;
+    language: string;
+    url: string;
+  }>;
+}) {
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Scenarios</h1>
+        <p className="text-slate-600 mt-2">A scenario represents a medication-safety use case and its evaluation task.</p>
+      </div>
+      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[920px] text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                <th className="px-4 py-3 text-left">Scenario</th>
+                <th className="px-4 py-3 text-left">Task</th>
+                <th className="px-4 py-3 text-left">What</th>
+                <th className="px-4 py-3 text-left">Who</th>
+                <th className="px-4 py-3 text-left">When</th>
+                <th className="px-4 py-3 text-left">Language</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {rows.map((row) => (
+                <tr key={row.key} className="hover:bg-slate-50/70">
+                  <td className="px-4 py-4 min-w-[210px]">
+                    <a href={row.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:underline">
+                      {row.scenario}
+                    </a>
+                  </td>
+                  <td className="px-4 py-4 min-w-[180px] text-slate-900">{row.taskName}</td>
+                  <td className="px-4 py-4 max-w-md text-slate-700">{row.what}</td>
+                  <td className="px-4 py-4 text-slate-700">{row.who}</td>
+                  <td className="px-4 py-4 text-slate-700">{row.when}</td>
+                  <td className="px-4 py-4 text-slate-700">{row.language}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PredictionsView({
+  rows,
+  totalRows,
+  query,
+  setQuery,
+  regex,
+  setRegex,
+}: {
+  rows: Array<{
+    run: string;
+    model: Model;
+    scenario: string;
+    taskName: string;
+    earned: number;
+    failed: number;
+    total: number;
+    errorRate: number | null;
+  }>;
+  totalRows: number;
+  query: string;
+  setQuery: (query: string) => void;
+  regex: boolean;
+  setRegex: (regex: boolean) => void;
+}) {
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Predictions</h1>
+        <p className="text-slate-600 mt-2">Benchmark result rows backing the public board.</p>
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <label className="relative block w-full max-w-sm">
+          <span className="sr-only">Search predictions</span>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search"
+            className="h-12 w-full border border-slate-300 bg-white px-4 pr-11 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500"
+          />
+          <Search size={18} className="absolute right-4 top-3.5 text-slate-500" />
+        </label>
+        <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+          <input type="checkbox" checked={regex} onChange={(event) => setRegex(event.target.checked)} />
+          Regex
+        </label>
+        <span className="text-sm text-slate-500">
+          {rows.length} / {totalRows} results
+        </span>
+      </div>
+
+      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[860px] text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                <th className="px-4 py-3 text-left">Run</th>
+                <th className="px-4 py-3 text-left">Model</th>
+                <th className="px-4 py-3 text-left">Scenario / Task</th>
+                <th className="px-4 py-3 text-left">Earned</th>
+                <th className="px-4 py-3 text-left">Failed</th>
+                <th className="px-4 py-3 text-left">Error rate</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {rows.slice(0, 120).map((row) => (
+                <tr key={`${row.run}-${row.taskName}`} className="hover:bg-slate-50/70">
+                  <td className="px-4 py-3 font-mono text-xs text-blue-700">{row.run}</td>
+                  <td className="px-4 py-3 text-slate-900">{row.model.name}</td>
+                  <td className="px-4 py-3 text-slate-700">
+                    <div className="font-medium text-slate-900">{row.scenario}</div>
+                    <div className="mt-0.5 text-xs text-slate-500">{row.taskName}</div>
+                  </td>
+                  <td className="px-4 py-3 tabular-nums text-slate-700">{Math.round(row.earned)}</td>
+                  <td className="px-4 py-3 tabular-nums text-slate-700">{Math.round(row.failed)}</td>
+                  <td className="px-4 py-3 tabular-nums text-slate-700">
+                    {row.errorRate == null ? "N/A" : `${row.errorRate.toFixed(1)}%`}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {rows.length > 120 && (
+        <p className="text-xs text-slate-500">Showing first 120 rows. Narrow the search to inspect a smaller set.</p>
+      )}
     </div>
   );
 }

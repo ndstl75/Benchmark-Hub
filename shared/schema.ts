@@ -54,7 +54,21 @@ export const insertModelSchema = createInsertSchema(models).omit({ id: true });
 export const insertBenchmarkResultSchema = createInsertSchema(benchmarkResults).omit({ id: true });
 export const insertLeaderboardScoreSchema = createInsertSchema(leaderboardScores).omit({ id: true });
 export const insertTaskDefinitionSchema = createInsertSchema(taskDefinitions).omit({ id: true });
-export const insertEvaluatorSchema = createInsertSchema(evaluators).omit({ id: true });
+export const evaluatorEnvSchema = z.record(
+  z.string().regex(/^[A-Za-z0-9_-]+$/, "Env keys must be TOML bare keys"),
+  z.string(),
+);
+export const insertEvaluatorSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    dockerImage: z.string().trim().min(1).max(512).nullable().optional(),
+    agentbeatsId: z.string().trim().min(1).max(256).nullable().optional(),
+    env: evaluatorEnvSchema.optional().default({}),
+  })
+  .strict();
+export const updateEvaluatorSchema = insertEvaluatorSchema.partial().refine((data) => Object.keys(data).length > 0, {
+  message: "At least one evaluator field is required",
+});
 
 export type InsertModel = z.infer<typeof insertModelSchema>;
 export type Model = typeof models.$inferSelect;
@@ -65,4 +79,5 @@ export type LeaderboardScore = typeof leaderboardScores.$inferSelect;
 export type InsertTaskDefinition = z.infer<typeof insertTaskDefinitionSchema>;
 export type TaskDefinition = typeof taskDefinitions.$inferSelect;
 export type InsertEvaluator = z.infer<typeof insertEvaluatorSchema>;
+export type UpdateEvaluator = z.infer<typeof updateEvaluatorSchema>;
 export type Evaluator = typeof evaluators.$inferSelect;

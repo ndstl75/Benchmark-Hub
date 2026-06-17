@@ -51,8 +51,8 @@ import {
   TASK_TAXONOMY,
 } from "@/data/benchmarkContent";
 
-/** PhamDrugBench logo: brand icon + wordmark */
-function PhamDrugBenchLogo({ className = "", iconSize = 32 }: { className?: string; iconSize?: number }) {
+/** PharmDrugBench logo: brand icon + wordmark */
+function PharmDrugBenchLogo({ className = "", iconSize = 32 }: { className?: string; iconSize?: number }) {
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       <img
@@ -64,8 +64,8 @@ function PhamDrugBenchLogo({ className = "", iconSize = 32 }: { className?: stri
         aria-hidden
       />
       <div>
-        <h1 className="font-bold text-base leading-tight tracking-tight text-slate-900" data-testid="text-app-title">PhamDrugBench</h1>
-        <p className="text-[10px] text-slate-500 font-medium leading-tight">Rx-LLM medication safety benchmarks</p>
+        <h1 className="font-bold text-base leading-tight tracking-tight text-slate-900" data-testid="text-app-title">PharmDrugBench</h1>
+        <p className="text-[10px] text-slate-500 font-medium leading-tight">Source-backed medication safety benchmarks</p>
       </div>
     </div>
   );
@@ -195,7 +195,7 @@ export default function Home() {
       .map(m => ({
         name: m.name,
         type: m.type === 'Reasoning' ? 'Reasoning' as const : 'Non-Reasoning' as const,
-        score: `Win Rate: ${Math.round(m.winRate * 100)}%`,
+        score: `Reported mean: ${Math.round(m.winRate * 100)}%`,
       }));
   }, [allModels]);
 
@@ -207,6 +207,14 @@ export default function Home() {
     if (modelId == null) return '—';
     const score = leaderboardScores.find(
       s => s.metricName === metricName && s.modelId === modelId && s.tab === 'Accuracy'
+    );
+    return score?.value ?? '—';
+  };
+
+  const getGeneralMetricValue = (metricName: string, modelId: number | undefined) => {
+    if (modelId == null) return '—';
+    const score = leaderboardScores.find(
+      s => s.metricName === metricName && s.modelId === modelId && s.tab === 'General information'
     );
     return score?.value ?? '—';
   };
@@ -332,7 +340,6 @@ export default function Home() {
         models={leaderboardModels}
         leaderboardScores={leaderboardScores}
         taskDefs={taskDefs}
-        onNavigateTab={setActiveTab}
       />
     );
   }
@@ -342,7 +349,7 @@ export default function Home() {
       
       <aside className="w-[21rem] bg-white border-r border-slate-200 flex-shrink-0 flex flex-col h-screen sticky top-0">
         <div className="p-3">
-          <PhamDrugBenchLogo iconSize={32} />
+          <PharmDrugBenchLogo iconSize={32} />
         </div>
 
         <div className="mx-3 my-2 px-2.5 py-2 flex items-center justify-between border border-slate-200 rounded-md cursor-pointer hover:bg-slate-50 shadow-sm" data-testid="button-phi-instance">
@@ -607,7 +614,7 @@ export default function Home() {
         <div className="p-3 border-t border-slate-100 bg-slate-50/50">
           <Button variant="default" className="w-full bg-[#0F172A] hover:bg-slate-800 text-white flex items-center justify-center gap-2 shadow-md rounded-lg h-9 font-medium text-xs" data-testid="link-github" asChild>
             <a href="https://github.com/AIChemist-Lab" target="_blank" rel="noopener noreferrer">
-              <Github size={16} /> PhamDrugBench GitHub <span className="text-amber-400">&#9733;</span>
+              <Github size={16} /> PharmDrugBench GitHub <span className="text-amber-400">&#9733;</span>
             </a>
           </Button>
           <p className="text-center text-[10px] font-medium text-slate-400 mt-3">Autonomous Pharmacy Evaluation</p>
@@ -684,7 +691,7 @@ export default function Home() {
                       <BarChart3 size={16} className="text-purple-500" strokeWidth={2.5} />
                     </div>
                     <div>
-                      <p className="text-[11px] font-semibold text-slate-400 mb-1">Overall Win Rate</p>
+                      <p className="text-[11px] font-semibold text-slate-400 mb-1">Reported Mean</p>
                       <div className="flex items-center gap-2">
                         <p className="text-[22px] font-extrabold text-slate-900 tracking-tight" data-testid="text-win-rate">
                           {activeModel ? `${(activeModel.winRate * 100).toFixed(1)}%` : '92.0%'}
@@ -711,7 +718,9 @@ export default function Home() {
                         {activeModel ? formatDashboardMetric("Rx-LLM (CMM)", getDashboardMetricValue("Rx-LLM (CMM)", activeModel.id)) : '—'}
                       </p>
                       <p className="text-[10px] font-medium text-emerald-500 mt-0.5">
-                        {metricDeltaLabel("Rx-LLM (CMM)", activeModel?.id) ?? '6 CMM benchmarks'}
+                        {getDashboardMetricValue("Rx-LLM (CMM)", activeModel?.id) === 'N/A'
+                          ? 'Public score table pending'
+                          : metricDeltaLabel("Rx-LLM (CMM)", activeModel?.id) ?? '6 CMM benchmarks'}
                       </p>
                     </div>
                   </CardContent>
@@ -737,14 +746,16 @@ export default function Home() {
                 <Card className="shadow-sm border-slate-200/60 rounded-2xl bg-white hover:border-slate-300 transition-colors">
                   <CardContent className="p-5 flex flex-col h-[110px] justify-between">
                     <div className="flex items-center justify-between">
-                      <p className="text-[12px] font-semibold text-slate-500">Mean Win Rate</p>
+                      <p className="text-[12px] font-semibold text-slate-500">Reported Mean</p>
                       <Bot size={14} className="text-slate-400" />
                     </div>
                     <div>
                       <p className="text-[28px] font-extrabold text-slate-900 tracking-tight" data-testid="text-mean-win-rate">
                         {activeModel ? (() => { const v = getDashboardMetricValue("Mean Win Rate", activeModel.id); return v !== '—' ? formatScoreAsPercent(v) : '—'; })() : '—'}
                       </p>
-                      <p className="text-[10px] font-medium text-slate-400 mt-0.5">Paper-aligned aggregate</p>
+                      <p className="text-[10px] font-medium text-slate-400 mt-0.5">
+                        Source coverage: {getGeneralMetricValue("Source Coverage", activeModel?.id)}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -899,7 +910,7 @@ export default function Home() {
                       </p>
                       <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
                         <span className="text-[11px] font-semibold text-slate-400">
-                          {project.tasks} PhamDrugBench task{project.tasks === 1 ? "" : "s"}
+                          {project.tasks} PharmDrugBench task{project.tasks === 1 ? "" : "s"}
                         </span>
                         <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-emerald-600 group-hover:underline">
                           <Github size={14} />
@@ -931,7 +942,7 @@ export default function Home() {
               <div>
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Task Taxonomy</h2>
                 <p className="text-[14px] text-slate-600 leading-relaxed max-w-3xl">
-                  Eighteen evaluation tasks grouped by domain and primary paper. Prompts and metrics are loaded from the benchmark database and aligned to Rx-LLM, DDI identification, MedMatch, and Drug-or-Pokémon publications.
+                  Eighteen task definitions grouped by domain and primary paper. Public performance values are shown only where source tables are available; missing study values remain N/A.
                 </p>
               </div>
               {TASK_TAXONOMY.map((group) => (

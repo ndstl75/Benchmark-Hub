@@ -1,6 +1,6 @@
-# PhamDrugBench Supplementary Appendices
+# PharmDrugBench Supplementary Appendices
 
-PhamDrugBench task definitions align with four primary papers:
+PharmDrugBench task definitions align with four primary papers:
 
 - **Rx-LLM** — [medRxiv 10.64898/2025.12.01.25341004v2](https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2) (6 CMM benchmarks, 250 cases each)
 - **DDI identification** — [medRxiv 10.64898/2025.12.03.25341549v2](https://www.medrxiv.org/content/10.64898/2025.12.03.25341549v2) (750 scenarios, 3 formats)
@@ -9,8 +9,8 @@ PhamDrugBench task definitions align with four primary papers:
 
 Leaderboard scores are built from appendix tables in AIChemist-Lab repos under `sources/`:
 
-- **[MedMatch](https://github.com/AIChemist-Lab/MedMatch)** — entity/route accuracy, drug order generation (`entity_accuracy_table.csv`, `route_accuracy_table.csv`, `evaluation_results.json`)
-- **LLM-DDI** — DDI identification Table 3 experiment accuracies (`ddi_identification_table3.csv`)
+- **[MedMatch](https://github.com/AIChemist-Lab/MedMatch)** — entity/route accuracy, drug order generation (`entity_accuracy_table.csv`, `route_accuracy_table.csv`). `evaluation_results.json` is included for reference but is not currently consumed by the build script.
+- **LLM-DDI** — DDI identification Table 3 experiment accuracies (`ddi_identification_table3.csv`). The Gemma 3 27B row uses this table's `MedGemma-27B` column (a medically fine-tuned Gemma); the leaderboard flags this with a † note.
 - **LLM-Uncertainty-DDI** — DDI verification accuracy (`table_4_results.csv`)
 - **Pokemon-Drugs-Names** — fictitious-drug confabulation rates (PMC Table 2; embedded in build script)
 

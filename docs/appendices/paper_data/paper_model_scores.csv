@@ -1,0 +1,25 @@
+paper_id,paper_metric,model,score_fraction,score_percent,score_status,notes
+rx-llm,Rx-LLM (CMM),GPT-4o-mini,,,not_reported_public_score,"Task definitions are tracked, but public model performance is N/A until source score tables are added."
+rx-llm,Rx-LLM (CMM),GPT-5 Chat,,,not_reported_public_score,"Task definitions are tracked, but public model performance is N/A until source score tables are added."
+rx-llm,Rx-LLM (CMM),Gemma 3 27B,,,not_reported_public_score,"Task definitions are tracked, but public model performance is N/A until source score tables are added."
+rx-llm,Rx-LLM (CMM),Llama 3.3 70B,,,not_reported_public_score,"Task definitions are tracked, but public model performance is N/A until source score tables are added."
+rx-llm,Rx-LLM (CMM),Qwen3 32B,,,not_reported_public_score,"Task definitions are tracked, but public model performance is N/A until source score tables are added."
+rx-llm,Rx-LLM (CMM),DrugGPT,,,not_reported_public_score,"Task definitions are tracked, but public model performance is N/A until source score tables are added."
+ddi-identification,DDI Identification,GPT-4o-mini,0.730,73.0,published_table,Scores are Table 3 experiment-level accuracies.
+ddi-identification,DDI Identification,GPT-5 Chat,0.875,87.5,published_table,Scores are Table 3 experiment-level accuracies.
+ddi-identification,DDI Identification,Gemma 3 27B,0.717,71.7,published_table,Scores are Table 3 experiment-level accuracies.
+ddi-identification,DDI Identification,Llama 3.3 70B,0.700,70.0,published_table,Scores are Table 3 experiment-level accuracies.
+ddi-identification,DDI Identification,Qwen3 32B,0.756,75.6,published_table,Scores are Table 3 experiment-level accuracies.
+ddi-identification,DDI Identification,DrugGPT,0.788,78.8,published_table,Scores are Table 3 experiment-level accuracies.
+medmatch,MedMatch,GPT-4o-mini,0.904,90.4,source_derived_aggregate,Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.
+medmatch,MedMatch,GPT-5 Chat,0.916,91.6,source_derived_aggregate,Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.
+medmatch,MedMatch,Gemma 3 27B,0.905,90.5,source_derived_aggregate,Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.
+medmatch,MedMatch,Llama 3.3 70B,0.868,86.8,source_derived_aggregate,Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.
+medmatch,MedMatch,Qwen3 32B,0.901,90.1,source_derived_aggregate,Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.
+medmatch,MedMatch,DrugGPT,,,not_reported_for_model,Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.
+drug-or-pokemon,Drug or Pokémon?,GPT-4o-mini,0.018,1.8,computed_from_pmc_table_2,Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.
+drug-or-pokemon,Drug or Pokémon?,GPT-5 Chat,,,not_reported_for_model,Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.
+drug-or-pokemon,Drug or Pokémon?,Gemma 3 27B,0.032,3.2,computed_from_pmc_table_2,Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.
+drug-or-pokemon,Drug or Pokémon?,Llama 3.3 70B,0.111,11.1,computed_from_pmc_table_2,Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.
+drug-or-pokemon,Drug or Pokémon?,Qwen3 32B,0.014,1.4,computed_from_pmc_table_2,Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.
+drug-or-pokemon,Drug or Pokémon?,DrugGPT,,,not_reported_for_model,Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.
