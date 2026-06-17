@@ -20,7 +20,7 @@ export const TASK_TAXONOMY = [
       "Formulation Matching",
       "Drug Order Gen (Sig)",
       "Route Matching",
-      "DDI ID",
+      "Rx-LLM DDI ID",
       "Renal Dose ID",
       "Drug-Indication",
     ],
@@ -74,7 +74,7 @@ export const DATASET_PROJECTS = [
     title: "Rx-LLM CMM Benchmark Suite",
     category: "Comprehensive Medication Management",
     description:
-      "Six clinician-annotated CMM benchmark definitions with 250 cases each. Public performance cells stay N/A until the supplementary score tables are added.",
+      "Six clinician-annotated CMM benchmarks with 250 cases each. Public scores use the primary metrics reported in Rx-LLM Tables 2-3.",
     githubUrl: "https://github.com/AIChemist-Lab",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     tasks: 6,
@@ -130,7 +130,7 @@ export const LEADERBOARD_ACCURACY_METRICS = [
   },
   {
     name: "Rx-LLM (CMM)",
-    subtitle: "Score table pending · tasks listed",
+    subtitle: "6 primary CMM task metrics",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
   },
   {
@@ -163,8 +163,8 @@ export const PHAMDRUGBENCH_INTRO = {
     { label: "Benchmark papers", value: "4", icon: BookOpen },
     { label: "CMM benchmarks", value: "6", icon: Activity },
     { label: "MedMatch prompts", value: "100", icon: Database },
-    { label: "Evaluation tasks", value: "18", icon: BarChart3 },
-    { label: "Models evaluated", value: "6", icon: BrainCircuit },
+    { label: "Evaluation tasks", value: "19", icon: BarChart3 },
+    { label: "Models evaluated", value: "7", icon: BrainCircuit },
   ] as const,
   resources: [
     { label: "Rx-LLM", href: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2", icon: BookOpen },
@@ -614,7 +614,7 @@ function buildAllSampleTasks(): SampleTask[] {
   return tasks;
 }
 
-/** PhysicianBench-style tasks grouped by paper (18 tasks across 4 benchmark papers) */
+/** PhysicianBench-style tasks grouped by paper (19 tasks across 4 benchmark papers) */
 export const SAMPLE_TASKS: SampleTask[] = buildAllSampleTasks();
 
 export const CHECKPOINT_ACCENT: Record<TaskCheckpoint["accent"], string> = {
@@ -788,7 +788,7 @@ export const METHODOLOGY_STEPS = [
     step: "02",
     title: "Paper-aligned evaluation suites",
     description:
-      "Scores are grouped by source publication — DDI identification, MedMatch formatting, and Drug-or-Pokémon adversarial safety where public values are available, with Rx-LLM task definitions held as N/A until source tables are added.",
+      "Scores are grouped by source publication — Rx-LLM CMM, DDI identification, MedMatch formatting, and Drug-or-Pokémon adversarial safety where public values are available.",
   },
   {
     step: "03",
@@ -875,7 +875,7 @@ export const CITATION_BIBTEX = PAPER_CITATIONS.map((c) => c.bibtex).join("\n\n")
 
 /** Domain columns for subgroup heatmap */
 export const SUBGROUP_COLUMNS = [
-  { key: "Rx-LLM (CMM)", label: "Rx-LLM", n: "N/A" },
+  { key: "Rx-LLM (CMM)", label: "Rx-LLM", n: 6 },
   { key: "DDI Identification", label: "DDI ID", n: 3 },
   { key: "MedMatch", label: "MedMatch", n: 7 },
   { key: "Drug or Pokémon?", label: "Adversarial", n: 2 },

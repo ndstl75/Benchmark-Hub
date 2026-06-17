@@ -9,14 +9,15 @@ PharmDrugBench task definitions align with four primary papers:
 
 Leaderboard scores are built from appendix tables in AIChemist-Lab repos under `sources/`:
 
+- **Rx-LLM** — primary task metrics from PMC/medRxiv Tables 2-3 (`rx_llm_tables_2_3.csv`). The dashboard score is the macro mean across the six primary CMM task metrics.
 - **[MedMatch](https://github.com/AIChemist-Lab/MedMatch)** — entity/route accuracy, drug order generation (`entity_accuracy_table.csv`, `route_accuracy_table.csv`). `evaluation_results.json` is included for reference but is not currently consumed by the build script.
-- **LLM-DDI** — DDI identification Table 3 experiment accuracies (`ddi_identification_table3.csv`). The Gemma 3 27B row uses this table's `MedGemma-27B` column (a medically fine-tuned Gemma); the leaderboard flags this with a † note.
+- **LLM-DDI** — DDI identification Table 3 experiment accuracies (`ddi_identification_table3.csv`). `MedGemma-27B` is listed as a separate model row when source tables report MedGemma rather than base Gemma 3 27B.
 - **LLM-Uncertainty-DDI** — DDI verification accuracy (`table_4_results.csv`)
 - **Pokemon-Drugs-Names** — fictitious-drug confabulation rates (PMC Table 2; embedded in build script)
 
-## Supported models (6)
+## Supported models (7)
 
-GPT-4o-mini, GPT-5 Chat, Gemma 3 27B, Llama 3.3 70B, Qwen3 32B, DrugGPT (DDI Table 3)
+GPT-4o-mini, GPT-5 Chat, MedGemma-27B, Gemma 3 27B, Llama 3.3 70B, Qwen3 32B, DrugGPT (DDI Table 3)
 
 ## Regenerate benchmark data
 

@@ -94,6 +94,7 @@ const DOMAIN_TASK_MAP = {
     "Formulation Matching",
     "Drug Order Gen (Sig)",
     "Route Matching",
+    "Rx-LLM DDI ID",
     "Renal Dose ID",
     "Drug-Indication",
   ],
@@ -681,14 +682,6 @@ function LeaderboardView({
                               className={`inline-flex items-center gap-1 hover:underline ${isBest ? "font-bold text-slate-950" : scoreTone(raw)}`}
                             >
                               {formatScoreCell(scores, model, row)}
-                              {model.name === "Gemma 3 27B" && row.metricName === "DDI Identification" && (
-                                  <sup
-                                    title="DDI Identification is the mean of the DDI Table 3 accuracy rows under MedGemma-27B, not base Gemma 3 27B."
-                                    className="text-[9px] font-semibold text-amber-600"
-                                  >
-                                  †
-                                </sup>
-                              )}
                               <ExternalLink size={11} className="text-slate-300" />
                             </button>
                           ) : (
@@ -710,7 +703,7 @@ function LeaderboardView({
             <strong>Reported Mean</strong> averages only source-backed study scores. Coverage shows how many of the four primary papers contribute.
           </p>
           <p>
-            <span className="font-semibold text-amber-700">†</span> Gemma 3 27B’s DDI Identification value is the mean of the DDI paper Table 3 accuracy rows under the MedGemma-27B column.
+            Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B.
             <span className="ml-2 font-semibold">*</span> Cost and Latency are indicative estimates only.
           </p>
         </div>

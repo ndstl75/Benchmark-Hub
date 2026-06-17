@@ -21,8 +21,9 @@ This folder organizes the four primary paper data sources referenced by PharmDru
 
 ## Current public score policy
 
-- Rx-LLM task definitions are included, but Rx-LLM model performance is N/A until public supplementary score tables are added.
+- Rx-LLM values come from `docs/appendices/sources/rx_llm_tables_2_3.csv`; the dashboard score is the macro mean of six primary CMM task metrics from Tables 2-3.
 - DDI identification values come from `docs/appendices/sources/ddi_identification_table3.csv`.
+- MedGemma-27B is listed separately when Rx-LLM or DDI source tables report MedGemma rather than base Gemma 3 27B.
 - MedMatch values are source-derived aggregates from `entity_accuracy_table.csv` and `route_accuracy_table.csv`; DrugGPT is not reported.
 - Drug or Pokemon values are suspicion-detected scores, computed as `100 - default drug-dosing confabulation rate` from the embedded PMC Table 2 rates; GPT-5 Chat and DrugGPT are not reported.
 - The app also references `LLM-Uncertainty-DDI` as a supplemental DDI verification source, but this extract keeps it out of the four-primary-paper tables.

@@ -5,7 +5,7 @@
       "type": "Standard",
       "provider": "OpenAI",
       "access": "API",
-      "winRate": 0.551,
+      "winRate": 0.602,
       "costPer1mTokens": "$0.15",
       "latency": "2.1s",
       "isCustom": false
@@ -21,11 +21,21 @@
       "isCustom": false
     },
     {
+      "name": "MedGemma-27B",
+      "type": "Medical",
+      "provider": "Google",
+      "access": "Open Weights",
+      "winRate": 0.718,
+      "costPer1mTokens": "$0.15",
+      "latency": "1.8s",
+      "isCustom": false
+    },
+    {
       "name": "Gemma 3 27B",
       "type": "Standard",
       "provider": "Google",
       "access": "Open Weights",
-      "winRate": 0.551,
+      "winRate": 0.469,
       "costPer1mTokens": "$0.15",
       "latency": "1.8s",
       "isCustom": false
@@ -35,7 +45,7 @@
       "type": "Standard",
       "provider": "Meta",
       "access": "Open Weights",
-      "winRate": 0.56,
+      "winRate": 0.613,
       "costPer1mTokens": "$0.70",
       "latency": "3.2s",
       "isCustom": false
@@ -62,6 +72,42 @@
     }
   ],
   "benchmarkResults": [
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Formulation Matching",
+      "earned": 53,
+      "failed": 47
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 83,
+      "failed": 17
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Route Matching",
+      "earned": 68,
+      "failed": 32
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Rx-LLM DDI ID",
+      "earned": 70,
+      "failed": 30
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Renal Dose ID",
+      "earned": 83,
+      "failed": 17
+    },
+    {
+      "modelName": "GPT-4o-mini",
+      "taskName": "Drug-Indication",
+      "earned": 96,
+      "failed": 4
+    },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch Route Selection",
@@ -207,28 +253,64 @@
       "failed": 19
     },
     {
-      "modelName": "Gemma 3 27B",
-      "taskName": "MedMatch Route Selection",
-      "earned": 86,
-      "failed": 14
+      "modelName": "MedGemma-27B",
+      "taskName": "Formulation Matching",
+      "earned": 41,
+      "failed": 59
     },
     {
-      "modelName": "Gemma 3 27B",
+      "modelName": "MedGemma-27B",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 81,
+      "failed": 19
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "taskName": "Route Matching",
+      "earned": 69,
+      "failed": 31
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "taskName": "Rx-LLM DDI ID",
+      "earned": 66,
+      "failed": 34
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "taskName": "Renal Dose ID",
+      "earned": 77,
+      "failed": 23
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "taskName": "Drug-Indication",
+      "earned": 97,
+      "failed": 3
+    },
+    {
+      "modelName": "MedGemma-27B",
       "taskName": "DDI ID",
       "earned": 50,
       "failed": 50
     },
     {
-      "modelName": "Gemma 3 27B",
+      "modelName": "MedGemma-27B",
       "taskName": "DDI 3-Drug Combo",
       "earned": 85,
       "failed": 15
     },
     {
-      "modelName": "Gemma 3 27B",
+      "modelName": "MedGemma-27B",
       "taskName": "DDI Multi-Drug",
       "earned": 80,
       "failed": 20
+    },
+    {
+      "modelName": "Gemma 3 27B",
+      "taskName": "MedMatch Route Selection",
+      "earned": 86,
+      "failed": 14
     },
     {
       "modelName": "Gemma 3 27B",
@@ -283,6 +365,42 @@
       "taskName": "Pok\u00e9mon (Brand)",
       "earned": 2,
       "failed": 98
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Formulation Matching",
+      "earned": 54,
+      "failed": 46
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 88,
+      "failed": 12
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Route Matching",
+      "earned": 74,
+      "failed": 26
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Rx-LLM DDI ID",
+      "earned": 67,
+      "failed": 33
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Renal Dose ID",
+      "earned": 83,
+      "failed": 17
+    },
+    {
+      "modelName": "Llama 3.3 70B",
+      "taskName": "Drug-Indication",
+      "earned": 98,
+      "failed": 2
     },
     {
       "modelName": "Llama 3.3 70B",
@@ -464,13 +582,13 @@
       "modelName": "GPT-4o-mini",
       "metricName": "Mean Win Rate",
       "tab": "Accuracy",
-      "value": "0.551"
+      "value": "0.602"
     },
     {
       "modelName": "GPT-4o-mini",
       "metricName": "Rx-LLM (CMM)",
       "tab": "Accuracy",
-      "value": "N/A"
+      "value": "0.757"
     },
     {
       "modelName": "GPT-4o-mini",
@@ -524,7 +642,7 @@
       "modelName": "GPT-4o-mini",
       "metricName": "Source Coverage",
       "tab": "General information",
-      "value": "3/4"
+      "value": "4/4"
     },
     {
       "modelName": "GPT-5 Chat",
@@ -593,10 +711,76 @@
       "value": "2/4"
     },
     {
+      "modelName": "MedGemma-27B",
+      "metricName": "Mean Win Rate",
+      "tab": "Accuracy",
+      "value": "0.718"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Rx-LLM (CMM)",
+      "tab": "Accuracy",
+      "value": "0.719"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "DDI Identification",
+      "tab": "Accuracy",
+      "value": "0.717"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "MedMatch",
+      "tab": "Accuracy",
+      "value": "N/A"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Drug or Pok\u00e9mon?",
+      "tab": "Accuracy",
+      "value": "N/A"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Cost (per 1M tokens)",
+      "tab": "Efficiency",
+      "value": "$0.15"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Latency (s / request)",
+      "tab": "Efficiency",
+      "value": "1.8s"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Provider",
+      "tab": "General information",
+      "value": "Google"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Access",
+      "tab": "General information",
+      "value": "Open Weights"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Model Type",
+      "tab": "General information",
+      "value": "Medical"
+    },
+    {
+      "modelName": "MedGemma-27B",
+      "metricName": "Source Coverage",
+      "tab": "General information",
+      "value": "2/4"
+    },
+    {
       "modelName": "Gemma 3 27B",
       "metricName": "Mean Win Rate",
       "tab": "Accuracy",
-      "value": "0.551"
+      "value": "0.469"
     },
     {
       "modelName": "Gemma 3 27B",
@@ -608,7 +792,7 @@
       "modelName": "Gemma 3 27B",
       "metricName": "DDI Identification",
       "tab": "Accuracy",
-      "value": "0.717"
+      "value": "N/A"
     },
     {
       "modelName": "Gemma 3 27B",
@@ -656,19 +840,19 @@
       "modelName": "Gemma 3 27B",
       "metricName": "Source Coverage",
       "tab": "General information",
-      "value": "3/4"
+      "value": "2/4"
     },
     {
       "modelName": "Llama 3.3 70B",
       "metricName": "Mean Win Rate",
       "tab": "Accuracy",
-      "value": "0.560"
+      "value": "0.613"
     },
     {
       "modelName": "Llama 3.3 70B",
       "metricName": "Rx-LLM (CMM)",
       "tab": "Accuracy",
-      "value": "N/A"
+      "value": "0.773"
     },
     {
       "modelName": "Llama 3.3 70B",
@@ -722,7 +906,7 @@
       "modelName": "Llama 3.3 70B",
       "metricName": "Source Coverage",
       "tab": "General information",
-      "value": "3/4"
+      "value": "4/4"
     },
     {
       "modelName": "Qwen3 32B",
@@ -899,8 +1083,8 @@
       ]
     },
     {
-      "name": "DDI ID",
-      "prompt": "Pointwise two-drug classification: identify clinically significant interacting pair (Category C, D, or X) from a medication list with full dosing. Rx-LLM: 250 cases. DDI paper: part of 750-scenario multi-format suite. DDI identification paper: 750 clinician-annotated DDI scenarios. Zero-shot; precision, recall, F1, accuracy, self-consistency.",
+      "name": "Rx-LLM DDI ID",
+      "prompt": "Pointwise two-drug classification: identify clinically significant interacting pair (Category C, D, or X) from a medication list with full dosing. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "Correct interacting drug pair.",
       "humanAnnotation": "Correct interacting drug pair.",
       "agreement": "94%",
@@ -938,6 +1122,20 @@
         "F1-score",
         "Accuracy",
         "Correctness consistency"
+      ]
+    },
+    {
+      "name": "DDI ID",
+      "prompt": "Pointwise DDI identification: classify clinically significant two-drug interactions from the DDI identification paper. DDI identification paper: 750 clinician-annotated DDI scenarios. Zero-shot; precision, recall, F1, accuracy, self-consistency.",
+      "response": "Correct pointwise DDI classification.",
+      "humanAnnotation": "Correct pointwise DDI classification.",
+      "agreement": "94%",
+      "metrics": [
+        "Precision",
+        "Recall",
+        "F1-score",
+        "Accuracy",
+        "Self-consistency"
       ]
     },
     {
@@ -1115,6 +1313,7 @@
     "supportedModels": [
       "GPT-4o-mini",
       "GPT-5 Chat",
+      "MedGemma-27B",
       "Gemma 3 27B",
       "Llama 3.3 70B",
       "Qwen3 32B",
@@ -1123,9 +1322,9 @@
     "scorePolicy": {
       "reportedMean": "Mean Win Rate averages only source-backed paper scores and excludes N/A cells.",
       "sourceCoverage": "Number of primary papers with source-backed performance for the model out of four.",
-      "rxLlm": "Rx-LLM task definitions are shown, but performance cells are N/A until public supplementary score tables are added.",
+      "rxLlm": "Rx-LLM (CMM) is the macro mean of the six primary task metrics reported in Rx-LLM Tables 2-3; unreported models remain N/A.",
       "pokemon": "Drug or Pok\u00e9mon? scores are suspicion detected = 100 - default-dosing confabulation rate; unreported models are N/A, not zero."
     },
-    "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) performance is N/A until public supplementary score tables are added. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pok\u00e9mon? source table. Gemma 3 27B's DDI Identification value is the mean of the DDI Table 3 accuracy rows under the MedGemma-27B column (a medically fine-tuned Gemma), not base Gemma 3 27B. Cost and Latency are indicative estimates and are not source-backed."
+    "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pok\u00e9mon? source table. Cost and Latency are indicative estimates and are not source-backed."
   }
 }

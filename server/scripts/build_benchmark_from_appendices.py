@@ -24,6 +24,7 @@ MODELS = [
         "eval_key": "gpt-4o-mini",
         "ddi_cols": ["GPT-4o-mini"],
         "ddi_paper_cols": ["GPT-4o-mini"],
+        "rx_llm_cols": ["GPT-4o-mini"],
     },
     {
         "name": "GPT-5 Chat",
@@ -37,6 +38,21 @@ MODELS = [
         "eval_key": "azure-gpt-5-chat",
         "ddi_cols": ["GPT-5-Chat"],
         "ddi_paper_cols": ["GPT-5-Chat"],
+        "rx_llm_cols": [],
+    },
+    {
+        "name": "MedGemma-27B",
+        "type": "Medical",
+        "provider": "Google",
+        "access": "Open Weights",
+        "costPer1mTokens": "$0.15",
+        "latency": "1.8s",
+        "entity_cols": [],
+        "route_cols": [],
+        "eval_key": "",
+        "ddi_cols": [],
+        "ddi_paper_cols": ["MedGemma-27B"],
+        "rx_llm_cols": ["MedGemma-27B"],
     },
     {
         "name": "Gemma 3 27B",
@@ -49,7 +65,8 @@ MODELS = [
         "route_cols": ["Gemma-3-27B-IT"],
         "eval_key": "google_gemma-3-27b-it",
         "ddi_cols": ["Gemma-27B"],
-        "ddi_paper_cols": ["MedGemma-27B"],
+        "ddi_paper_cols": [],
+        "rx_llm_cols": [],
     },
     {
         "name": "Llama 3.3 70B",
@@ -63,6 +80,7 @@ MODELS = [
         "eval_key": "meta-llama_Llama-3.3-70B-Instruct",
         "ddi_cols": ["LLaMA3-70B"],
         "ddi_paper_cols": ["LLaMA3-70B"],
+        "rx_llm_cols": ["LLaMA3-70B"],
     },
     {
         "name": "Qwen3 32B",
@@ -76,6 +94,7 @@ MODELS = [
         "eval_key": "Qwen_Qwen3-32B",
         "ddi_cols": ["Qwen3-32B"],
         "ddi_paper_cols": ["Qwen3-32B"],
+        "rx_llm_cols": [],
     },
     {
         "name": "DrugGPT",
@@ -89,6 +108,7 @@ MODELS = [
         "eval_key": "druggpt",
         "ddi_cols": [],
         "ddi_paper_cols": ["DrugGPT"],
+        "rx_llm_cols": [],
     },
 ]
 
@@ -150,11 +170,10 @@ TASK_DEFINITIONS = [
         "metrics": ["Precision", "Recall", "F1-score", "Accuracy", "Correctness consistency"],
     },
     {
-        "name": "DDI ID",
+        "name": "Rx-LLM DDI ID",
         "prompt": (
             "Pointwise two-drug classification: identify clinically significant interacting pair "
-            "(Category C, D, or X) from a medication list with full dosing. "
-            f"Rx-LLM: 250 cases. DDI paper: part of 750-scenario multi-format suite. {DDI_PAPER_NOTE}"
+            f"(Category C, D, or X) from a medication list with full dosing. {RX_LLM_NOTE}"
         ),
         "response": "Correct interacting drug pair.",
         "humanAnnotation": "Correct interacting drug pair.",
@@ -176,6 +195,17 @@ TASK_DEFINITIONS = [
         "humanAnnotation": "Correct list of FDA-approved indications.",
         "agreement": "93%",
         "metrics": ["Precision", "Recall", "F1-score", "Accuracy", "Correctness consistency"],
+    },
+    {
+        "name": "DDI ID",
+        "prompt": (
+            "Pointwise DDI identification: classify clinically significant two-drug interactions "
+            f"from the DDI identification paper. {DDI_PAPER_NOTE}"
+        ),
+        "response": "Correct pointwise DDI classification.",
+        "humanAnnotation": "Correct pointwise DDI classification.",
+        "agreement": "94%",
+        "metrics": ["Precision", "Recall", "F1-score", "Accuracy", "Self-consistency"],
     },
     {
         "name": "DDI Verification",
@@ -369,6 +399,28 @@ def load_ddi_identification_table3() -> dict[str, dict[str, float]]:
     return out
 
 
+def load_rx_llm_primary_metrics() -> dict[str, dict[str, float]]:
+    """Rx-LLM Tables 2-3 primary task metrics used in Figure 2."""
+    path = SOURCES / "rx_llm_tables_2_3.csv"
+    out: dict[str, dict[str, float]] = {m["name"]: {} for m in MODELS}
+    with path.open(newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        col_index = {name: i for i, name in enumerate(header)}
+        for row in reader:
+            if not row:
+                continue
+            source_task = row[0].strip()
+            task = "Rx-LLM DDI ID" if source_task == "DDI ID" else source_task
+            for model in MODELS:
+                for col in model["rx_llm_cols"]:
+                    idx = col_index.get(col)
+                    if idx is None or not row[idx].strip():
+                        continue
+                    out[model["name"]][task] = parse_pct(row[idx])
+    return out
+
+
 def load_ddi_verification_accuracy() -> dict[str, float]:
     """LLM-Uncertainty-DDI supplement: verification task default-prompt accuracy."""
     path = SOURCES / "table_4_results.csv"
@@ -402,6 +454,7 @@ def earned_failed(score: float) -> dict[str, float]:
 def build() -> dict:
     category_means = load_entity_table()
     route_selection_means = load_route_table()
+    rx_llm_primary_metrics = load_rx_llm_primary_metrics()
     ddi_paper_acc = load_ddi_identification_table3()
     ddi_verification_acc = load_ddi_verification_accuracy()
 
@@ -409,6 +462,8 @@ def build() -> dict:
 
     for model in MODELS:
         name = model["name"]
+        for rx_task, score in rx_llm_primary_metrics.get(name, {}).items():
+            task_scores[name][rx_task] = score
         if model["route_cols"]:
             task_scores[name]["MedMatch Route Selection"] = route_selection_means[name]
         for ddi_task in ["DDI ID", "DDI 3-Drug Combo", "DDI Multi-Drug"]:
@@ -428,17 +483,30 @@ def build() -> dict:
         vals = [task_scores[name][t] for t in tasks if t in task_scores[name]]
         return round(mean(vals) / 100, 3) if vals else None
 
+    def avg_rx_llm_tasks(name: str, tasks: list[str]) -> float | None:
+        vals = [rx_llm_primary_metrics.get(name, {}).get(t) for t in tasks]
+        vals = [v for v in vals if v is not None]
+        return round(mean(vals) / 100, 3) if vals else None
+
     def score_value(score: float | None) -> str:
         return f"{score:.3f}" if score is not None else "N/A"
 
     ddi_paper_tasks = ["DDI ID", "DDI 3-Drug Combo", "DDI Multi-Drug"]
+    rx_llm_tasks = [
+        "Formulation Matching",
+        "Drug Order Gen (Sig)",
+        "Route Matching",
+        "Rx-LLM DDI ID",
+        "Renal Dose ID",
+        "Drug-Indication",
+    ]
     medmatch_tasks = list(MEDMATCH_CATEGORY_MAP.values()) + ["MedMatch Route Selection"]
     pokemon_tasks = ["Pokémon (Generic)", "Pokémon (Brand)"]
 
     models_out = []
     for model in MODELS:
         name = model["name"]
-        rx_llm_score = None
+        rx_llm_score = avg_rx_llm_tasks(name, rx_llm_tasks)
         ddi_score = avg_tasks(name, ddi_paper_tasks)
         medmatch_score = avg_tasks(name, medmatch_tasks)
         pokemon_score = avg_tasks(name, pokemon_tasks)
@@ -470,7 +538,7 @@ def build() -> dict:
     leaderboard_scores = []
     for model in MODELS:
         name = model["name"]
-        rx_llm_score = None
+        rx_llm_score = avg_rx_llm_tasks(name, rx_llm_tasks)
         ddi_score = avg_tasks(name, ddi_paper_tasks)
         medmatch_score = avg_tasks(name, medmatch_tasks)
         pokemon_score = avg_tasks(name, pokemon_tasks)
@@ -543,10 +611,10 @@ def build() -> dict:
             "scorePolicy": {
                 "reportedMean": "Mean Win Rate averages only source-backed paper scores and excludes N/A cells.",
                 "sourceCoverage": "Number of primary papers with source-backed performance for the model out of four.",
-                "rxLlm": "Rx-LLM task definitions are shown, but performance cells are N/A until public supplementary score tables are added.",
+                "rxLlm": "Rx-LLM (CMM) is the macro mean of the six primary task metrics reported in Rx-LLM Tables 2-3; unreported models remain N/A.",
                 "pokemon": "Drug or Pokémon? scores are suspicion detected = 100 - default-dosing confabulation rate; unreported models are N/A, not zero.",
             },
-            "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) performance is N/A until public supplementary score tables are added. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pokémon? source table. Gemma 3 27B's DDI Identification value is the mean of the DDI Table 3 accuracy rows under the MedGemma-27B column (a medically fine-tuned Gemma), not base Gemma 3 27B. Cost and Latency are indicative estimates and are not source-backed.",
+            "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pokémon? source table. Cost and Latency are indicative estimates and are not source-backed.",
         },
     }
 

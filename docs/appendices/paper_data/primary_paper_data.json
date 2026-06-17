@@ -10,46 +10,52 @@
     "dashboard_metric": "Rx-LLM (CMM)",
     "dataset_scope": "6 CMM benchmark definitions; 250 clinician-annotated cases per benchmark",
     "source_files": [
-      "Rx-LLM paper",
-      "public supplementary score tables pending"
+      "docs/appendices/sources/rx_llm_tables_2_3.csv",
+      "Rx-LLM PMC/medRxiv Tables 2-3"
     ],
-    "notes": "Task definitions are tracked, but public model performance is N/A until source score tables are added.",
+    "notes": "Dashboard score is the macro mean of six primary task metrics from Rx-LLM Tables 2-3; unreported models remain N/A.",
     "model_scores": [
       {
         "model": "GPT-4o-mini",
-        "score_fraction": null,
-        "score_percent": null,
-        "score_status": "not_reported_public_score"
+        "score_fraction": 0.757,
+        "score_percent": 75.7,
+        "score_status": "published_table_aggregate"
       },
       {
         "model": "GPT-5 Chat",
         "score_fraction": null,
         "score_percent": null,
-        "score_status": "not_reported_public_score"
+        "score_status": "not_reported_for_model"
+      },
+      {
+        "model": "MedGemma-27B",
+        "score_fraction": 0.719,
+        "score_percent": 71.9,
+        "score_status": "published_table_aggregate"
       },
       {
         "model": "Gemma 3 27B",
         "score_fraction": null,
         "score_percent": null,
-        "score_status": "not_reported_public_score"
+        "score_status": "not_reported_for_model"
       },
       {
         "model": "Llama 3.3 70B",
-        "score_fraction": null,
-        "score_percent": null,
-        "score_status": "not_reported_public_score"
+        "score_fraction": 0.773,
+        "score_percent": 77.3,
+        "score_status": "published_table_aggregate"
       },
       {
         "model": "Qwen3 32B",
         "score_fraction": null,
         "score_percent": null,
-        "score_status": "not_reported_public_score"
+        "score_status": "not_reported_for_model"
       },
       {
         "model": "DrugGPT",
         "score_fraction": null,
         "score_percent": null,
-        "score_status": "not_reported_public_score"
+        "score_status": "not_reported_for_model"
       }
     ],
     "tasks": [
@@ -63,39 +69,44 @@
           "Accuracy",
           "Correctness consistency"
         ],
-        "source_status": "not_reported_public_score",
-        "canonical_score_source": "Rx-LLM paper; public supplementary score tables pending",
-        "notes": "Performance N/A until public Rx-LLM supplementary model score tables are added.",
+        "source_status": "published_table",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
+        "notes": "Uses Rx-LLM primary metric (F1) reported in Tables 2-3; unreported models remain N/A.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 53.1,
+            "score_status": "published_table"
           },
           {
             "model": "GPT-5 Chat",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": 40.9,
+            "score_status": "published_table"
           },
           {
             "model": "Gemma 3 27B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 54,
+            "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "DrugGPT",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           }
         ]
       },
@@ -107,39 +118,44 @@
           "HAMeC score",
           "Correctness consistency"
         ],
-        "source_status": "not_reported_public_score",
-        "canonical_score_source": "Rx-LLM paper; public supplementary score tables pending",
-        "notes": "Performance N/A until public Rx-LLM supplementary model score tables are added.",
+        "source_status": "published_table",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
+        "notes": "Uses Rx-LLM primary metric (Overall accuracy) reported in Tables 2-3; unreported models remain N/A.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 83.2,
+            "score_status": "published_table"
           },
           {
             "model": "GPT-5 Chat",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": 81.2,
+            "score_status": "published_table"
           },
           {
             "model": "Gemma 3 27B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 88,
+            "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "DrugGPT",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           }
         ]
       },
@@ -153,44 +169,49 @@
           "Accuracy",
           "Correctness consistency"
         ],
-        "source_status": "not_reported_public_score",
-        "canonical_score_source": "Rx-LLM paper; public supplementary score tables pending",
-        "notes": "Performance N/A until public Rx-LLM supplementary model score tables are added.",
+        "source_status": "published_table",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
+        "notes": "Uses Rx-LLM primary metric (F1) reported in Tables 2-3; unreported models remain N/A.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 67.7,
+            "score_status": "published_table"
           },
           {
             "model": "GPT-5 Chat",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": 69.1,
+            "score_status": "published_table"
           },
           {
             "model": "Gemma 3 27B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 74.3,
+            "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "DrugGPT",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           }
         ]
       },
       {
-        "task_name": "DDI ID",
+        "task_name": "Rx-LLM DDI ID",
         "dataset_slice": "pointwise two-drug format",
         "metrics": [
           "Precision",
@@ -199,39 +220,44 @@
           "Accuracy",
           "Self-consistency"
         ],
-        "source_status": "not_reported_public_score",
-        "canonical_score_source": "Rx-LLM paper; public supplementary score tables pending",
-        "notes": "Performance N/A until public Rx-LLM supplementary model score tables are added.",
+        "source_status": "published_table",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
+        "notes": "Uses Rx-LLM primary metric (Accuracy) reported in Tables 2-3; unreported models remain N/A.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
-            "score_percent": 61,
-            "score_status": "not_reported_public_score"
+            "score_percent": 70.4,
+            "score_status": "published_table"
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": 81,
-            "score_status": "not_reported_public_score"
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": 66.5,
+            "score_status": "published_table"
           },
           {
             "model": "Gemma 3 27B",
-            "score_percent": 50,
-            "score_status": "not_reported_public_score"
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": 60,
-            "score_status": "not_reported_public_score"
+            "score_percent": 66.7,
+            "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": 67,
-            "score_status": "not_reported_public_score"
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "DrugGPT",
-            "score_percent": 50,
-            "score_status": "not_reported_public_score"
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           }
         ]
       },
@@ -245,39 +271,44 @@
           "Exact match",
           "Correctness consistency"
         ],
-        "source_status": "not_reported_public_score",
-        "canonical_score_source": "Rx-LLM paper; public supplementary score tables pending",
-        "notes": "Performance N/A until public Rx-LLM supplementary model score tables are added.",
+        "source_status": "published_table",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
+        "notes": "Uses Rx-LLM primary metric (F1) reported in Tables 2-3; unreported models remain N/A.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 83.3,
+            "score_status": "published_table"
           },
           {
             "model": "GPT-5 Chat",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": 76.9,
+            "score_status": "published_table"
           },
           {
             "model": "Gemma 3 27B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 83.2,
+            "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "DrugGPT",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           }
         ]
       },
@@ -291,39 +322,44 @@
           "Accuracy",
           "Correctness consistency"
         ],
-        "source_status": "not_reported_public_score",
-        "canonical_score_source": "Rx-LLM paper; public supplementary score tables pending",
-        "notes": "Performance N/A until public Rx-LLM supplementary model score tables are added.",
+        "source_status": "published_table",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
+        "notes": "Uses Rx-LLM primary metric (Accuracy) reported in Tables 2-3; unreported models remain N/A.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 96.5,
+            "score_status": "published_table"
           },
           {
             "model": "GPT-5 Chat",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": 96.9,
+            "score_status": "published_table"
           },
           {
             "model": "Gemma 3 27B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_percent": 97.6,
+            "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "DrugGPT",
             "score_percent": null,
-            "score_status": "not_reported_public_score"
+            "score_status": "not_reported_for_model"
           }
         ]
       }
@@ -358,10 +394,16 @@
         "score_status": "published_table"
       },
       {
-        "model": "Gemma 3 27B",
+        "model": "MedGemma-27B",
         "score_fraction": 0.717,
         "score_percent": 71.7,
         "score_status": "published_table"
+      },
+      {
+        "model": "Gemma 3 27B",
+        "score_fraction": null,
+        "score_percent": null,
+        "score_status": "not_reported_for_model"
       },
       {
         "model": "Llama 3.3 70B",
@@ -408,9 +450,14 @@
             "score_status": "published_table"
           },
           {
-            "model": "Gemma 3 27B",
+            "model": "MedGemma-27B",
             "score_percent": 50,
             "score_status": "published_table"
+          },
+          {
+            "model": "Gemma 3 27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
@@ -454,9 +501,14 @@
             "score_status": "published_table"
           },
           {
-            "model": "Gemma 3 27B",
+            "model": "MedGemma-27B",
             "score_percent": 85,
             "score_status": "published_table"
+          },
+          {
+            "model": "Gemma 3 27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
@@ -500,9 +552,14 @@
             "score_status": "published_table"
           },
           {
-            "model": "Gemma 3 27B",
+            "model": "MedGemma-27B",
             "score_percent": 80,
             "score_status": "published_table"
+          },
+          {
+            "model": "Gemma 3 27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Llama 3.3 70B",
@@ -538,7 +595,7 @@
       "docs/appendices/sources/route_accuracy_table.csv",
       "server/data/benchmark.json"
     ],
-    "notes": "Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT is not reported.",
+    "notes": "Scores are source-derived aggregates from MedMatch entity and route source tables; DrugGPT and MedGemma-27B are not reported.",
     "model_scores": [
       {
         "model": "GPT-4o-mini",
@@ -551,6 +608,12 @@
         "score_fraction": 0.916,
         "score_percent": 91.6,
         "score_status": "source_derived_aggregate"
+      },
+      {
+        "model": "MedGemma-27B",
+        "score_fraction": null,
+        "score_percent": null,
+        "score_status": "not_reported_for_model"
       },
       {
         "model": "Gemma 3 27B",
@@ -600,6 +663,11 @@
             "score_status": "source_derived_aggregate"
           },
           {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
             "model": "Gemma 3 27B",
             "score_percent": 94,
             "score_status": "source_derived_aggregate"
@@ -641,6 +709,11 @@
             "model": "GPT-5 Chat",
             "score_percent": 90,
             "score_status": "source_derived_aggregate"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Gemma 3 27B",
@@ -686,6 +759,11 @@
             "score_status": "source_derived_aggregate"
           },
           {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
             "model": "Gemma 3 27B",
             "score_percent": 97,
             "score_status": "source_derived_aggregate"
@@ -727,6 +805,11 @@
             "model": "GPT-5 Chat",
             "score_percent": 95,
             "score_status": "source_derived_aggregate"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Gemma 3 27B",
@@ -772,6 +855,11 @@
             "score_status": "source_derived_aggregate"
           },
           {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
             "model": "Gemma 3 27B",
             "score_percent": 88,
             "score_status": "source_derived_aggregate"
@@ -813,6 +901,11 @@
             "model": "GPT-5 Chat",
             "score_percent": 81,
             "score_status": "source_derived_aggregate"
+          },
+          {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
           },
           {
             "model": "Gemma 3 27B",
@@ -858,6 +951,11 @@
             "score_status": "source_derived_aggregate"
           },
           {
+            "model": "MedGemma-27B",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
             "model": "Gemma 3 27B",
             "score_percent": 86,
             "score_status": "source_derived_aggregate"
@@ -889,13 +987,13 @@
     "pmc": "PMC12870567",
     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12870567/",
     "github": "https://github.com/AIChemist-Lab/Pokemon-Drugs-Names",
-    "dashboard_metric": "Drug or Pokémon?",
+    "dashboard_metric": "Drug or Pok\u00e9mon?",
     "dataset_scope": "250 adversarial vignettes with fabricated generic and brand medication names",
     "source_files": [
       "server/scripts/build_benchmark_from_appendices.py embedded PMC Table 2 rates",
       "server/data/benchmark.json"
     ],
-    "notes": "Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat and DrugGPT are not reported.",
+    "notes": "Scores are suspicion detected = 100 - default drug-dosing confabulation rate; GPT-5 Chat, MedGemma-27B, and DrugGPT are not reported.",
     "model_scores": [
       {
         "model": "GPT-4o-mini",
@@ -905,6 +1003,12 @@
       },
       {
         "model": "GPT-5 Chat",
+        "score_fraction": null,
+        "score_percent": null,
+        "score_status": "not_reported_for_model"
+      },
+      {
+        "model": "MedGemma-27B",
         "score_fraction": null,
         "score_percent": null,
         "score_status": "not_reported_for_model"
@@ -936,7 +1040,7 @@
     ],
     "tasks": [
       {
-        "task_name": "Pokémon (Generic)",
+        "task_name": "Pok\u00e9mon (Generic)",
         "dataset_slice": "250 generic-name poisoned vignettes",
         "metrics": [
           "LLM-as-a-judge",
@@ -953,6 +1057,11 @@
           },
           {
             "model": "GPT-5 Chat",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
             "score_percent": null,
             "score_status": "not_reported_for_model"
           },
@@ -979,7 +1088,7 @@
         ]
       },
       {
-        "task_name": "Pokémon (Brand)",
+        "task_name": "Pok\u00e9mon (Brand)",
         "dataset_slice": "250 brand-name poisoned vignettes",
         "metrics": [
           "LLM-as-a-judge",
@@ -996,6 +1105,11 @@
           },
           {
             "model": "GPT-5 Chat",
+            "score_percent": null,
+            "score_status": "not_reported_for_model"
+          },
+          {
+            "model": "MedGemma-27B",
             "score_percent": null,
             "score_status": "not_reported_for_model"
           },

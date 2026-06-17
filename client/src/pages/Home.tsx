@@ -719,7 +719,7 @@ export default function Home() {
                       </p>
                       <p className="text-[10px] font-medium text-emerald-500 mt-0.5">
                         {getDashboardMetricValue("Rx-LLM (CMM)", activeModel?.id) === 'N/A'
-                          ? 'Public score table pending'
+                          ? 'Not reported for this model'
                           : metricDeltaLabel("Rx-LLM (CMM)", activeModel?.id) ?? '6 CMM benchmarks'}
                       </p>
                     </div>
@@ -942,7 +942,7 @@ export default function Home() {
               <div>
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Task Taxonomy</h2>
                 <p className="text-[14px] text-slate-600 leading-relaxed max-w-3xl">
-                  Eighteen task definitions grouped by domain and primary paper. Public performance values are shown only where source tables are available; missing study values remain N/A.
+                  Nineteen task definitions grouped by domain and primary paper. Public performance values are shown only where source tables are available; missing study values remain N/A.
                 </p>
               </div>
               {TASK_TAXONOMY.map((group) => (

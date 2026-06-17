@@ -296,7 +296,7 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
         <rect x="350" y="280" width="520" height="28" rx="8" fill="#F8FAFC" stroke="#E2E8F0" />
         <circle className="pdb-live-dot" cx="368" cy="294" r="4" fill="#22C55E" />
         <text x="380" y="298" fill="#64748B" fontSize="10" fontFamily="system-ui,sans-serif">
-          live · 18 clinician-validated tasks · 4 benchmark papers · paper-aligned scoring
+          live · 19 clinician-validated tasks · 4 benchmark papers · paper-aligned scoring
         </text>
       </g>
     </svg>
