@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQueries } from "@tanstack/react-query";
 import type { Model, LeaderboardScore, TaskDefinition, BenchmarkResult } from "@shared/schema";
-import { BookOpen, ChevronRight, ExternalLink, Github, Search } from "lucide-react";
+import { ArrowDown, ArrowDownUp, ArrowUp, BookOpen, ChevronRight, ExternalLink, Github, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,7 +19,10 @@ type LeaderboardPageProps = {
 };
 
 type RouteId = "home" | "leaderboard" | "errors" | "models" | "scenarios" | "runs";
-type ScoreTab = "Accuracy" | "Efficiency" | "General information";
+type ScoreTab = "Accuracy" | "Efficiency";
+type SortDirection = "desc" | "asc";
+type LeaderboardSort = { rowKey: string; direction: SortDirection };
+type FailureSortKey = "model" | "cmm" | "ddi" | "formatting" | "adversarial" | "overall";
 type FailureByModel = {
   model: Model;
   totalFailed: number;
@@ -36,7 +39,7 @@ const ROUTES: Array<{ id: Exclude<RouteId, "home">; label: string; hash: string 
   { id: "runs", label: "Predictions", hash: "#/runs" },
 ];
 
-const SCORE_TABS: ScoreTab[] = ["Accuracy", "Efficiency", "General information"];
+const SCORE_TABS: ScoreTab[] = ["Accuracy", "Efficiency"];
 
 const SCORE_ROWS: Record<
   ScoreTab,
@@ -75,18 +78,6 @@ const SCORE_ROWS: Record<
       kind: "score",
     },
   ],
-  "General information": [
-    {
-      key: "coverage",
-      label: "Source Coverage",
-      metricName: "Source Coverage",
-      tab: "General information",
-      subtitle: "Reported papers out of 4",
-      kind: "score",
-    },
-    { key: "provider", label: "Provider", subtitle: "Model provider", kind: "provider" },
-    { key: "access", label: "Access", subtitle: "Public availability", kind: "access" },
-  ],
 };
 
 const DOMAIN_TASK_MAP = {
@@ -109,6 +100,16 @@ const DOMAIN_TASK_MAP = {
     "MedMatch Route Selection",
   ],
   adversarial: ["Pokémon (Generic)", "Pokémon (Brand)"],
+};
+
+const MODEL_DESCRIPTIONS: Record<string, string> = {
+  "GPT-4o-mini": "GPT-4o mini is a compact GPT-4o family model from OpenAI, released in July 2024.",
+  "GPT-5 Chat": "GPT-5 Chat is an OpenAI GPT-5 family chat model released in August 2025.",
+  "MedGemma-27B": "MedGemma-27B is a medically tuned 27B Gemma family model from Google, released in May 2025.",
+  "Gemma 3 27B": "Gemma 3 27B is a 27B open-weight Gemma 3 family model from Google, released in March 2025.",
+  "Llama 3.3 70B": "Llama 3.3 70B Instruct is a Llama 3 family open-weight model from Meta, released in December 2024.",
+  "Qwen3 32B": "Qwen3 32B is a 32B dense Qwen3 family model from Alibaba/Qwen, released in April 2025.",
+  DrugGPT: "DrugGPT is a knowledge-grounded drug-analysis language model, introduced in 2024 and published in 2025.",
 };
 
 function routeFromHash(hash: string): RouteId {
@@ -163,6 +164,24 @@ function formatScoreCell(
   return raw === "-" ? "—" : raw;
 }
 
+function parseSortableNumber(value: string): number | null {
+  if (value === "-" || value === "N/A") return null;
+  const match = value.replace(/[$,%]/g, "").match(/-?\d+(\.\d+)?/);
+  return match ? Number(match[0]) : null;
+}
+
+function compareNullableNumbers(a: number | null, b: number | null, direction: SortDirection): number {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return direction === "desc" ? b - a : a - b;
+}
+
+function SortIcon({ active, direction }: { active: boolean; direction: SortDirection }) {
+  const Icon = active ? (direction === "desc" ? ArrowDown : ArrowUp) : ArrowDownUp;
+  return <Icon size={12} className={active ? "text-teal-700" : "text-slate-300"} aria-hidden />;
+}
+
 function scoreTone(value: string): string {
   return value === "N/A" || value === "-" ? "text-slate-400 font-semibold" : "text-slate-700";
 }
@@ -208,6 +227,10 @@ function predictionQueryForMetric(modelName: string, metricName?: string): strin
 
 function slug(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+function modelDescription(model: Model): string {
+  return MODEL_DESCRIPTIONS[model.name] ?? `${model.name} is a ${model.provider} model entry; release metadata is not tracked.`;
 }
 
 export function LeaderboardPage({ models, leaderboardScores, taskDefs }: LeaderboardPageProps) {
@@ -611,6 +634,28 @@ function LeaderboardView({
   bestByRow: Map<string, number>;
   openPredictions: (query: string) => void;
 }) {
+  const [sort, setSort] = useState<LeaderboardSort>({ rowKey: "Mean Win Rate", direction: "desc" });
+  const activeSortRow = rows.find((row) => row.key === sort.rowKey && row.kind === "score") ?? rows.find((row) => row.kind === "score");
+  const sortedModels = useMemo(() => {
+    if (!activeSortRow) return models;
+    return [...models].sort((a, b) => {
+      const result = compareNullableNumbers(
+        parseSortableNumber(getRawScore(scores, a.id, activeSortRow)),
+        parseSortableNumber(getRawScore(scores, b.id, activeSortRow)),
+        sort.direction,
+      );
+      return result || a.name.localeCompare(b.name);
+    });
+  }, [activeSortRow, models, scores, sort.direction]);
+
+  const toggleSort = (row: (typeof SCORE_ROWS)[ScoreTab][number]) => {
+    if (row.kind !== "score") return;
+    setSort((current) => ({
+      rowKey: row.key,
+      direction: current.rowKey === row.key && current.direction === "desc" ? "asc" : "desc",
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -646,7 +691,7 @@ function LeaderboardView({
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                   <th className="sticky left-0 z-10 w-[220px] bg-slate-50/95 px-4 py-3 text-left">Metric</th>
-                  {models.map((model) => (
+                  {sortedModels.map((model) => (
                     <th key={model.id} className="min-w-[140px] px-4 py-3 text-left normal-case tracking-normal">
                       <div className="font-semibold text-slate-700">{model.name}</div>
                       <div className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-medium text-slate-400">
@@ -661,10 +706,22 @@ function LeaderboardView({
                 {rows.map((row) => (
                   <tr key={row.key} className="hover:bg-slate-50/70">
                     <td className="sticky left-0 z-10 bg-white px-4 py-3">
-                      <div className="font-medium text-slate-900">{row.label}</div>
+                      {row.kind === "score" ? (
+                        <button
+                          type="button"
+                          onClick={() => toggleSort(row)}
+                          className="inline-flex items-center gap-1.5 text-left font-medium text-slate-900 hover:text-teal-800"
+                          aria-label={`Sort models by ${row.label}`}
+                        >
+                          {row.label}
+                          <SortIcon active={activeSortRow?.key === row.key} direction={sort.direction} />
+                        </button>
+                      ) : (
+                        <div className="font-medium text-slate-900">{row.label}</div>
+                      )}
                       {row.subtitle && <div className="mt-0.5 text-xs text-slate-500">{row.subtitle}</div>}
                     </td>
-                    {models.map((model) => {
+                    {sortedModels.map((model) => {
                       const raw = getRawScore(scores, model.id, row);
                       const n = parseFloat(raw);
                       const isBest =
@@ -698,21 +755,58 @@ function LeaderboardView({
             </table>
           </div>
         </div>
-        <div className="space-y-1 text-xs text-slate-500 leading-relaxed">
-          <p>
-            <strong>Reported Mean</strong> averages only source-backed study scores. Coverage shows how many of the four primary papers contribute.
+        {scoreTab === "Accuracy" ? (
+          <div className="space-y-1 text-xs text-slate-500 leading-relaxed">
+            <p>
+              <strong>Reported Mean</strong> averages only source-backed study scores. Coverage shows how many of the four primary papers contribute.
+            </p>
+            <p>
+              Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B.
+            </p>
+          </div>
+        ) : (
+          <p className="text-xs text-slate-500 leading-relaxed">
+            <span className="font-semibold">*</span> Cost and Latency are indicative estimates only.
           </p>
-          <p>
-            Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B.
-            <span className="ml-2 font-semibold">*</span> Cost and Latency are indicative estimates only.
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );
 }
 
 function ErrorAnalysis({ failureByModel }: { failureByModel: FailureByModel[] }) {
+  const [sort, setSort] = useState<{ key: FailureSortKey; direction: SortDirection }>({ key: "overall", direction: "desc" });
+  const sortedFailureByModel = useMemo(() => {
+    return [...failureByModel].sort((a, b) => {
+      if (sort.key === "model") {
+        const result = a.model.name.localeCompare(b.model.name);
+        return sort.direction === "desc" ? -result : result;
+      }
+      const aValue = sort.key === "overall" ? a.overallRate : a.domains.find((domain) => domain.key === sort.key)?.rate ?? null;
+      const bValue = sort.key === "overall" ? b.overallRate : b.domains.find((domain) => domain.key === sort.key)?.rate ?? null;
+      return compareNullableNumbers(aValue, bValue, sort.direction) || a.model.name.localeCompare(b.model.name);
+    });
+  }, [failureByModel, sort]);
+
+  const toggleSort = (key: FailureSortKey) => {
+    setSort((current) => ({
+      key,
+      direction: current.key === key && current.direction === "desc" ? "asc" : "desc",
+    }));
+  };
+
+  const SortHeader = ({ sortKey, children }: { sortKey: FailureSortKey; children: string }) => (
+    <button
+      type="button"
+      onClick={() => toggleSort(sortKey)}
+      className="inline-flex items-center gap-1.5 text-left hover:text-teal-800"
+      aria-label={`Sort by ${children}`}
+    >
+      {children}
+      <SortIcon active={sort.key === sortKey} direction={sort.direction} />
+    </button>
+  );
+
   return (
     <section className="space-y-4">
       <div>
@@ -734,15 +828,21 @@ function ErrorAnalysis({ failureByModel }: { failureByModel: FailureByModel[] })
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200/80 bg-slate-50/50 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                <th className="px-4 py-2.5 text-left min-w-[150px]">Model</th>
+                <th className="px-4 py-2.5 text-left min-w-[150px]">
+                  <SortHeader sortKey="model">Model</SortHeader>
+                </th>
                 {FAILURE_CATEGORIES.map((cat) => (
-                  <th key={cat.key} className="px-4 py-2.5 text-left min-w-[160px]">{cat.label}</th>
+                  <th key={cat.key} className="px-4 py-2.5 text-left min-w-[160px]">
+                    <SortHeader sortKey={cat.key as FailureSortKey}>{cat.label}</SortHeader>
+                  </th>
                 ))}
-                <th className="px-4 py-2.5 text-left min-w-[130px]">Overall Error</th>
+                <th className="px-4 py-2.5 text-left min-w-[130px]">
+                  <SortHeader sortKey="overall">Overall Error</SortHeader>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {failureByModel.map(({ model, domains, overallRate, totalFailed, totalEvaluated }) => (
+              {sortedFailureByModel.map(({ model, domains, overallRate, totalFailed, totalEvaluated }) => (
                 <tr key={model.id} className="align-top hover:bg-slate-50/70 transition-colors">
                   <td className="px-4 py-3 font-semibold text-slate-900">{model.name}</td>
                   {domains.map((domain) => (
@@ -813,8 +913,7 @@ function ModelsView({ models }: { models: Model[] }) {
                     <div className="text-xs text-slate-500">{model.type}</div>
                   </td>
                   <td className="px-4 py-4 max-w-lg text-slate-700">
-                    Public PharmDrugBench row with source-backed reported mean {formatScoreAsPercent(model.winRate)}.
-                    Cost estimate {model.costPer1mTokens}; latency estimate {model.latency}.
+                    {modelDescription(model)}
                   </td>
                   <td className="px-4 py-4">
                     <Badge variant="outline" className={model.access === "Open Weights" ? "border-emerald-100 bg-emerald-50 text-emerald-700" : "border-amber-100 bg-amber-50 text-amber-700"}>
