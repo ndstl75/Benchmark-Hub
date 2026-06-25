@@ -1,19 +1,19 @@
 [
   {
     "paper_id": "rx-llm",
-    "title": "Rx-LLM: a benchmarking suite to evaluate safe large language model performance for medication-related tasks",
+    "title": "Rx-Bench: a benchmarking suite to evaluate safe large language model performance for medication-related tasks",
     "domain": "Comprehensive Medication Management",
     "doi": "10.64898/2025.12.01.25341004",
     "pmc": null,
     "url": "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     "github": "https://github.com/AIChemist-Lab",
-    "dashboard_metric": "Rx-LLM (CMM)",
+    "dashboard_metric": "Rx-Bench (CMM)",
     "dataset_scope": "6 CMM benchmark definitions; 250 clinician-annotated cases per benchmark",
     "source_files": [
       "docs/appendices/sources/rx_llm_tables_2_3.csv",
-      "Rx-LLM PMC/medRxiv Tables 2-3"
+      "Rx-Bench manuscript Tables 2-3"
     ],
-    "notes": "Dashboard score is the macro mean of six primary task metrics from Rx-LLM Tables 2-3; unreported models remain N/A.",
+    "notes": "Dashboard score is the macro mean of six primary task metrics from Rx-Bench Tables 2-3; Scenarios exposes each benchmark task separately.",
     "model_scores": [
       {
         "model": "GPT-4o-mini",
@@ -23,9 +23,9 @@
       },
       {
         "model": "GPT-5 Chat",
-        "score_fraction": null,
-        "score_percent": null,
-        "score_status": "not_reported_for_model"
+        "score_fraction": 0.85,
+        "score_percent": 85.0,
+        "score_status": "published_table_aggregate"
       },
       {
         "model": "MedGemma-27B",
@@ -47,15 +47,15 @@
       },
       {
         "model": "Qwen3 32B",
-        "score_fraction": null,
-        "score_percent": null,
-        "score_status": "not_reported_for_model"
+        "score_fraction": 0.728,
+        "score_percent": 72.8,
+        "score_status": "published_table_aggregate"
       },
       {
         "model": "DrugGPT",
-        "score_fraction": null,
-        "score_percent": null,
-        "score_status": "not_reported_for_model"
+        "score_fraction": 0.786,
+        "score_percent": 78.6,
+        "score_status": "published_table_aggregate"
       }
     ],
     "tasks": [
@@ -70,8 +70,8 @@
           "Correctness consistency"
         ],
         "source_status": "published_table",
-        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
-        "notes": "Uses Rx-LLM primary metric (F1) reported in Tables 2-3; unreported models remain N/A.",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-Bench manuscript Tables 2-3",
+        "notes": "Uses Rx-Bench primary metric (F1) reported in Tables 2-3; base Gemma 3 27B remains N/A because MedGemma-27B is reported separately.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
@@ -80,8 +80,8 @@
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 73.0,
+            "score_status": "published_table"
           },
           {
             "model": "MedGemma-27B",
@@ -95,18 +95,18 @@
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": 54,
+            "score_percent": 54.0,
             "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 36.6,
+            "score_status": "published_table"
           },
           {
             "model": "DrugGPT",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 63.4,
+            "score_status": "published_table"
           }
         ]
       },
@@ -119,8 +119,8 @@
           "Correctness consistency"
         ],
         "source_status": "published_table",
-        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
-        "notes": "Uses Rx-LLM primary metric (Overall accuracy) reported in Tables 2-3; unreported models remain N/A.",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-Bench manuscript Tables 2-3",
+        "notes": "Uses Rx-Bench primary metric (Overall accuracy) reported in Tables 2-3; base Gemma 3 27B remains N/A because MedGemma-27B is reported separately.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
@@ -129,8 +129,8 @@
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 90.0,
+            "score_status": "published_table"
           },
           {
             "model": "MedGemma-27B",
@@ -144,18 +144,18 @@
           },
           {
             "model": "Llama 3.3 70B",
-            "score_percent": 88,
+            "score_percent": 88.0,
             "score_status": "published_table"
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 79.6,
+            "score_status": "published_table"
           },
           {
             "model": "DrugGPT",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 80.4,
+            "score_status": "published_table"
           }
         ]
       },
@@ -170,8 +170,8 @@
           "Correctness consistency"
         ],
         "source_status": "published_table",
-        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
-        "notes": "Uses Rx-LLM primary metric (F1) reported in Tables 2-3; unreported models remain N/A.",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-Bench manuscript Tables 2-3",
+        "notes": "Uses Rx-Bench primary metric (F1) reported in Tables 2-3; base Gemma 3 27B remains N/A because MedGemma-27B is reported separately.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
@@ -180,8 +180,8 @@
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 75.2,
+            "score_status": "published_table"
           },
           {
             "model": "MedGemma-27B",
@@ -200,18 +200,18 @@
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 71.6,
+            "score_status": "published_table"
           },
           {
             "model": "DrugGPT",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 74.0,
+            "score_status": "published_table"
           }
         ]
       },
       {
-        "task_name": "Rx-LLM DDI ID",
+        "task_name": "Rx-Bench DDI ID",
         "dataset_slice": "pointwise two-drug format",
         "metrics": [
           "Precision",
@@ -221,8 +221,8 @@
           "Self-consistency"
         ],
         "source_status": "published_table",
-        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
-        "notes": "Uses Rx-LLM primary metric (Accuracy) reported in Tables 2-3; unreported models remain N/A.",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-Bench manuscript Tables 2-3",
+        "notes": "Uses Rx-Bench primary metric (Accuracy) reported in Tables 2-3; base Gemma 3 27B remains N/A because MedGemma-27B is reported separately.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
@@ -231,8 +231,8 @@
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 84.8,
+            "score_status": "published_table"
           },
           {
             "model": "MedGemma-27B",
@@ -251,13 +251,13 @@
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 75.6,
+            "score_status": "published_table"
           },
           {
             "model": "DrugGPT",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 77.7,
+            "score_status": "published_table"
           }
         ]
       },
@@ -272,8 +272,8 @@
           "Correctness consistency"
         ],
         "source_status": "published_table",
-        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
-        "notes": "Uses Rx-LLM primary metric (F1) reported in Tables 2-3; unreported models remain N/A.",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-Bench manuscript Tables 2-3",
+        "notes": "Uses Rx-Bench primary metric (F1) reported in Tables 2-3; base Gemma 3 27B remains N/A because MedGemma-27B is reported separately.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
@@ -282,8 +282,8 @@
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 87.4,
+            "score_status": "published_table"
           },
           {
             "model": "MedGemma-27B",
@@ -302,13 +302,13 @@
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 79.7,
+            "score_status": "published_table"
           },
           {
             "model": "DrugGPT",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 77.9,
+            "score_status": "published_table"
           }
         ]
       },
@@ -323,8 +323,8 @@
           "Correctness consistency"
         ],
         "source_status": "published_table",
-        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-LLM PMC/medRxiv Tables 2-3",
-        "notes": "Uses Rx-LLM primary metric (Accuracy) reported in Tables 2-3; unreported models remain N/A.",
+        "canonical_score_source": "docs/appendices/sources/rx_llm_tables_2_3.csv; Rx-Bench manuscript Tables 2-3",
+        "notes": "Uses Rx-Bench primary metric (Accuracy) reported in Tables 2-3; base Gemma 3 27B remains N/A because MedGemma-27B is reported separately.",
         "model_scores": [
           {
             "model": "GPT-4o-mini",
@@ -333,8 +333,8 @@
           },
           {
             "model": "GPT-5 Chat",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 99.3,
+            "score_status": "published_table"
           },
           {
             "model": "MedGemma-27B",
@@ -353,13 +353,13 @@
           },
           {
             "model": "Qwen3 32B",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 94.0,
+            "score_status": "published_table"
           },
           {
             "model": "DrugGPT",
-            "score_percent": null,
-            "score_status": "not_reported_for_model"
+            "score_percent": 98.4,
+            "score_status": "published_table"
           }
         ]
       }

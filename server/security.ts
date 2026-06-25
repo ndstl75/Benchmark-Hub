@@ -32,7 +32,6 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction) {
 
 export function securityHeaders(req: Request, res: Response, next: NextFunction) {
   res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   if (process.env.NODE_ENV === "production") {
@@ -41,7 +40,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
       [
         "default-src 'self'",
         "base-uri 'self'",
-        "frame-ancestors 'none'",
+        "frame-ancestors 'self' https://huggingface.co https://*.huggingface.co",
         "form-action 'self'",
         "img-src 'self' data:",
         "script-src 'self'",

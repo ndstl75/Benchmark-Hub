@@ -95,16 +95,9 @@ app.use((req, res, next) => {
 
     // Serve on the port from the PORT env var (defaults to 8447, matching Docker Compose).
     const port = parseInt(process.env.PORT || "8447", 10);
-    httpServer.listen(
-      {
-        port,
-        host: "0.0.0.0",
-        reusePort: true,
-      },
-      () => {
-        log(`serving on port ${port}`);
-      },
-    );
+    httpServer.listen(port, "0.0.0.0", () => {
+      log(`serving on port ${port}`);
+    });
   } catch (err) {
     console.error("Startup failed:", err);
     app.use((_req, res) => {
@@ -113,7 +106,7 @@ app.use((req, res, next) => {
       });
     });
     const port = parseInt(process.env.PORT || "8447", 10);
-    httpServer.listen({ port, host: "0.0.0.0", reusePort: true }, () => {
+    httpServer.listen(port, "0.0.0.0", () => {
       log(`serving on port ${port} (degraded: startup error)`);
     });
   }

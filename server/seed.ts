@@ -1,7 +1,12 @@
 import { readFileSync } from "fs";
 import { join } from "path";
-import { db } from "./db";
-import { models, benchmarkResults, leaderboardScores, taskDefinitions } from "@shared/schema";
+import { writeJsonl, jsonlExists } from "./jsonl";
+import type {
+  Model,
+  BenchmarkResult,
+  LeaderboardScore,
+  TaskDefinition,
+} from "@shared/schema";
 
 type BenchmarkData = {
   models: Array<{
@@ -41,69 +46,93 @@ function loadBenchmarkData(): BenchmarkData {
   return JSON.parse(readFileSync(dataPath, "utf-8")) as BenchmarkData;
 }
 
-async function clearBenchmarkTables() {
-  await db.delete(benchmarkResults);
-  await db.delete(leaderboardScores);
-  await db.delete(taskDefinitions);
-  await db.delete(models);
+function clearJsonlData() {
+  writeJsonl("models", []);
+  writeJsonl("benchmark_results", []);
+  writeJsonl("leaderboard_scores", []);
+  writeJsonl("task_definitions", []);
+  writeJsonl("evaluators", []);
 }
 
 export async function seed() {
   const force = process.env.SEED_FORCE === "1";
-  const existingModels = await db.select().from(models);
-  if (existingModels.length > 0 && !force) {
+  const hasData = jsonlExists("models");
+
+  if (hasData && !force) {
     return;
   }
 
-  const data = loadBenchmarkData();
-  if (force && existingModels.length > 0) {
-    console.log("Force reseed: clearing existing benchmark data...");
-    await clearBenchmarkTables();
+  if (force && hasData) {
+    console.log("Force reseed: clearing existing JSONL data...");
+    clearJsonlData();
   }
 
-  console.log("Seeding database from server/data/benchmark.json...");
+  const data = loadBenchmarkData();
+  console.log("Seeding JSONL store from server/data/benchmark.json...");
 
-  const insertedModels = await db
-    .insert(models)
-    .values(
-      data.models.map((m) => ({
-        name: m.name,
-        type: m.type,
-        provider: m.provider,
-        access: m.access,
-        winRate: m.winRate,
-        costPer1mTokens: m.costPer1mTokens,
-        latency: m.latency,
-        isCustom: m.isCustom ?? false,
-      })),
-    )
-    .returning();
-  console.log(`Inserted ${insertedModels.length} models`);
+  const models: Model[] = data.models.map((model, index) => ({
+    id: index + 1,
+    name: model.name,
+    type: model.type,
+    provider: model.provider,
+    access: model.access,
+    winRate: model.winRate,
+    costPer1mTokens: model.costPer1mTokens,
+    latency: model.latency,
+    isCustom: model.isCustom ?? false,
+  }));
+  writeJsonl("models", models);
+  console.log(`Wrote ${models.length} models`);
 
-  const modelIdByName = new Map(insertedModels.map((m) => [m.name, m.id]));
+  const modelIdByName = new Map(models.map((model) => [model.name, model.id]));
 
-  const benchmarkRows = data.benchmarkResults.map((row) => {
+  const benchmarkResults: BenchmarkResult[] = data.benchmarkResults.map((row, index) => {
     const modelId = modelIdByName.get(row.modelName);
     if (modelId == null) {
       throw new Error(`Unknown model in benchmarkResults: ${row.modelName}`);
     }
-    return { modelId, taskName: row.taskName, earned: row.earned, failed: row.failed };
+    return {
+      id: index + 1,
+      modelId,
+      taskName: row.taskName,
+      earned: row.earned,
+      failed: row.failed,
+    };
   });
-  await db.insert(benchmarkResults).values(benchmarkRows);
-  console.log(`Inserted ${benchmarkRows.length} benchmark results`);
+  writeJsonl("benchmark_results", benchmarkResults);
+  console.log(`Wrote ${benchmarkResults.length} benchmark results`);
 
-  const leaderboardRows = data.leaderboardScores.map((row) => {
+  const leaderboardScores: LeaderboardScore[] = data.leaderboardScores.map((row, index) => {
     const modelId = modelIdByName.get(row.modelName);
     if (modelId == null) {
       throw new Error(`Unknown model in leaderboardScores: ${row.modelName}`);
     }
-    return { modelId, metricName: row.metricName, tab: row.tab, value: row.value };
+    return {
+      id: index + 1,
+      modelId,
+      metricName: row.metricName,
+      tab: row.tab,
+      value: row.value,
+    };
   });
-  await db.insert(leaderboardScores).values(leaderboardRows);
-  console.log(`Inserted ${leaderboardRows.length} leaderboard scores`);
+  writeJsonl("leaderboard_scores", leaderboardScores);
+  console.log(`Wrote ${leaderboardScores.length} leaderboard scores`);
 
-  await db.insert(taskDefinitions).values(data.taskDefinitions);
-  console.log(`Inserted ${data.taskDefinitions.length} task definitions`);
+  const taskDefinitions: TaskDefinition[] = data.taskDefinitions.map((task, index) => ({
+    id: index + 1,
+    name: task.name,
+    prompt: task.prompt,
+    response: task.response,
+    humanAnnotation: task.humanAnnotation,
+    agreement: task.agreement,
+    metrics: task.metrics,
+  }));
+  writeJsonl("task_definitions", taskDefinitions);
+  console.log(`Wrote ${taskDefinitions.length} task definitions`);
+
+  if (!jsonlExists("evaluators")) {
+    writeJsonl("evaluators", []);
+  }
 
   console.log("Seeding complete.");
 }

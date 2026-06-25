@@ -14,7 +14,7 @@ export function DatasetDiagram({ id, className = "" }: DatasetDiagramProps) {
         <svg viewBox="0 0 480 280" className={common} aria-hidden>
           <rect width="480" height="280" fill="#F8FAFC" />
           <text x="24" y="28" fill="#334155" fontSize="13" fontWeight="700" fontFamily="system-ui,sans-serif">
-            Rx-LLM: 6 CMM benchmarks (250 cases each)
+            Rx-Bench: 6 CMM benchmarks (250 cases each)
           </text>
           {[
             ["Formulation", 24, 44],

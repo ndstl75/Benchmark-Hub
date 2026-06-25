@@ -14,16 +14,16 @@ This folder organizes the four primary paper data sources referenced by PharmDru
 
 | Paper ID | Paper | Dashboard metric | Tasks |
 | --- | --- | --- | ---: |
-| rx-llm | Rx-LLM: a benchmarking suite to evaluate safe large language model performance for medication-related tasks | Rx-LLM (CMM) | 6 |
+| rx-llm | Rx-Bench: a benchmarking suite to evaluate safe large language model performance for medication-related tasks | Rx-Bench (CMM) | 6 |
 | ddi-identification | Drug-drug interaction identification using large language models | DDI Identification | 3 |
 | medmatch | MedMatch: a first step for the automation of large language model performance benchmarking for medication-related tasks | MedMatch | 7 |
 | drug-or-pokemon | Drug or Pokemon? Large language model performance in identification of fabricated medications | Drug or Pokémon? | 2 |
 
 ## Current public score policy
 
-- Rx-LLM values come from `docs/appendices/sources/rx_llm_tables_2_3.csv`; the dashboard score is the macro mean of six primary CMM task metrics from Tables 2-3.
+- Rx-Bench values come from `docs/appendices/sources/rx_llm_tables_2_3.csv`; the dashboard score is the macro mean of six primary CMM task metrics from Tables 2-3, and task-level rows are exposed separately.
 - DDI identification values come from `docs/appendices/sources/ddi_identification_table3.csv`.
-- MedGemma-27B is listed separately when Rx-LLM or DDI source tables report MedGemma rather than base Gemma 3 27B.
+- MedGemma-27B is listed separately when Rx-Bench or DDI source tables report MedGemma rather than base Gemma 3 27B.
 - MedMatch values are source-derived aggregates from `entity_accuracy_table.csv` and `route_accuracy_table.csv`; DrugGPT is not reported.
 - Drug or Pokemon values are suspicion-detected scores, computed as `100 - default drug-dosing confabulation rate` from the embedded PMC Table 2 rates; GPT-5 Chat and DrugGPT are not reported.
 - The app also references `LLM-Uncertainty-DDI` as a supplemental DDI verification source, but this extract keeps it out of the four-primary-paper tables.

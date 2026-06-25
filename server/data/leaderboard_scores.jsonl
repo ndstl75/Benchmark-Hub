@@ -1,0 +1,77 @@
+{"id":1,"modelId":1,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.602"}
+{"id":2,"modelId":1,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"0.757"}
+{"id":3,"modelId":1,"metricName":"DDI Identification","tab":"Accuracy","value":"0.730"}
+{"id":4,"modelId":1,"metricName":"MedMatch","tab":"Accuracy","value":"0.904"}
+{"id":5,"modelId":1,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"0.018"}
+{"id":6,"modelId":1,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"$0.15"}
+{"id":7,"modelId":1,"metricName":"Latency (s / request)","tab":"Efficiency","value":"2.1s"}
+{"id":8,"modelId":1,"metricName":"Provider","tab":"General information","value":"OpenAI"}
+{"id":9,"modelId":1,"metricName":"Access","tab":"General information","value":"API"}
+{"id":10,"modelId":1,"metricName":"Model Type","tab":"General information","value":"Standard"}
+{"id":11,"modelId":1,"metricName":"Source Coverage","tab":"General information","value":"4/4"}
+{"id":12,"modelId":2,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.880"}
+{"id":13,"modelId":2,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"0.850"}
+{"id":14,"modelId":2,"metricName":"DDI Identification","tab":"Accuracy","value":"0.875"}
+{"id":15,"modelId":2,"metricName":"MedMatch","tab":"Accuracy","value":"0.916"}
+{"id":16,"modelId":2,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"N/A"}
+{"id":17,"modelId":2,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"$1.10"}
+{"id":18,"modelId":2,"metricName":"Latency (s / request)","tab":"Efficiency","value":"8.2s"}
+{"id":19,"modelId":2,"metricName":"Provider","tab":"General information","value":"OpenAI"}
+{"id":20,"modelId":2,"metricName":"Access","tab":"General information","value":"API"}
+{"id":21,"modelId":2,"metricName":"Model Type","tab":"General information","value":"Reasoning"}
+{"id":22,"modelId":2,"metricName":"Source Coverage","tab":"General information","value":"3/4"}
+{"id":23,"modelId":3,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.718"}
+{"id":24,"modelId":3,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"0.719"}
+{"id":25,"modelId":3,"metricName":"DDI Identification","tab":"Accuracy","value":"0.717"}
+{"id":26,"modelId":3,"metricName":"MedMatch","tab":"Accuracy","value":"N/A"}
+{"id":27,"modelId":3,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"N/A"}
+{"id":28,"modelId":3,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"$0.15"}
+{"id":29,"modelId":3,"metricName":"Latency (s / request)","tab":"Efficiency","value":"1.8s"}
+{"id":30,"modelId":3,"metricName":"Provider","tab":"General information","value":"Google"}
+{"id":31,"modelId":3,"metricName":"Access","tab":"General information","value":"Open Weights"}
+{"id":32,"modelId":3,"metricName":"Model Type","tab":"General information","value":"Medical"}
+{"id":33,"modelId":3,"metricName":"Source Coverage","tab":"General information","value":"2/4"}
+{"id":34,"modelId":4,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.469"}
+{"id":35,"modelId":4,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"N/A"}
+{"id":36,"modelId":4,"metricName":"DDI Identification","tab":"Accuracy","value":"N/A"}
+{"id":37,"modelId":4,"metricName":"MedMatch","tab":"Accuracy","value":"0.905"}
+{"id":38,"modelId":4,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"0.032"}
+{"id":39,"modelId":4,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"$0.15"}
+{"id":40,"modelId":4,"metricName":"Latency (s / request)","tab":"Efficiency","value":"1.8s"}
+{"id":41,"modelId":4,"metricName":"Provider","tab":"General information","value":"Google"}
+{"id":42,"modelId":4,"metricName":"Access","tab":"General information","value":"Open Weights"}
+{"id":43,"modelId":4,"metricName":"Model Type","tab":"General information","value":"Standard"}
+{"id":44,"modelId":4,"metricName":"Source Coverage","tab":"General information","value":"2/4"}
+{"id":45,"modelId":5,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.613"}
+{"id":46,"modelId":5,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"0.773"}
+{"id":47,"modelId":5,"metricName":"DDI Identification","tab":"Accuracy","value":"0.700"}
+{"id":48,"modelId":5,"metricName":"MedMatch","tab":"Accuracy","value":"0.868"}
+{"id":49,"modelId":5,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"0.111"}
+{"id":50,"modelId":5,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"$0.70"}
+{"id":51,"modelId":5,"metricName":"Latency (s / request)","tab":"Efficiency","value":"3.2s"}
+{"id":52,"modelId":5,"metricName":"Provider","tab":"General information","value":"Meta"}
+{"id":53,"modelId":5,"metricName":"Access","tab":"General information","value":"Open Weights"}
+{"id":54,"modelId":5,"metricName":"Model Type","tab":"General information","value":"Standard"}
+{"id":55,"modelId":5,"metricName":"Source Coverage","tab":"General information","value":"4/4"}
+{"id":56,"modelId":6,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.600"}
+{"id":57,"modelId":6,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"0.728"}
+{"id":58,"modelId":6,"metricName":"DDI Identification","tab":"Accuracy","value":"0.756"}
+{"id":59,"modelId":6,"metricName":"MedMatch","tab":"Accuracy","value":"0.901"}
+{"id":60,"modelId":6,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"0.014"}
+{"id":61,"modelId":6,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"$0.20"}
+{"id":62,"modelId":6,"metricName":"Latency (s / request)","tab":"Efficiency","value":"2.5s"}
+{"id":63,"modelId":6,"metricName":"Provider","tab":"General information","value":"Alibaba"}
+{"id":64,"modelId":6,"metricName":"Access","tab":"General information","value":"Open Weights"}
+{"id":65,"modelId":6,"metricName":"Model Type","tab":"General information","value":"Standard"}
+{"id":66,"modelId":6,"metricName":"Source Coverage","tab":"General information","value":"4/4"}
+{"id":67,"modelId":7,"metricName":"Mean Win Rate","tab":"Accuracy","value":"0.787"}
+{"id":68,"modelId":7,"metricName":"Rx-Bench (CMM)","tab":"Accuracy","value":"0.786"}
+{"id":69,"modelId":7,"metricName":"DDI Identification","tab":"Accuracy","value":"0.788"}
+{"id":70,"modelId":7,"metricName":"MedMatch","tab":"Accuracy","value":"N/A"}
+{"id":71,"modelId":7,"metricName":"Drug or Pokémon?","tab":"Accuracy","value":"N/A"}
+{"id":72,"modelId":7,"metricName":"Cost (per 1M tokens)","tab":"Efficiency","value":"N/A"}
+{"id":73,"modelId":7,"metricName":"Latency (s / request)","tab":"Efficiency","value":"N/A"}
+{"id":74,"modelId":7,"metricName":"Provider","tab":"General information","value":"DrugGPT"}
+{"id":75,"modelId":7,"metricName":"Access","tab":"General information","value":"Specialized"}
+{"id":76,"modelId":7,"metricName":"Model Type","tab":"General information","value":"Standard"}
+{"id":77,"modelId":7,"metricName":"Source Coverage","tab":"General information","value":"2/4"}

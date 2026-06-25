@@ -19,7 +19,7 @@ type LeaderboardPageProps = {
 };
 
 type RouteId = "home" | "leaderboard" | "errors" | "models" | "scenarios" | "runs";
-type ScoreTab = "Accuracy" | "Efficiency";
+type ScoreTab = "Accuracy" | "Efficiency" | "General information";
 type SortDirection = "desc" | "asc";
 type LeaderboardSort = { rowKey: string; direction: SortDirection };
 type FailureSortKey = "model" | "cmm" | "ddi" | "formatting" | "adversarial" | "overall";
@@ -39,7 +39,7 @@ const ROUTES: Array<{ id: Exclude<RouteId, "home">; label: string; hash: string 
   { id: "runs", label: "Predictions", hash: "#/runs" },
 ];
 
-const SCORE_TABS: ScoreTab[] = ["Accuracy", "Efficiency"];
+const SCORE_TABS: ScoreTab[] = ["Accuracy", "Efficiency", "General information"];
 
 const SCORE_ROWS: Record<
   ScoreTab,
@@ -78,6 +78,18 @@ const SCORE_ROWS: Record<
       kind: "score",
     },
   ],
+  "General information": [
+    {
+      key: "coverage",
+      label: "Source Coverage",
+      metricName: "Source Coverage",
+      tab: "General information",
+      subtitle: "Reported papers out of 4",
+      kind: "score",
+    },
+    { key: "provider", label: "Provider", subtitle: "Model provider", kind: "provider" },
+    { key: "access", label: "Access", subtitle: "Public availability", kind: "access" },
+  ],
 };
 
 const DOMAIN_TASK_MAP = {
@@ -85,7 +97,7 @@ const DOMAIN_TASK_MAP = {
     "Formulation Matching",
     "Drug Order Gen (Sig)",
     "Route Matching",
-    "Rx-LLM DDI ID",
+    "Rx-Bench DDI ID",
     "Renal Dose ID",
     "Drug-Indication",
   ],
@@ -112,6 +124,8 @@ const MODEL_DESCRIPTIONS: Record<string, string> = {
   DrugGPT: "DrugGPT is a knowledge-grounded drug-analysis language model, introduced in 2024 and published in 2025.",
 };
 
+const SCENARIO_PAPER_GROUPS = TASK_TAXONOMY.filter((group) => group.domain !== "DDI Verification");
+
 function routeFromHash(hash: string): RouteId {
   if (hash.startsWith("#/leaderboard")) return "leaderboard";
   if (hash.startsWith("#/errors")) return "errors";
@@ -132,6 +146,10 @@ function formatScoreAsPercent(value: string | number | undefined): string {
   if (Number.isNaN(n)) return String(value);
   if (n >= 0 && n <= 1) return `${(n * 100).toFixed(1)}%`;
   return String(value);
+}
+
+function formatCount(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
 function getScore(
@@ -218,7 +236,7 @@ function scenarioForTaskName(taskName: string): string {
 
 function predictionQueryForMetric(modelName: string, metricName?: string): string {
   if (!metricName || metricName === "Mean Win Rate" || metricName === "Source Coverage") return modelName;
-  if (metricName === "Rx-LLM (CMM)") return `${modelName} CMM`;
+  if (metricName === "Rx-Bench (CMM)") return `${modelName} CMM`;
   if (metricName === "DDI Identification") return `${modelName} DDI`;
   if (metricName === "Drug or Pokémon?") return `${modelName} Pokémon`;
   if (metricName === "Cost (per 1M tokens)" || metricName === "Latency (s / request)") return modelName;
@@ -359,24 +377,6 @@ export function LeaderboardPage({ models, leaderboardScores, taskDefs }: Leaderb
     });
   }, [predictionQuery, predictionRegex, predictionRows]);
 
-  const scenarioRows = useMemo(() => {
-    return TASK_TAXONOMY.flatMap((group) =>
-      group.tasks.map((taskName) => {
-        const definition = taskDefs.find((task) => task.name === taskName);
-        return {
-          key: `${group.domain}-${taskName}`,
-          scenario: group.domain,
-          taskName,
-          what: definition?.prompt ?? group.dataset,
-          who: "Clinician / evaluator",
-          when: "Medication-safety evaluation",
-          language: "English",
-          url: group.url,
-        };
-      }),
-    );
-  }, [taskDefs]);
-
   const openPredictions = (query: string) => {
     setPredictionQuery(query);
     navigate("runs");
@@ -451,7 +451,9 @@ export function LeaderboardPage({ models, leaderboardScores, taskDefs }: Leaderb
           )}
           {activeRoute === "errors" && <ErrorAnalysis failureByModel={failureByModel} />}
           {activeRoute === "models" && <ModelsView models={rankedModels} />}
-          {activeRoute === "scenarios" && <ScenariosView rows={scenarioRows} />}
+          {activeRoute === "scenarios" && (
+            <ScenariosView models={rankedModels} resultsByModel={allBenchmarkResults} taskDefs={taskDefs} />
+          )}
           {activeRoute === "runs" && (
             <PredictionsView
               rows={filteredPredictionRows}
@@ -761,12 +763,16 @@ function LeaderboardView({
               <strong>Reported Mean</strong> averages only source-backed study scores. Coverage shows how many of the four primary papers contribute.
             </p>
             <p>
-              Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B.
+              Rx-Bench (CMM) is the macro mean of six primary task metrics from Rx-Bench Tables 2-3; task-level scores are grouped by paper in Scenarios. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B.
             </p>
           </div>
-        ) : (
+        ) : scoreTab === "Efficiency" ? (
           <p className="text-xs text-slate-500 leading-relaxed">
             <span className="font-semibold">*</span> Cost and Latency are indicative estimates only.
+          </p>
+        ) : (
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Source Coverage reports how many primary source papers contribute to each model row; provider and access are descriptive metadata.
           </p>
         )}
       </div>
@@ -889,7 +895,7 @@ function ErrorCell({ rate, failed, total }: { rate: number; failed: number; tota
 
 function ModelsView({ models }: { models: Model[] }) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Models</h1>
       </div>
@@ -931,57 +937,211 @@ function ModelsView({ models }: { models: Model[] }) {
 }
 
 function ScenariosView({
-  rows,
+  models,
+  resultsByModel,
+  taskDefs,
 }: {
-  rows: Array<{
-    key: string;
-    scenario: string;
-    taskName: string;
-    what: string;
-    who: string;
-    when: string;
-    language: string;
-    url: string;
-  }>;
+  models: Model[];
+  resultsByModel: Map<number, BenchmarkResult[]>;
+  taskDefs: TaskDefinition[];
 }) {
+  const [selectedPaper, setSelectedPaper] = useState<string>(SCENARIO_PAPER_GROUPS[0].domain);
+  const [selectedTaskName, setSelectedTaskName] = useState<string>(SCENARIO_PAPER_GROUPS[0].tasks[0]);
+
+  const paper = SCENARIO_PAPER_GROUPS.find((group) => group.domain === selectedPaper) ?? SCENARIO_PAPER_GROUPS[0];
+  const taskName = (paper.tasks as readonly string[]).includes(selectedTaskName)
+    ? selectedTaskName
+    : paper.tasks[0];
+  const taskDef = taskDefs.find((task) => task.name === taskName);
+
+  const taskScores = useMemo(() => {
+    return models
+      .map((model) => {
+        const result = resultsByModel.get(model.id)?.find((row) => row.taskName === taskName);
+        const total = result ? result.earned + result.failed : 0;
+        const score = result && total > 0 ? result.earned / total : null;
+        return { model, result, total, score };
+      })
+      .sort((a, b) => compareNullableNumbers(a.score, b.score, "desc"));
+  }, [models, resultsByModel, taskName]);
+
+  const handlePaperChange = (domain: string) => {
+    const nextPaper = SCENARIO_PAPER_GROUPS.find((group) => group.domain === domain) ?? SCENARIO_PAPER_GROUPS[0];
+    setSelectedPaper(nextPaper.domain);
+    setSelectedTaskName(nextPaper.tasks[0]);
+  };
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Scenarios</h1>
-        <p className="text-slate-600 mt-2">A scenario represents a medication-safety use case and its evaluation task.</p>
+        <p className="text-slate-600 mt-2">Paper-grouped medication-safety task definitions and source-backed model scores.</p>
       </div>
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[920px] text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                <th className="px-4 py-3 text-left">Scenario</th>
-                <th className="px-4 py-3 text-left">Task</th>
-                <th className="px-4 py-3 text-left">What</th>
-                <th className="px-4 py-3 text-left">Who</th>
-                <th className="px-4 py-3 text-left">When</th>
-                <th className="px-4 py-3 text-left">Language</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {rows.map((row) => (
-                <tr key={row.key} className="hover:bg-slate-50/70">
-                  <td className="px-4 py-4 min-w-[210px]">
-                    <a href={row.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:underline">
-                      {row.scenario}
-                    </a>
-                  </td>
-                  <td className="px-4 py-4 min-w-[180px] text-slate-900">{row.taskName}</td>
-                  <td className="px-4 py-4 max-w-md text-slate-700">{row.what}</td>
-                  <td className="px-4 py-4 text-slate-700">{row.who}</td>
-                  <td className="px-4 py-4 text-slate-700">{row.when}</td>
-                  <td className="px-4 py-4 text-slate-700">{row.language}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      <div>
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Benchmark paper</span>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {SCENARIO_PAPER_GROUPS.map((group) => {
+            const active = group.domain === paper.domain;
+            return (
+              <button
+                key={group.domain}
+                type="button"
+                onClick={() => handlePaperChange(group.domain)}
+                aria-pressed={active}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+                  active
+                    ? "border-teal-600 bg-teal-600 text-white shadow-sm"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-teal-300 hover:text-teal-700"
+                }`}
+              >
+                {group.domain}
+              </button>
+            );
+          })}
         </div>
       </div>
+
+      <div className="rounded-lg border border-slate-200 bg-white">
+        <div className="grid gap-4 px-4 py-3 min-[900px]:grid-cols-[minmax(180px,0.62fr)_minmax(0,1.08fr)_minmax(220px,0.72fr)]">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">{paper.domain}</p>
+            <h2 className="mt-1 text-xl font-bold leading-snug text-slate-900">{taskName}</h2>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">{paper.paper}</p>
+            <p className="mt-1 truncate text-xs text-slate-500">{paper.dataset}</p>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Prompt</p>
+            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-700">{taskDef?.prompt ?? paper.dataset}</p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Reference</p>
+              <a
+                href={paper.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-teal-700 hover:underline"
+              >
+                Source <ExternalLink size={13} />
+              </a>
+            </div>
+            <p className="line-clamp-2 text-sm leading-relaxed text-slate-700">{taskDef?.humanAnnotation ?? "Clinician annotation"}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {(taskDef?.metrics ?? ["Source-backed score"]).map((metric) => (
+                <Badge key={metric} variant="outline" className="rounded-md border-slate-200 bg-slate-50 text-slate-600">
+                  {metric}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section className="grid items-start gap-4 min-[860px]:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          <div className="border-b border-slate-100 px-3 py-2.5">
+            <h2 className="text-sm font-bold text-slate-900">Tasks In This Paper</h2>
+            <p className="mt-1 text-xs text-slate-500">{paper.tasks.length} source tasks</p>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {paper.tasks.map((name) => {
+              const definition = taskDefs.find((task) => task.name === name);
+              const selected = name === taskName;
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => setSelectedTaskName(name)}
+                  aria-pressed={selected}
+                  className={`group flex w-full items-center gap-1.5 border-l-2 px-3 py-2.5 text-left transition-colors ${
+                    selected
+                      ? "border-teal-500 bg-teal-50"
+                      : "border-transparent bg-white hover:bg-slate-50"
+                  }`}
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className={`block text-sm font-semibold leading-snug ${selected ? "text-teal-900" : "text-slate-900"}`}>
+                      {name}
+                    </span>
+                    <span className="mt-1 block truncate text-xs leading-snug text-slate-500">
+                      {definition?.metrics.slice(0, 3).join(" · ") ?? paper.dataset}
+                    </span>
+                  </span>
+                  <ChevronRight
+                    size={16}
+                    className={`shrink-0 transition-opacity ${
+                      selected ? "text-teal-500 opacity-100" : "text-slate-300 opacity-0 group-hover:opacity-100"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          <div className="border-b border-slate-100 px-4 py-3">
+            <h2 className="text-base font-bold text-slate-900">Model Scores</h2>
+            <p className="mt-1 text-xs text-slate-500">Sorted by selected task score.</p>
+          </div>
+          <div>
+            <table className="w-full table-fixed text-sm">
+              <colgroup>
+                <col style={{ width: "42%" }} />
+                <col style={{ width: "24%" }} />
+                <col style={{ width: "18%" }} />
+                <col style={{ width: "16%" }} />
+              </colgroup>
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left">Model</th>
+                  <th className="px-3 py-3 text-right">Score</th>
+                  <th className="px-3 py-3 text-right">Earned</th>
+                  <th className="px-3 py-3 text-left">Source</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {taskScores.map(({ model, result, total, score }, index) => (
+                  <tr key={model.id} className="hover:bg-slate-50/70">
+                    <td className="px-3 py-3">
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <span className={`w-5 shrink-0 text-right text-xs font-semibold tabular-nums ${score == null ? "text-slate-300" : "text-slate-400"}`}>
+                          {score == null ? "–" : index + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="truncate font-semibold text-slate-900">{model.name}</div>
+                          <div className="truncate text-xs text-slate-500">{model.provider}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 text-right">
+                      {score == null ? (
+                        <span className="tabular-nums text-slate-400">N/A</span>
+                      ) : (
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="font-semibold tabular-nums text-slate-900">{formatScoreAsPercent(score)}</span>
+                          <span className="hidden h-1.5 w-14 overflow-hidden rounded-full bg-slate-100 sm:inline-block">
+                            <span className="block h-full rounded-full bg-teal-500" style={{ width: `${Math.round(score * 100)}%` }} />
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-3 py-3 text-right text-xs tabular-nums text-slate-600 sm:text-sm">
+                      {result ? `${formatCount(result.earned)} / ${formatCount(total)}` : "—"}
+                    </td>
+                    <td className="px-3 py-3 text-xs text-slate-600 sm:text-sm">
+                      <span className="block truncate">{result ? "Paper" : "Not reported"}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

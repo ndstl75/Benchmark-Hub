@@ -1,0 +1,7 @@
+{"id":1,"name":"GPT-4o-mini","type":"Standard","provider":"OpenAI","access":"API","winRate":0.602,"costPer1mTokens":"$0.15","latency":"2.1s","isCustom":false}
+{"id":2,"name":"GPT-5 Chat","type":"Reasoning","provider":"OpenAI","access":"API","winRate":0.88,"costPer1mTokens":"$1.10","latency":"8.2s","isCustom":false}
+{"id":3,"name":"MedGemma-27B","type":"Medical","provider":"Google","access":"Open Weights","winRate":0.718,"costPer1mTokens":"$0.15","latency":"1.8s","isCustom":false}
+{"id":4,"name":"Gemma 3 27B","type":"Standard","provider":"Google","access":"Open Weights","winRate":0.469,"costPer1mTokens":"$0.15","latency":"1.8s","isCustom":false}
+{"id":5,"name":"Llama 3.3 70B","type":"Standard","provider":"Meta","access":"Open Weights","winRate":0.613,"costPer1mTokens":"$0.70","latency":"3.2s","isCustom":false}
+{"id":6,"name":"Qwen3 32B","type":"Standard","provider":"Alibaba","access":"Open Weights","winRate":0.6,"costPer1mTokens":"$0.20","latency":"2.5s","isCustom":false}
+{"id":7,"name":"DrugGPT","type":"Standard","provider":"DrugGPT","access":"Specialized","winRate":0.787,"costPer1mTokens":"N/A","latency":"N/A","isCustom":false}

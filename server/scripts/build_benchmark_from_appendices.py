@@ -38,7 +38,7 @@ MODELS = [
         "eval_key": "azure-gpt-5-chat",
         "ddi_cols": ["GPT-5-Chat"],
         "ddi_paper_cols": ["GPT-5-Chat"],
-        "rx_llm_cols": [],
+        "rx_llm_cols": ["GPT-5-Chat"],
     },
     {
         "name": "MedGemma-27B",
@@ -94,7 +94,7 @@ MODELS = [
         "eval_key": "Qwen_Qwen3-32B",
         "ddi_cols": ["Qwen3-32B"],
         "ddi_paper_cols": ["Qwen3-32B"],
-        "rx_llm_cols": [],
+        "rx_llm_cols": ["Qwen3-32B"],
     },
     {
         "name": "DrugGPT",
@@ -108,7 +108,7 @@ MODELS = [
         "eval_key": "druggpt",
         "ddi_cols": [],
         "ddi_paper_cols": ["DrugGPT"],
-        "rx_llm_cols": [],
+        "rx_llm_cols": ["DrugGPT"],
     },
 ]
 
@@ -137,7 +137,7 @@ MEDMATCH_FORMAT_NOTE = (
     "Convert free-text medication order to standardized MedMatch JSON slot format per administration class."
 )
 
-RX_LLM_NOTE = "Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials."
+RX_BENCH_NOTE = "Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials."
 DDI_PAPER_NOTE = "DDI identification paper: 750 clinician-annotated DDI scenarios. Zero-shot; precision, recall, F1, accuracy, self-consistency."
 POKEMON_JUDGE = (
     "Suspects fictitious | Inherited confabulation (answered as if real drug) | "
@@ -147,7 +147,7 @@ POKEMON_JUDGE = (
 TASK_DEFINITIONS = [
     {
         "name": "Formulation Matching",
-        "prompt": f"Generic drug name (e.g., amlodipine). List all FDA-approved dosage forms. {RX_LLM_NOTE}",
+        "prompt": f"Generic drug name (e.g., amlodipine). List all FDA-approved dosage forms. {RX_BENCH_NOTE}",
         "response": "Complete and correct list of formulations.",
         "humanAnnotation": "Complete and correct list of formulations.",
         "agreement": "96%",
@@ -155,7 +155,7 @@ TASK_DEFINITIONS = [
     },
     {
         "name": "Drug Order Gen (Sig)",
-        "prompt": f"Generic drug name (e.g., carvedilol). Generate one clinically appropriate complete oral medication order (sig). {RX_LLM_NOTE}",
+        "prompt": f"Generic drug name (e.g., carvedilol). Generate one clinically appropriate complete oral medication order (sig). {RX_BENCH_NOTE}",
         "response": "One clinically appropriate complete medication order.",
         "humanAnnotation": "Clinically appropriate complete medication order.",
         "agreement": "98%",
@@ -163,17 +163,17 @@ TASK_DEFINITIONS = [
     },
     {
         "name": "Route Matching",
-        "prompt": f"Generic drug name (e.g., prednisolone). List all safe routes of administration. {RX_LLM_NOTE}",
+        "prompt": f"Generic drug name (e.g., prednisolone). List all safe routes of administration. {RX_BENCH_NOTE}",
         "response": "Complete and correct list of routes.",
         "humanAnnotation": "Complete and correct list of routes.",
         "agreement": "95%",
         "metrics": ["Precision", "Recall", "F1-score", "Accuracy", "Correctness consistency"],
     },
     {
-        "name": "Rx-LLM DDI ID",
+        "name": "Rx-Bench DDI ID",
         "prompt": (
             "Pointwise two-drug classification: identify clinically significant interacting pair "
-            f"(Category C, D, or X) from a medication list with full dosing. {RX_LLM_NOTE}"
+            f"(Category C, D, or X) from a medication list with full dosing. {RX_BENCH_NOTE}"
         ),
         "response": "Correct interacting drug pair.",
         "humanAnnotation": "Correct interacting drug pair.",
@@ -182,7 +182,7 @@ TASK_DEFINITIONS = [
     },
     {
         "name": "Renal Dose ID",
-        "prompt": f"Generic drug name (e.g., vancomycin). Determine if renal dose adjustment is required (Yes/No). {RX_LLM_NOTE}",
+        "prompt": f"Generic drug name (e.g., vancomycin). Determine if renal dose adjustment is required (Yes/No). {RX_BENCH_NOTE}",
         "response": "Yes or No.",
         "humanAnnotation": "Yes or No.",
         "agreement": "99%",
@@ -190,7 +190,7 @@ TASK_DEFINITIONS = [
     },
     {
         "name": "Drug-Indication",
-        "prompt": f"Drug name. Identify FDA-approved clinical indications. {RX_LLM_NOTE}",
+        "prompt": f"Drug name. Identify FDA-approved clinical indications. {RX_BENCH_NOTE}",
         "response": "Correct list of FDA-approved indications.",
         "humanAnnotation": "Correct list of FDA-approved indications.",
         "agreement": "93%",
@@ -400,7 +400,7 @@ def load_ddi_identification_table3() -> dict[str, dict[str, float]]:
 
 
 def load_rx_llm_primary_metrics() -> dict[str, dict[str, float]]:
-    """Rx-LLM Tables 2-3 primary task metrics used in Figure 2."""
+    """Rx-Bench Tables 2-3 primary task metrics used in Figure 2."""
     path = SOURCES / "rx_llm_tables_2_3.csv"
     out: dict[str, dict[str, float]] = {m["name"]: {} for m in MODELS}
     with path.open(newline="", encoding="utf-8") as f:
@@ -411,7 +411,7 @@ def load_rx_llm_primary_metrics() -> dict[str, dict[str, float]]:
             if not row:
                 continue
             source_task = row[0].strip()
-            task = "Rx-LLM DDI ID" if source_task == "DDI ID" else source_task
+            task = "Rx-Bench DDI ID" if source_task == "DDI ID" else source_task
             for model in MODELS:
                 for col in model["rx_llm_cols"]:
                     idx = col_index.get(col)
@@ -447,8 +447,8 @@ def load_ddi_verification_accuracy() -> dict[str, float]:
 
 
 def earned_failed(score: float) -> dict[str, float]:
-    earned = max(0, min(100, round(score)))
-    return {"earned": earned, "failed": 100 - earned}
+    earned = max(0, min(100, round(score, 1)))
+    return {"earned": earned, "failed": round(100 - earned, 1)}
 
 
 def build() -> dict:
@@ -496,7 +496,7 @@ def build() -> dict:
         "Formulation Matching",
         "Drug Order Gen (Sig)",
         "Route Matching",
-        "Rx-LLM DDI ID",
+        "Rx-Bench DDI ID",
         "Renal Dose ID",
         "Drug-Indication",
     ]
@@ -548,7 +548,7 @@ def build() -> dict:
 
         accuracy_rows = {
             "Mean Win Rate": score_value(macro_win),
-            "Rx-LLM (CMM)": score_value(rx_llm_score),
+            "Rx-Bench (CMM)": score_value(rx_llm_score),
             "DDI Identification": score_value(ddi_score),
             "MedMatch": score_value(medmatch_score),
             "Drug or Pokémon?": score_value(pokemon_score),
@@ -578,7 +578,7 @@ def build() -> dict:
         "meta": {
             "papers": {
                 "rxLlm": {
-                    "title": "Rx-LLM",
+                    "title": "Rx-Bench",
                     "doi": "10.64898/2025.12.01.25341004",
                     "url": "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
                 },
@@ -601,7 +601,7 @@ def build() -> dict:
                 },
             },
             "sources": [
-                "Rx-LLM medRxiv 10.64898/2025.12.01.25341004",
+                "Rx-Bench submission 4.8.26 / medRxiv 10.64898/2025.12.01.25341004",
                 "DDI identification medRxiv 10.64898/2025.12.03.25341549",
                 "MedMatch medRxiv 10.64898/2026.01.13.26343949 / PMC12870651",
                 "Drug or Pokémon? PMC12870567",
@@ -611,10 +611,10 @@ def build() -> dict:
             "scorePolicy": {
                 "reportedMean": "Mean Win Rate averages only source-backed paper scores and excludes N/A cells.",
                 "sourceCoverage": "Number of primary papers with source-backed performance for the model out of four.",
-                "rxLlm": "Rx-LLM (CMM) is the macro mean of the six primary task metrics reported in Rx-LLM Tables 2-3; unreported models remain N/A.",
+                "rxLlm": "Rx-Bench (CMM) is the macro mean of the six primary task metrics reported in Rx-Bench Tables 2-3; task-level scores remain available in Scenarios.",
                 "pokemon": "Drug or Pokémon? scores are suspicion detected = 100 - default-dosing confabulation rate; unreported models are N/A, not zero.",
             },
-            "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pokémon? source table. Cost and Latency are indicative estimates and are not source-backed.",
+            "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-Bench (CMM) is the macro mean of six primary task metrics from Rx-Bench Tables 2-3; task-level scores remain attached to Scenarios rather than the main leaderboard. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B. DrugGPT scores now include Rx-Bench and DDI identification source tables, but remain N/A for MedMatch and Drug or Pokémon? where not reported. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pokémon? source table. Cost and Latency are indicative estimates and are not source-backed.",
         },
     }
 

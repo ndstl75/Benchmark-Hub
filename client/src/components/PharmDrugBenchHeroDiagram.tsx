@@ -10,7 +10,7 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
       viewBox="0 0 920 340"
       className={`w-full max-w-6xl mx-auto ${className}`}
       role="img"
-      aria-label="PharmDrugBench agent loop: LLM receives medication prompts, responds, and is scored with paper-aligned benchmark metrics"
+      aria-label="PharmDrugBench model loop: LLM receives medication-safety benchmark prompts, returns a candidate answer, and is scored with paper-aligned metrics"
     >
       <defs>
         <style>{`
@@ -139,7 +139,7 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
         </marker>
       </defs>
 
-      {/* reasoning bubble (PhysicianBench-style) */}
+      {/* benchmark task bubble */}
       <g filter="url(#pdb-shadow)">
         <rect
           x="40"
@@ -154,10 +154,13 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
         />
         <path d="M 140 86 L 150 98 L 162 86" fill="#FFFFFF" stroke="#0F766E" strokeWidth="1.4" />
         <text x="56" y="43" fill="#64748B" fontSize="9" fontWeight="700" fontFamily="system-ui,sans-serif" letterSpacing="0.16em">
-          REASONING
+          BENCHMARK TASK
         </text>
         <text x="56" y="62" fill="#0F172A" fontSize="11" fontWeight="700" fontFamily="system-ui,sans-serif">
-          Assess ASCVD risk (10-yr 18%)
+          Checks indication, safety,
+        </text>
+        <text x="56" y="76" fill="#0F172A" fontSize="11" fontWeight="700" fontFamily="system-ui,sans-serif">
+          dose, and route
         </text>
       </g>
 
@@ -187,7 +190,7 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
         <circle cx="168" cy="178" r="6" fill="#DCFCE7" stroke="#22C55E" strokeWidth="1" />
         <path d="M 165 178 L 167 180 L 171 176" stroke="#16A34A" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         <text x="116" y="232" fill="#64748B" fontSize="11" fontWeight="700" textAnchor="middle" fontFamily="system-ui,sans-serif" letterSpacing="0.12em">
-          AGENT
+          MODEL
         </text>
       </g>
 
@@ -226,7 +229,7 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
       <g opacity="0.9">
         <path className="pdb-score-line" d="M 116 248 Q 116 268 196 268 Q 276 268 276 248" stroke="#A78BFA" strokeWidth="1.5" strokeDasharray="4 3" fill="none" />
         <text x="196" y="284" fill="#7C3AED" fontSize="9" fontWeight="600" textAnchor="middle" fontFamily="system-ui,sans-serif">
-          checkpoint metrics score response
+          the benchmark scores the response
         </text>
       </g>
       </g>
@@ -271,7 +274,7 @@ export function PharmDrugBenchHeroDiagram({ className = "" }: PharmDrugBenchHero
 
         {/* task tiles — 2 rows × 3 */}
         {[
-          { label: "6 CMM", sub: "Rx-LLM", x: 350, y: 152, bg: "#FEF9C3", stroke: "#FDE047", icon: "💊" },
+          { label: "6 CMM", sub: "Rx-Bench", x: 350, y: 152, bg: "#FEF9C3", stroke: "#FDE047", icon: "💊" },
           { label: "3 DDI", sub: "Multi-format", x: 478, y: 152, bg: "#FFEDD5", stroke: "#FDBA74", icon: "⚠" },
           { label: "7 MedMatch", sub: "JSON slots", x: 606, y: 152, bg: "#EDE9FE", stroke: "#C4B5FD", icon: "{}" },
           { label: "2 Adversarial", sub: "Drug or Pokémon?", x: 350, y: 216, bg: "#FCE7F3", stroke: "#F9A8D4", icon: "?" },

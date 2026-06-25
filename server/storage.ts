@@ -1,13 +1,24 @@
 import {
-  type Model, type InsertModel,
-  type BenchmarkResult, type InsertBenchmarkResult,
-  type LeaderboardScore, type InsertLeaderboardScore,
-  type TaskDefinition, type InsertTaskDefinition,
-  type Evaluator, type InsertEvaluator,
-  models, benchmarkResults, leaderboardScores, taskDefinitions, evaluators,
+  type Model,
+  type InsertModel,
+  type BenchmarkResult,
+  type InsertBenchmarkResult,
+  type LeaderboardScore,
+  type InsertLeaderboardScore,
+  type TaskDefinition,
+  type InsertTaskDefinition,
+  type Evaluator,
+  type InsertEvaluator,
 } from "@shared/schema";
-import { db } from "./db";
-import { eq, asc } from "drizzle-orm";
+import { readJsonl, writeJsonl, nextId } from "./jsonl";
+
+const COLLECTIONS = {
+  models: "models",
+  benchmarkResults: "benchmark_results",
+  leaderboardScores: "leaderboard_scores",
+  taskDefinitions: "task_definitions",
+  evaluators: "evaluators",
+} as const;
 
 export interface IStorage {
   getModels(): Promise<Model[]>;
@@ -34,93 +45,123 @@ export interface IStorage {
   deleteEvaluator(id: number): Promise<void>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class JsonlStorage implements IStorage {
   async getModels(): Promise<Model[]> {
-    return db.select().from(models);
+    return readJsonl<Model>(COLLECTIONS.models);
   }
 
   async getModelById(id: number): Promise<Model | undefined> {
-    const [model] = await db.select().from(models).where(eq(models.id, id));
-    return model;
+    return (await this.getModels()).find((model) => model.id === id);
   }
 
   async getModelByName(name: string): Promise<Model | undefined> {
-    const [model] = await db.select().from(models).where(eq(models.name, name));
-    return model;
+    return (await this.getModels()).find((model) => model.name === name);
   }
 
   async createModel(model: InsertModel): Promise<Model> {
-    const [created] = await db.insert(models).values(model).returning();
+    const models = await this.getModels();
+    if (models.some((existing) => existing.name === model.name)) {
+      throw new Error(`Model already exists: ${model.name}`);
+    }
+    const created: Model = { ...model, id: nextId(models) };
+    writeJsonl(COLLECTIONS.models, [...models, created]);
     return created;
   }
 
   async deleteModel(id: number): Promise<void> {
-    await db.delete(benchmarkResults).where(eq(benchmarkResults.modelId, id));
-    await db.delete(leaderboardScores).where(eq(leaderboardScores.modelId, id));
-    await db.delete(models).where(eq(models.id, id));
+    const models = await this.getModels();
+    writeJsonl(
+      COLLECTIONS.models,
+      models.filter((model) => model.id !== id),
+    );
+    const results = readJsonl<BenchmarkResult>(COLLECTIONS.benchmarkResults);
+    writeJsonl(
+      COLLECTIONS.benchmarkResults,
+      results.filter((result) => result.modelId !== id),
+    );
+    const scores = readJsonl<LeaderboardScore>(COLLECTIONS.leaderboardScores);
+    writeJsonl(
+      COLLECTIONS.leaderboardScores,
+      scores.filter((score) => score.modelId !== id),
+    );
   }
 
   async getBenchmarkResults(modelId: number): Promise<BenchmarkResult[]> {
-    return db.select().from(benchmarkResults).where(eq(benchmarkResults.modelId, modelId)).orderBy(asc(benchmarkResults.taskName));
+    return readJsonl<BenchmarkResult>(COLLECTIONS.benchmarkResults)
+      .filter((result) => result.modelId === modelId)
+      .sort((a, b) => a.taskName.localeCompare(b.taskName));
   }
 
   async createBenchmarkResult(result: InsertBenchmarkResult): Promise<BenchmarkResult> {
-    const [created] = await db.insert(benchmarkResults).values(result).returning();
+    const results = readJsonl<BenchmarkResult>(COLLECTIONS.benchmarkResults);
+    const created: BenchmarkResult = { ...result, id: nextId(results) };
+    writeJsonl(COLLECTIONS.benchmarkResults, [...results, created]);
     return created;
   }
 
   async getBenchmarkResultsByModel(modelId: number): Promise<BenchmarkResult[]> {
-    return db.select().from(benchmarkResults).where(eq(benchmarkResults.modelId, modelId)).orderBy(asc(benchmarkResults.taskName));
+    return this.getBenchmarkResults(modelId);
   }
 
   async getLeaderboardScores(tab?: string): Promise<LeaderboardScore[]> {
-    if (tab) {
-      return db.select().from(leaderboardScores).where(eq(leaderboardScores.tab, tab));
-    }
-    return db.select().from(leaderboardScores);
+    const scores = readJsonl<LeaderboardScore>(COLLECTIONS.leaderboardScores);
+    return tab ? scores.filter((score) => score.tab === tab) : scores;
   }
 
   async createLeaderboardScore(score: InsertLeaderboardScore): Promise<LeaderboardScore> {
-    const [created] = await db.insert(leaderboardScores).values(score).returning();
+    const scores = readJsonl<LeaderboardScore>(COLLECTIONS.leaderboardScores);
+    const created: LeaderboardScore = { ...score, id: nextId(scores) };
+    writeJsonl(COLLECTIONS.leaderboardScores, [...scores, created]);
     return created;
   }
 
   async getTaskDefinitions(): Promise<TaskDefinition[]> {
-    return db.select().from(taskDefinitions).orderBy(asc(taskDefinitions.id));
+    return readJsonl<TaskDefinition>(COLLECTIONS.taskDefinitions).sort((a, b) => a.id - b.id);
   }
 
   async getTaskDefinitionByName(name: string): Promise<TaskDefinition | undefined> {
-    const [task] = await db.select().from(taskDefinitions).where(eq(taskDefinitions.name, name));
-    return task;
+    return (await this.getTaskDefinitions()).find((task) => task.name === name);
   }
 
   async createTaskDefinition(task: InsertTaskDefinition): Promise<TaskDefinition> {
-    const [created] = await db.insert(taskDefinitions).values(task).returning();
+    const tasks = readJsonl<TaskDefinition>(COLLECTIONS.taskDefinitions);
+    const created: TaskDefinition = { ...task, id: nextId(tasks) };
+    writeJsonl(COLLECTIONS.taskDefinitions, [...tasks, created]);
     return created;
   }
 
   async getEvaluators(): Promise<Evaluator[]> {
-    return db.select().from(evaluators);
+    return readJsonl<Evaluator>(COLLECTIONS.evaluators);
   }
 
   async getEvaluatorById(id: number): Promise<Evaluator | undefined> {
-    const [row] = await db.select().from(evaluators).where(eq(evaluators.id, id));
-    return row;
+    return (await this.getEvaluators()).find((evaluator) => evaluator.id === id);
   }
 
   async createEvaluator(data: InsertEvaluator): Promise<Evaluator> {
-    const [created] = await db.insert(evaluators).values(data).returning();
+    const evaluators = readJsonl<Evaluator>(COLLECTIONS.evaluators);
+    const created: Evaluator = { ...data, id: nextId(evaluators) };
+    writeJsonl(COLLECTIONS.evaluators, [...evaluators, created]);
     return created;
   }
 
   async updateEvaluator(id: number, data: Partial<InsertEvaluator>): Promise<Evaluator | undefined> {
-    const [updated] = await db.update(evaluators).set(data).where(eq(evaluators.id, id)).returning();
+    const evaluators = readJsonl<Evaluator>(COLLECTIONS.evaluators);
+    const index = evaluators.findIndex((evaluator) => evaluator.id === id);
+    if (index < 0) return undefined;
+    const updated: Evaluator = { ...evaluators[index], ...data };
+    evaluators[index] = updated;
+    writeJsonl(COLLECTIONS.evaluators, evaluators);
     return updated;
   }
 
   async deleteEvaluator(id: number): Promise<void> {
-    await db.delete(evaluators).where(eq(evaluators.id, id));
+    const evaluators = readJsonl<Evaluator>(COLLECTIONS.evaluators);
+    writeJsonl(
+      COLLECTIONS.evaluators,
+      evaluators.filter((evaluator) => evaluator.id !== id),
+    );
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new JsonlStorage();

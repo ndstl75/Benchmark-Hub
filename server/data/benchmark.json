@@ -15,7 +15,7 @@
       "type": "Reasoning",
       "provider": "OpenAI",
       "access": "API",
-      "winRate": 0.895,
+      "winRate": 0.88,
       "costPer1mTokens": "$1.10",
       "latency": "8.2s",
       "isCustom": false
@@ -55,7 +55,7 @@
       "type": "Standard",
       "provider": "Alibaba",
       "access": "Open Weights",
-      "winRate": 0.557,
+      "winRate": 0.6,
       "costPer1mTokens": "$0.20",
       "latency": "2.5s",
       "isCustom": false
@@ -65,7 +65,7 @@
       "type": "Standard",
       "provider": "DrugGPT",
       "access": "Specialized",
-      "winRate": 0.788,
+      "winRate": 0.787,
       "costPer1mTokens": "N/A",
       "latency": "N/A",
       "isCustom": false
@@ -75,506 +75,614 @@
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Formulation Matching",
-      "earned": 53,
-      "failed": 47
+      "earned": 53.1,
+      "failed": 46.9
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Drug Order Gen (Sig)",
-      "earned": 83,
-      "failed": 17
+      "earned": 83.2,
+      "failed": 16.8
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Route Matching",
-      "earned": 68,
-      "failed": 32
+      "earned": 67.7,
+      "failed": 32.3
     },
     {
       "modelName": "GPT-4o-mini",
-      "taskName": "Rx-LLM DDI ID",
-      "earned": 70,
-      "failed": 30
+      "taskName": "Rx-Bench DDI ID",
+      "earned": 70.4,
+      "failed": 29.6
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Renal Dose ID",
-      "earned": 83,
-      "failed": 17
+      "earned": 83.3,
+      "failed": 16.7
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Drug-Indication",
-      "earned": 96,
-      "failed": 4
+      "earned": 96.5,
+      "failed": 3.5
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch Route Selection",
-      "earned": 90,
-      "failed": 10
+      "earned": 90.1,
+      "failed": 9.9
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "DDI ID",
-      "earned": 61,
-      "failed": 39
+      "earned": 61.0,
+      "failed": 39.0
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "DDI 3-Drug Combo",
-      "earned": 87,
-      "failed": 13
+      "earned": 86.6,
+      "failed": 13.4
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "DDI Multi-Drug",
-      "earned": 71,
-      "failed": 29
+      "earned": 71.3,
+      "failed": 28.7
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "DDI Verification",
-      "earned": 65,
-      "failed": 35
+      "earned": 65.0,
+      "failed": 35.0
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch (Oral Solid)",
-      "earned": 94,
-      "failed": 6
+      "earned": 94.2,
+      "failed": 5.8
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch (Oral Liq)",
-      "earned": 91,
-      "failed": 9
+      "earned": 90.7,
+      "failed": 9.3
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch (IV Intermit)",
-      "earned": 97,
-      "failed": 3
+      "earned": 97.3,
+      "failed": 2.7
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch (IV Push)",
-      "earned": 96,
-      "failed": 4
+      "earned": 96.5,
+      "failed": 3.5
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch (Continuous Titrate)",
-      "earned": 84,
-      "failed": 16
+      "earned": 84.3,
+      "failed": 15.7
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "MedMatch (Continuous Non-Titrate)",
-      "earned": 80,
-      "failed": 20
+      "earned": 79.9,
+      "failed": 20.1
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Pok\u00e9mon (Generic)",
-      "earned": 2,
-      "failed": 98
+      "earned": 2.3,
+      "failed": 97.7
     },
     {
       "modelName": "GPT-4o-mini",
       "taskName": "Pok\u00e9mon (Brand)",
-      "earned": 1,
-      "failed": 99
+      "earned": 1.2,
+      "failed": 98.8
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Formulation Matching",
+      "earned": 73.0,
+      "failed": 27.0
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 90.0,
+      "failed": 10.0
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Route Matching",
+      "earned": 75.2,
+      "failed": 24.8
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Rx-Bench DDI ID",
+      "earned": 84.8,
+      "failed": 15.2
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Renal Dose ID",
+      "earned": 87.4,
+      "failed": 12.6
+    },
+    {
+      "modelName": "GPT-5 Chat",
+      "taskName": "Drug-Indication",
+      "earned": 99.3,
+      "failed": 0.7
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch Route Selection",
-      "earned": 98,
-      "failed": 2
+      "earned": 98.4,
+      "failed": 1.6
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "DDI ID",
-      "earned": 81,
-      "failed": 19
+      "earned": 80.6,
+      "failed": 19.4
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "DDI 3-Drug Combo",
-      "earned": 94,
-      "failed": 6
+      "earned": 93.6,
+      "failed": 6.4
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "DDI Multi-Drug",
-      "earned": 88,
-      "failed": 12
+      "earned": 88.4,
+      "failed": 11.6
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "DDI Verification",
-      "earned": 83,
-      "failed": 17
+      "earned": 83.3,
+      "failed": 16.7
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch (Oral Solid)",
-      "earned": 95,
-      "failed": 5
+      "earned": 95.0,
+      "failed": 5.0
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch (Oral Liq)",
-      "earned": 90,
-      "failed": 10
+      "earned": 90.0,
+      "failed": 10.0
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch (IV Intermit)",
-      "earned": 96,
-      "failed": 4
+      "earned": 96.3,
+      "failed": 3.7
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch (IV Push)",
-      "earned": 95,
-      "failed": 5
+      "earned": 94.8,
+      "failed": 5.2
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch (Continuous Titrate)",
-      "earned": 86,
-      "failed": 14
+      "earned": 85.8,
+      "failed": 14.2
     },
     {
       "modelName": "GPT-5 Chat",
       "taskName": "MedMatch (Continuous Non-Titrate)",
-      "earned": 81,
-      "failed": 19
+      "earned": 80.6,
+      "failed": 19.4
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "Formulation Matching",
-      "earned": 41,
-      "failed": 59
+      "earned": 40.9,
+      "failed": 59.1
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "Drug Order Gen (Sig)",
-      "earned": 81,
-      "failed": 19
+      "earned": 81.2,
+      "failed": 18.8
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "Route Matching",
-      "earned": 69,
-      "failed": 31
+      "earned": 69.1,
+      "failed": 30.9
     },
     {
       "modelName": "MedGemma-27B",
-      "taskName": "Rx-LLM DDI ID",
-      "earned": 66,
-      "failed": 34
+      "taskName": "Rx-Bench DDI ID",
+      "earned": 66.5,
+      "failed": 33.5
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "Renal Dose ID",
-      "earned": 77,
-      "failed": 23
+      "earned": 76.9,
+      "failed": 23.1
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "Drug-Indication",
-      "earned": 97,
-      "failed": 3
+      "earned": 96.9,
+      "failed": 3.1
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "DDI ID",
-      "earned": 50,
-      "failed": 50
+      "earned": 50.1,
+      "failed": 49.9
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "DDI 3-Drug Combo",
-      "earned": 85,
-      "failed": 15
+      "earned": 84.9,
+      "failed": 15.1
     },
     {
       "modelName": "MedGemma-27B",
       "taskName": "DDI Multi-Drug",
-      "earned": 80,
-      "failed": 20
+      "earned": 80.0,
+      "failed": 20.0
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch Route Selection",
-      "earned": 86,
-      "failed": 14
+      "earned": 85.8,
+      "failed": 14.2
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "DDI Verification",
-      "earned": 66,
-      "failed": 34
+      "earned": 65.9,
+      "failed": 34.1
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch (Oral Solid)",
-      "earned": 94,
-      "failed": 6
+      "earned": 93.6,
+      "failed": 6.4
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch (Oral Liq)",
-      "earned": 91,
-      "failed": 9
+      "earned": 91.0,
+      "failed": 9.0
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch (IV Intermit)",
-      "earned": 97,
-      "failed": 3
+      "earned": 96.8,
+      "failed": 3.2
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch (IV Push)",
-      "earned": 95,
-      "failed": 5
+      "earned": 95.4,
+      "failed": 4.6
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch (Continuous Titrate)",
-      "earned": 88,
-      "failed": 12
+      "earned": 87.9,
+      "failed": 12.1
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "MedMatch (Continuous Non-Titrate)",
-      "earned": 83,
-      "failed": 17
+      "earned": 83.3,
+      "failed": 16.7
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "Pok\u00e9mon (Generic)",
-      "earned": 4,
-      "failed": 96
+      "earned": 4.1,
+      "failed": 95.9
     },
     {
       "modelName": "Gemma 3 27B",
       "taskName": "Pok\u00e9mon (Brand)",
-      "earned": 2,
-      "failed": 98
+      "earned": 2.3,
+      "failed": 97.7
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Formulation Matching",
-      "earned": 54,
-      "failed": 46
+      "earned": 54.0,
+      "failed": 46.0
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Drug Order Gen (Sig)",
-      "earned": 88,
-      "failed": 12
+      "earned": 88.0,
+      "failed": 12.0
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Route Matching",
-      "earned": 74,
-      "failed": 26
+      "earned": 74.3,
+      "failed": 25.7
     },
     {
       "modelName": "Llama 3.3 70B",
-      "taskName": "Rx-LLM DDI ID",
-      "earned": 67,
-      "failed": 33
+      "taskName": "Rx-Bench DDI ID",
+      "earned": 66.7,
+      "failed": 33.3
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Renal Dose ID",
-      "earned": 83,
-      "failed": 17
+      "earned": 83.2,
+      "failed": 16.8
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Drug-Indication",
-      "earned": 98,
-      "failed": 2
+      "earned": 97.6,
+      "failed": 2.4
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch Route Selection",
-      "earned": 81,
-      "failed": 19
+      "earned": 81.2,
+      "failed": 18.8
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "DDI ID",
-      "earned": 60,
-      "failed": 40
+      "earned": 59.8,
+      "failed": 40.2
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "DDI 3-Drug Combo",
-      "earned": 82,
-      "failed": 18
+      "earned": 81.5,
+      "failed": 18.5
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "DDI Multi-Drug",
-      "earned": 69,
-      "failed": 31
+      "earned": 68.6,
+      "failed": 31.4
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "DDI Verification",
-      "earned": 74,
-      "failed": 26
+      "earned": 73.9,
+      "failed": 26.1
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch (Oral Solid)",
-      "earned": 95,
-      "failed": 5
+      "earned": 94.6,
+      "failed": 5.4
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch (Oral Liq)",
-      "earned": 84,
-      "failed": 16
+      "earned": 84.3,
+      "failed": 15.7
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch (IV Intermit)",
-      "earned": 94,
-      "failed": 6
+      "earned": 94.1,
+      "failed": 5.9
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch (IV Push)",
-      "earned": 94,
-      "failed": 6
+      "earned": 94.5,
+      "failed": 5.5
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch (Continuous Titrate)",
-      "earned": 78,
-      "failed": 22
+      "earned": 77.5,
+      "failed": 22.5
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "MedMatch (Continuous Non-Titrate)",
-      "earned": 81,
-      "failed": 19
+      "earned": 81.2,
+      "failed": 18.8
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Pok\u00e9mon (Generic)",
-      "earned": 14,
-      "failed": 86
+      "earned": 14.0,
+      "failed": 86.0
     },
     {
       "modelName": "Llama 3.3 70B",
       "taskName": "Pok\u00e9mon (Brand)",
-      "earned": 8,
-      "failed": 92
+      "earned": 8.1,
+      "failed": 91.9
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Formulation Matching",
+      "earned": 36.6,
+      "failed": 63.4
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 79.6,
+      "failed": 20.4
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Route Matching",
+      "earned": 71.6,
+      "failed": 28.4
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Rx-Bench DDI ID",
+      "earned": 75.6,
+      "failed": 24.4
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Renal Dose ID",
+      "earned": 79.7,
+      "failed": 20.3
+    },
+    {
+      "modelName": "Qwen3 32B",
+      "taskName": "Drug-Indication",
+      "earned": 94.0,
+      "failed": 6.0
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch Route Selection",
-      "earned": 84,
-      "failed": 16
+      "earned": 84.3,
+      "failed": 15.7
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "DDI ID",
-      "earned": 67,
-      "failed": 33
+      "earned": 66.7,
+      "failed": 33.3
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "DDI 3-Drug Combo",
-      "earned": 84,
-      "failed": 16
+      "earned": 84.0,
+      "failed": 16.0
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "DDI Multi-Drug",
-      "earned": 76,
-      "failed": 24
+      "earned": 76.1,
+      "failed": 23.9
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "DDI Verification",
-      "earned": 59,
-      "failed": 41
+      "earned": 59.4,
+      "failed": 40.6
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch (Oral Solid)",
-      "earned": 95,
-      "failed": 5
+      "earned": 95.0,
+      "failed": 5.0
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch (Oral Liq)",
-      "earned": 89,
-      "failed": 11
+      "earned": 89.0,
+      "failed": 11.0
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch (IV Intermit)",
-      "earned": 96,
-      "failed": 4
+      "earned": 95.8,
+      "failed": 4.2
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch (IV Push)",
-      "earned": 95,
-      "failed": 5
+      "earned": 95.2,
+      "failed": 4.8
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch (Continuous Titrate)",
-      "earned": 88,
-      "failed": 12
+      "earned": 88.1,
+      "failed": 11.9
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "MedMatch (Continuous Non-Titrate)",
-      "earned": 83,
-      "failed": 17
+      "earned": 83.3,
+      "failed": 16.7
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "Pok\u00e9mon (Generic)",
-      "earned": 2,
-      "failed": 98
+      "earned": 1.6,
+      "failed": 98.4
     },
     {
       "modelName": "Qwen3 32B",
       "taskName": "Pok\u00e9mon (Brand)",
-      "earned": 1,
-      "failed": 99
+      "earned": 1.2,
+      "failed": 98.8
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Formulation Matching",
+      "earned": 63.4,
+      "failed": 36.6
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Drug Order Gen (Sig)",
+      "earned": 80.4,
+      "failed": 19.6
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Route Matching",
+      "earned": 74.0,
+      "failed": 26.0
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Rx-Bench DDI ID",
+      "earned": 77.7,
+      "failed": 22.3
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Renal Dose ID",
+      "earned": 77.9,
+      "failed": 22.1
+    },
+    {
+      "modelName": "DrugGPT",
+      "taskName": "Drug-Indication",
+      "earned": 98.4,
+      "failed": 1.6
     },
     {
       "modelName": "DrugGPT",
       "taskName": "DDI ID",
-      "earned": 50,
-      "failed": 50
+      "earned": 50.1,
+      "failed": 49.9
     },
     {
       "modelName": "DrugGPT",
       "taskName": "DDI 3-Drug Combo",
-      "earned": 94,
-      "failed": 6
+      "earned": 93.7,
+      "failed": 6.3
     },
     {
       "modelName": "DrugGPT",
       "taskName": "DDI Multi-Drug",
-      "earned": 93,
-      "failed": 7
+      "earned": 92.6,
+      "failed": 7.4
     }
   ],
   "leaderboardScores": [
@@ -586,7 +694,7 @@
     },
     {
       "modelName": "GPT-4o-mini",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
       "value": "0.757"
     },
@@ -648,13 +756,13 @@
       "modelName": "GPT-5 Chat",
       "metricName": "Mean Win Rate",
       "tab": "Accuracy",
-      "value": "0.895"
+      "value": "0.880"
     },
     {
       "modelName": "GPT-5 Chat",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
-      "value": "N/A"
+      "value": "0.850"
     },
     {
       "modelName": "GPT-5 Chat",
@@ -708,7 +816,7 @@
       "modelName": "GPT-5 Chat",
       "metricName": "Source Coverage",
       "tab": "General information",
-      "value": "2/4"
+      "value": "3/4"
     },
     {
       "modelName": "MedGemma-27B",
@@ -718,7 +826,7 @@
     },
     {
       "modelName": "MedGemma-27B",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
       "value": "0.719"
     },
@@ -784,7 +892,7 @@
     },
     {
       "modelName": "Gemma 3 27B",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
       "value": "N/A"
     },
@@ -850,7 +958,7 @@
     },
     {
       "modelName": "Llama 3.3 70B",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
       "value": "0.773"
     },
@@ -912,13 +1020,13 @@
       "modelName": "Qwen3 32B",
       "metricName": "Mean Win Rate",
       "tab": "Accuracy",
-      "value": "0.557"
+      "value": "0.600"
     },
     {
       "modelName": "Qwen3 32B",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
-      "value": "N/A"
+      "value": "0.728"
     },
     {
       "modelName": "Qwen3 32B",
@@ -972,19 +1080,19 @@
       "modelName": "Qwen3 32B",
       "metricName": "Source Coverage",
       "tab": "General information",
-      "value": "3/4"
+      "value": "4/4"
     },
     {
       "modelName": "DrugGPT",
       "metricName": "Mean Win Rate",
       "tab": "Accuracy",
-      "value": "0.788"
+      "value": "0.787"
     },
     {
       "modelName": "DrugGPT",
-      "metricName": "Rx-LLM (CMM)",
+      "metricName": "Rx-Bench (CMM)",
       "tab": "Accuracy",
-      "value": "N/A"
+      "value": "0.786"
     },
     {
       "modelName": "DrugGPT",
@@ -1038,13 +1146,13 @@
       "modelName": "DrugGPT",
       "metricName": "Source Coverage",
       "tab": "General information",
-      "value": "1/4"
+      "value": "2/4"
     }
   ],
   "taskDefinitions": [
     {
       "name": "Formulation Matching",
-      "prompt": "Generic drug name (e.g., amlodipine). List all FDA-approved dosage forms. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "prompt": "Generic drug name (e.g., amlodipine). List all FDA-approved dosage forms. Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "Complete and correct list of formulations.",
       "humanAnnotation": "Complete and correct list of formulations.",
       "agreement": "96%",
@@ -1058,7 +1166,7 @@
     },
     {
       "name": "Drug Order Gen (Sig)",
-      "prompt": "Generic drug name (e.g., carvedilol). Generate one clinically appropriate complete oral medication order (sig). Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "prompt": "Generic drug name (e.g., carvedilol). Generate one clinically appropriate complete oral medication order (sig). Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "One clinically appropriate complete medication order.",
       "humanAnnotation": "Clinically appropriate complete medication order.",
       "agreement": "98%",
@@ -1070,7 +1178,7 @@
     },
     {
       "name": "Route Matching",
-      "prompt": "Generic drug name (e.g., prednisolone). List all safe routes of administration. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "prompt": "Generic drug name (e.g., prednisolone). List all safe routes of administration. Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "Complete and correct list of routes.",
       "humanAnnotation": "Complete and correct list of routes.",
       "agreement": "95%",
@@ -1083,8 +1191,8 @@
       ]
     },
     {
-      "name": "Rx-LLM DDI ID",
-      "prompt": "Pointwise two-drug classification: identify clinically significant interacting pair (Category C, D, or X) from a medication list with full dosing. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "name": "Rx-Bench DDI ID",
+      "prompt": "Pointwise two-drug classification: identify clinically significant interacting pair (Category C, D, or X) from a medication list with full dosing. Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "Correct interacting drug pair.",
       "humanAnnotation": "Correct interacting drug pair.",
       "agreement": "94%",
@@ -1098,7 +1206,7 @@
     },
     {
       "name": "Renal Dose ID",
-      "prompt": "Generic drug name (e.g., vancomycin). Determine if renal dose adjustment is required (Yes/No). Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "prompt": "Generic drug name (e.g., vancomycin). Determine if renal dose adjustment is required (Yes/No). Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "Yes or No.",
       "humanAnnotation": "Yes or No.",
       "agreement": "99%",
@@ -1112,7 +1220,7 @@
     },
     {
       "name": "Drug-Indication",
-      "prompt": "Drug name. Identify FDA-approved clinical indications. Rx-LLM benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
+      "prompt": "Drug name. Identify FDA-approved clinical indications. Rx-Bench benchmark: 250 clinician-annotated cases (inpatient and outpatient). Zero-shot prompting; temperature 0.7; 3 trials.",
       "response": "Correct list of FDA-approved indications.",
       "humanAnnotation": "Correct list of FDA-approved indications.",
       "agreement": "93%",
@@ -1281,7 +1389,7 @@
   "meta": {
     "papers": {
       "rxLlm": {
-        "title": "Rx-LLM",
+        "title": "Rx-Bench",
         "doi": "10.64898/2025.12.01.25341004",
         "url": "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2"
       },
@@ -1304,7 +1412,7 @@
       }
     },
     "sources": [
-      "Rx-LLM medRxiv 10.64898/2025.12.01.25341004",
+      "Rx-Bench submission 4.8.26 / medRxiv 10.64898/2025.12.01.25341004",
       "DDI identification medRxiv 10.64898/2025.12.03.25341549",
       "MedMatch medRxiv 10.64898/2026.01.13.26343949 / PMC12870651",
       "Drug or Pok\u00e9mon? PMC12870567",
@@ -1322,9 +1430,9 @@
     "scorePolicy": {
       "reportedMean": "Mean Win Rate averages only source-backed paper scores and excludes N/A cells.",
       "sourceCoverage": "Number of primary papers with source-backed performance for the model out of four.",
-      "rxLlm": "Rx-LLM (CMM) is the macro mean of the six primary task metrics reported in Rx-LLM Tables 2-3; unreported models remain N/A.",
+      "rxLlm": "Rx-Bench (CMM) is the macro mean of the six primary task metrics reported in Rx-Bench Tables 2-3; task-level scores remain available in Scenarios.",
       "pokemon": "Drug or Pok\u00e9mon? scores are suspicion detected = 100 - default-dosing confabulation rate; unreported models are N/A, not zero."
     },
-    "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-LLM (CMM) is the macro mean of six primary task metrics from Rx-LLM Tables 2-3. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B. DrugGPT scores are from DDI identification Table 3 only. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pok\u00e9mon? source table. Cost and Latency are indicative estimates and are not source-backed."
+    "note": "Mean Win Rate is the reported mean over source-backed paper scores only. Rx-Bench (CMM) is the macro mean of six primary task metrics from Rx-Bench Tables 2-3; task-level scores remain attached to Scenarios rather than the main leaderboard. MedGemma-27B is listed separately where source tables report MedGemma rather than base Gemma 3 27B. DrugGPT scores now include Rx-Bench and DDI identification source tables, but remain N/A for MedMatch and Drug or Pok\u00e9mon? where not reported. DDI Verification remains a supplemental LLM-Uncertainty-DDI row and is not part of the four-paper reported mean. GPT-5 Chat and DrugGPT were not evaluated in the Drug or Pok\u00e9mon? source table. Cost and Latency are indicative estimates and are not source-backed."
   }
 }

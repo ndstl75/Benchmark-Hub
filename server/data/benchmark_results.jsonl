@@ -1,0 +1,102 @@
+{"id":1,"modelId":1,"taskName":"Formulation Matching","earned":53.1,"failed":46.9}
+{"id":2,"modelId":1,"taskName":"Drug Order Gen (Sig)","earned":83.2,"failed":16.8}
+{"id":3,"modelId":1,"taskName":"Route Matching","earned":67.7,"failed":32.3}
+{"id":4,"modelId":1,"taskName":"Rx-Bench DDI ID","earned":70.4,"failed":29.6}
+{"id":5,"modelId":1,"taskName":"Renal Dose ID","earned":83.3,"failed":16.7}
+{"id":6,"modelId":1,"taskName":"Drug-Indication","earned":96.5,"failed":3.5}
+{"id":7,"modelId":1,"taskName":"MedMatch Route Selection","earned":90.1,"failed":9.9}
+{"id":8,"modelId":1,"taskName":"DDI ID","earned":61,"failed":39}
+{"id":9,"modelId":1,"taskName":"DDI 3-Drug Combo","earned":86.6,"failed":13.4}
+{"id":10,"modelId":1,"taskName":"DDI Multi-Drug","earned":71.3,"failed":28.7}
+{"id":11,"modelId":1,"taskName":"DDI Verification","earned":65,"failed":35}
+{"id":12,"modelId":1,"taskName":"MedMatch (Oral Solid)","earned":94.2,"failed":5.8}
+{"id":13,"modelId":1,"taskName":"MedMatch (Oral Liq)","earned":90.7,"failed":9.3}
+{"id":14,"modelId":1,"taskName":"MedMatch (IV Intermit)","earned":97.3,"failed":2.7}
+{"id":15,"modelId":1,"taskName":"MedMatch (IV Push)","earned":96.5,"failed":3.5}
+{"id":16,"modelId":1,"taskName":"MedMatch (Continuous Titrate)","earned":84.3,"failed":15.7}
+{"id":17,"modelId":1,"taskName":"MedMatch (Continuous Non-Titrate)","earned":79.9,"failed":20.1}
+{"id":18,"modelId":1,"taskName":"Pokémon (Generic)","earned":2.3,"failed":97.7}
+{"id":19,"modelId":1,"taskName":"Pokémon (Brand)","earned":1.2,"failed":98.8}
+{"id":20,"modelId":2,"taskName":"Formulation Matching","earned":73,"failed":27}
+{"id":21,"modelId":2,"taskName":"Drug Order Gen (Sig)","earned":90,"failed":10}
+{"id":22,"modelId":2,"taskName":"Route Matching","earned":75.2,"failed":24.8}
+{"id":23,"modelId":2,"taskName":"Rx-Bench DDI ID","earned":84.8,"failed":15.2}
+{"id":24,"modelId":2,"taskName":"Renal Dose ID","earned":87.4,"failed":12.6}
+{"id":25,"modelId":2,"taskName":"Drug-Indication","earned":99.3,"failed":0.7}
+{"id":26,"modelId":2,"taskName":"MedMatch Route Selection","earned":98.4,"failed":1.6}
+{"id":27,"modelId":2,"taskName":"DDI ID","earned":80.6,"failed":19.4}
+{"id":28,"modelId":2,"taskName":"DDI 3-Drug Combo","earned":93.6,"failed":6.4}
+{"id":29,"modelId":2,"taskName":"DDI Multi-Drug","earned":88.4,"failed":11.6}
+{"id":30,"modelId":2,"taskName":"DDI Verification","earned":83.3,"failed":16.7}
+{"id":31,"modelId":2,"taskName":"MedMatch (Oral Solid)","earned":95,"failed":5}
+{"id":32,"modelId":2,"taskName":"MedMatch (Oral Liq)","earned":90,"failed":10}
+{"id":33,"modelId":2,"taskName":"MedMatch (IV Intermit)","earned":96.3,"failed":3.7}
+{"id":34,"modelId":2,"taskName":"MedMatch (IV Push)","earned":94.8,"failed":5.2}
+{"id":35,"modelId":2,"taskName":"MedMatch (Continuous Titrate)","earned":85.8,"failed":14.2}
+{"id":36,"modelId":2,"taskName":"MedMatch (Continuous Non-Titrate)","earned":80.6,"failed":19.4}
+{"id":37,"modelId":3,"taskName":"Formulation Matching","earned":40.9,"failed":59.1}
+{"id":38,"modelId":3,"taskName":"Drug Order Gen (Sig)","earned":81.2,"failed":18.8}
+{"id":39,"modelId":3,"taskName":"Route Matching","earned":69.1,"failed":30.9}
+{"id":40,"modelId":3,"taskName":"Rx-Bench DDI ID","earned":66.5,"failed":33.5}
+{"id":41,"modelId":3,"taskName":"Renal Dose ID","earned":76.9,"failed":23.1}
+{"id":42,"modelId":3,"taskName":"Drug-Indication","earned":96.9,"failed":3.1}
+{"id":43,"modelId":3,"taskName":"DDI ID","earned":50.1,"failed":49.9}
+{"id":44,"modelId":3,"taskName":"DDI 3-Drug Combo","earned":84.9,"failed":15.1}
+{"id":45,"modelId":3,"taskName":"DDI Multi-Drug","earned":80,"failed":20}
+{"id":46,"modelId":4,"taskName":"MedMatch Route Selection","earned":85.8,"failed":14.2}
+{"id":47,"modelId":4,"taskName":"DDI Verification","earned":65.9,"failed":34.1}
+{"id":48,"modelId":4,"taskName":"MedMatch (Oral Solid)","earned":93.6,"failed":6.4}
+{"id":49,"modelId":4,"taskName":"MedMatch (Oral Liq)","earned":91,"failed":9}
+{"id":50,"modelId":4,"taskName":"MedMatch (IV Intermit)","earned":96.8,"failed":3.2}
+{"id":51,"modelId":4,"taskName":"MedMatch (IV Push)","earned":95.4,"failed":4.6}
+{"id":52,"modelId":4,"taskName":"MedMatch (Continuous Titrate)","earned":87.9,"failed":12.1}
+{"id":53,"modelId":4,"taskName":"MedMatch (Continuous Non-Titrate)","earned":83.3,"failed":16.7}
+{"id":54,"modelId":4,"taskName":"Pokémon (Generic)","earned":4.1,"failed":95.9}
+{"id":55,"modelId":4,"taskName":"Pokémon (Brand)","earned":2.3,"failed":97.7}
+{"id":56,"modelId":5,"taskName":"Formulation Matching","earned":54,"failed":46}
+{"id":57,"modelId":5,"taskName":"Drug Order Gen (Sig)","earned":88,"failed":12}
+{"id":58,"modelId":5,"taskName":"Route Matching","earned":74.3,"failed":25.7}
+{"id":59,"modelId":5,"taskName":"Rx-Bench DDI ID","earned":66.7,"failed":33.3}
+{"id":60,"modelId":5,"taskName":"Renal Dose ID","earned":83.2,"failed":16.8}
+{"id":61,"modelId":5,"taskName":"Drug-Indication","earned":97.6,"failed":2.4}
+{"id":62,"modelId":5,"taskName":"MedMatch Route Selection","earned":81.2,"failed":18.8}
+{"id":63,"modelId":5,"taskName":"DDI ID","earned":59.8,"failed":40.2}
+{"id":64,"modelId":5,"taskName":"DDI 3-Drug Combo","earned":81.5,"failed":18.5}
+{"id":65,"modelId":5,"taskName":"DDI Multi-Drug","earned":68.6,"failed":31.4}
+{"id":66,"modelId":5,"taskName":"DDI Verification","earned":73.9,"failed":26.1}
+{"id":67,"modelId":5,"taskName":"MedMatch (Oral Solid)","earned":94.6,"failed":5.4}
+{"id":68,"modelId":5,"taskName":"MedMatch (Oral Liq)","earned":84.3,"failed":15.7}
+{"id":69,"modelId":5,"taskName":"MedMatch (IV Intermit)","earned":94.1,"failed":5.9}
+{"id":70,"modelId":5,"taskName":"MedMatch (IV Push)","earned":94.5,"failed":5.5}
+{"id":71,"modelId":5,"taskName":"MedMatch (Continuous Titrate)","earned":77.5,"failed":22.5}
+{"id":72,"modelId":5,"taskName":"MedMatch (Continuous Non-Titrate)","earned":81.2,"failed":18.8}
+{"id":73,"modelId":5,"taskName":"Pokémon (Generic)","earned":14,"failed":86}
+{"id":74,"modelId":5,"taskName":"Pokémon (Brand)","earned":8.1,"failed":91.9}
+{"id":75,"modelId":6,"taskName":"Formulation Matching","earned":36.6,"failed":63.4}
+{"id":76,"modelId":6,"taskName":"Drug Order Gen (Sig)","earned":79.6,"failed":20.4}
+{"id":77,"modelId":6,"taskName":"Route Matching","earned":71.6,"failed":28.4}
+{"id":78,"modelId":6,"taskName":"Rx-Bench DDI ID","earned":75.6,"failed":24.4}
+{"id":79,"modelId":6,"taskName":"Renal Dose ID","earned":79.7,"failed":20.3}
+{"id":80,"modelId":6,"taskName":"Drug-Indication","earned":94,"failed":6}
+{"id":81,"modelId":6,"taskName":"MedMatch Route Selection","earned":84.3,"failed":15.7}
+{"id":82,"modelId":6,"taskName":"DDI ID","earned":66.7,"failed":33.3}
+{"id":83,"modelId":6,"taskName":"DDI 3-Drug Combo","earned":84,"failed":16}
+{"id":84,"modelId":6,"taskName":"DDI Multi-Drug","earned":76.1,"failed":23.9}
+{"id":85,"modelId":6,"taskName":"DDI Verification","earned":59.4,"failed":40.6}
+{"id":86,"modelId":6,"taskName":"MedMatch (Oral Solid)","earned":95,"failed":5}
+{"id":87,"modelId":6,"taskName":"MedMatch (Oral Liq)","earned":89,"failed":11}
+{"id":88,"modelId":6,"taskName":"MedMatch (IV Intermit)","earned":95.8,"failed":4.2}
+{"id":89,"modelId":6,"taskName":"MedMatch (IV Push)","earned":95.2,"failed":4.8}
+{"id":90,"modelId":6,"taskName":"MedMatch (Continuous Titrate)","earned":88.1,"failed":11.9}
+{"id":91,"modelId":6,"taskName":"MedMatch (Continuous Non-Titrate)","earned":83.3,"failed":16.7}
+{"id":92,"modelId":6,"taskName":"Pokémon (Generic)","earned":1.6,"failed":98.4}
+{"id":93,"modelId":6,"taskName":"Pokémon (Brand)","earned":1.2,"failed":98.8}
+{"id":94,"modelId":7,"taskName":"Formulation Matching","earned":63.4,"failed":36.6}
+{"id":95,"modelId":7,"taskName":"Drug Order Gen (Sig)","earned":80.4,"failed":19.6}
+{"id":96,"modelId":7,"taskName":"Route Matching","earned":74,"failed":26}
+{"id":97,"modelId":7,"taskName":"Rx-Bench DDI ID","earned":77.7,"failed":22.3}
+{"id":98,"modelId":7,"taskName":"Renal Dose ID","earned":77.9,"failed":22.1}
+{"id":99,"modelId":7,"taskName":"Drug-Indication","earned":98.4,"failed":1.6}
+{"id":100,"modelId":7,"taskName":"DDI ID","earned":50.1,"failed":49.9}
+{"id":101,"modelId":7,"taskName":"DDI 3-Drug Combo","earned":93.7,"failed":6.3}
+{"id":102,"modelId":7,"taskName":"DDI Multi-Drug","earned":92.6,"failed":7.4}

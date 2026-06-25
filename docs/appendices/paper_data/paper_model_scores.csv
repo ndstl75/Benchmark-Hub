@@ -1,11 +1,11 @@
 paper_id,paper_metric,model,score_fraction,score_percent,score_status,notes
-rx-llm,Rx-LLM (CMM),GPT-4o-mini,0.757,75.7,published_table_aggregate,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
-rx-llm,Rx-LLM (CMM),GPT-5 Chat,,,not_reported_for_model,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
-rx-llm,Rx-LLM (CMM),MedGemma-27B,0.719,71.9,published_table_aggregate,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
-rx-llm,Rx-LLM (CMM),Gemma 3 27B,,,not_reported_for_model,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
-rx-llm,Rx-LLM (CMM),Llama 3.3 70B,0.773,77.3,published_table_aggregate,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
-rx-llm,Rx-LLM (CMM),Qwen3 32B,,,not_reported_for_model,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
-rx-llm,Rx-LLM (CMM),DrugGPT,,,not_reported_for_model,Macro mean of six Rx-LLM primary task metrics from PMC/medRxiv Tables 2-3; unreported models remain N/A.
+rx-llm,Rx-Bench (CMM),GPT-4o-mini,0.757,75.7,published_table_aggregate,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
+rx-llm,Rx-Bench (CMM),GPT-5 Chat,0.850,85.0,published_table_aggregate,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
+rx-llm,Rx-Bench (CMM),MedGemma-27B,0.719,71.9,published_table_aggregate,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
+rx-llm,Rx-Bench (CMM),Gemma 3 27B,,,not_reported_for_model,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
+rx-llm,Rx-Bench (CMM),Llama 3.3 70B,0.773,77.3,published_table_aggregate,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
+rx-llm,Rx-Bench (CMM),Qwen3 32B,0.728,72.8,published_table_aggregate,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
+rx-llm,Rx-Bench (CMM),DrugGPT,0.786,78.6,published_table_aggregate,Macro mean of six Rx-Bench primary task metrics from manuscript Tables 2-3; base Gemma 3 27B remains N/A because the manuscript reports MedGemma-27B separately.
 ddi-identification,DDI Identification,GPT-4o-mini,0.730,73.0,published_table,Scores are Table 3 experiment-level accuracies; MedGemma-27B is separate from base Gemma 3 27B.
 ddi-identification,DDI Identification,GPT-5 Chat,0.875,87.5,published_table,Scores are Table 3 experiment-level accuracies; MedGemma-27B is separate from base Gemma 3 27B.
 ddi-identification,DDI Identification,MedGemma-27B,0.717,71.7,published_table,Scores are Table 3 experiment-level accuracies; MedGemma-27B is separate from base Gemma 3 27B.

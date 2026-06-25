@@ -1,6 +1,6 @@
 # Docker
 
-PharmDrugBench runs on port **8447** in Docker.
+PharmDrugBench runs on port **8447** locally and **7860** on [Hugging Face Spaces](https://huggingface.co/docs/hub/spaces-sdks-docker).
 
 ## Build
 
@@ -10,23 +10,21 @@ docker build -t pharmdrugbench .
 
 ## Run
 
-Requires `DATABASE_URL` (e.g. Neon Postgres). For OpenAI models, set `OPENAI_API_KEY` and optionally `OPENAI_MODEL` (default: `gpt-5-mini`) in the environment or in `.env` when using docker-compose.
-
 ```bash
-docker run -e DATABASE_URL="postgresql://..." -p 8447:8447 pharmdrugbench
+docker run -p 8447:8447 -e PORT=8447 pharmdrugbench
 ```
 
 App is available at http://localhost:8447.
 
-## Docker Compose
+Benchmark data is stored as JSONL files under `server/data/`. On first start, the app seeds those files from `server/data/benchmark.json` if they are missing.
 
-Includes a local Postgres service. `.env` is read by the app; `DATABASE_URL` is set automatically for the app container.
+## Docker Compose
 
 ```bash
 docker compose up --build -d
 ```
 
-The app container runs schema push on startup (creates tables if missing), then the server starts and seeds simulated data when the DB is empty. Postgres data is stored in a `pgdata` volume so it persists across `docker compose down && up`.
+App: http://localhost:8447.
 
 To restart (rebuild and run):
 
@@ -34,14 +32,29 @@ To restart (rebuild and run):
 docker compose down && docker compose up --build -d
 ```
 
-App: http://localhost:8447.
+## Hugging Face Spaces
 
-**Simulated data:** On first startup (or with an empty DB), the app creates tables and seeds task definitions, models, benchmark results, and leaderboard so the dashboard shows data. If you ever need to run schema push manually:
+Push this repo to a Docker Space (for example `yxslpts/Benchmark-Hub`). The image listens on port **7860**.
+
+Optional Space secrets:
+
+| Secret | Purpose |
+| ------ | ------- |
+| `ADMIN_API_TOKEN` | Enable admin/write API routes |
+| `OPENAI_API_KEY` | Evaluate OpenAI models |
+| `DATA_DIR` | Custom path for JSONL data files |
 
 ```bash
-docker compose run --rm -e DATABASE_URL=postgresql://postgres:postgres@db:5432/agent_benchmark_hub app sh -c "npx drizzle-kit push --config=drizzle.config.ts"
+git remote add hf https://huggingface.co/spaces/yxslpts/Benchmark-Hub
+git push hf main
 ```
 
-## Database migration
+Use a Hugging Face [access token](https://huggingface.co/settings/tokens) with write permissions when prompted for a password.
 
-The Agent Doctor feature uses an `evaluators` table. Run schema sync once with the same `DATABASE_URL` (e.g. `npm run db:push` from the project root; when using docker-compose, run the one-off push command above).
+## Updating benchmark data
+
+Edit `server/data/benchmark.json`, then reload into JSONL:
+
+```bash
+npm run db:reseed
+```

@@ -1,12 +1,26 @@
+---
+title: Benchmark Hub
+emoji: 📊
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
 # PharmDrugBench
 
 A web-based pharmacy agent benchmarking platform that evaluates AI agents on autonomous
-pharmacy tasks. Benchmark data is loaded from `server/data/benchmark.json` and seeded into
-PostgreSQL, then served through an interactive dashboard and public leaderboard.
+pharmacy tasks. Benchmark data is loaded from JSONL files in `server/data/` (seeded from
+`benchmark.json` on first start) and served through an interactive dashboard and public leaderboard.
+
+**Live demo:** this Space runs the production Docker image on port **7860** and seeds JSONL
+data automatically on first boot.
 
 - **Frontend:** React + Vite + TailwindCSS + shadcn/ui + Recharts
 - **Backend:** Express.js (TypeScript)
-- **Database:** PostgreSQL with Drizzle ORM
+- **Storage:** JSONL files (`models`, `benchmark_results`, `leaderboard_scores`, `task_definitions`, `evaluators`)
 - **Server state:** TanStack Query
 
 The app runs on **port 8447**.
@@ -15,7 +29,7 @@ The app runs on **port 8447**.
 
 ## Quick start (Docker, recommended)
 
-This is the easiest way to run everything (app + PostgreSQL) with one command.
+This is the easiest way to run the app with one command.
 
 **Requirements:** Docker + Docker Compose.
 
@@ -24,15 +38,14 @@ This is the easiest way to run everything (app + PostgreSQL) with one command.
 cp .env.example .env
 # (optional) edit .env to add an OPENAI_API_KEY if you evaluate OpenAI models
 
-# 2. Build and start the app + database
+# 2. Build and start the app
 docker compose up --build -d
 
 # 3. Open the app
 #    http://localhost:8447
 ```
 
-On first start the app creates the database tables and seeds the benchmark data
-automatically. Postgres data is stored in a `pgdata` volume, so it survives restarts.
+On first start the app seeds JSONL data files from `server/data/benchmark.json` if they are missing.
 
 ```bash
 docker compose down              # stop
@@ -45,25 +58,19 @@ More Docker details: [`docs/docker.md`](docs/docker.md).
 
 ## Local development (without Docker for the app)
 
-**Requirements:** Node.js 20+, and a PostgreSQL database.
+**Requirements:** Node.js 20+.
 
 ```bash
 # 1. Install dependencies
 npm install
 
 # 2. Configure environment
-cp .env.example .env             # then set DATABASE_URL / OPENAI_API_KEY as needed
+cp .env.example .env             # then set OPENAI_API_KEY as needed
 
-# 3. (Optional) start just a local Postgres via Docker
-docker compose up -d db          # exposes Postgres on localhost:5447
-
-# 4. Create tables and run the dev server (hot reload)
-npm run db:push
+# 3. Seed JSONL data and run the dev server (hot reload)
+npm run db:seed
 npm run dev                      # http://localhost:8447
 ```
-
-> Tip: when using the bundled Postgres, the app automatically rewrites the
-> `@db:5432` host in `DATABASE_URL` to `@localhost:5447` for local dev.
 
 ---
 
@@ -74,7 +81,7 @@ All settings come from `.env` (copy from `.env.example`):
 | Variable         | Required | Description                                              |
 | ---------------- | -------- | -------------------------------------------------------- |
 | `PORT`           | no       | Port the server listens on (default `8447`).             |
-| `DATABASE_URL`   | yes      | PostgreSQL connection string.                            |
+| `DATA_DIR`       | no       | Directory for JSONL data files (default `server/data`).  |
 | `ADMIN_API_TOKEN`| no       | Token required for write/admin API routes. Without it, public deployments are read-only. |
 | `OPENAI_API_KEY` | no       | Only needed when evaluating OpenAI models.               |
 | `OPENAI_MODEL`   | no       | OpenAI model to use (default `gpt-5-mini`).              |
@@ -89,8 +96,7 @@ All settings come from `.env` (copy from `.env.example`):
 npm run dev          # start dev server (API + UI) on :8447
 npm run build        # build client + server into dist/
 npm start            # run the production build
-npm run db:push      # sync the database schema
-npm run db:seed      # seed the DB from server/data/benchmark.json
+npm run db:seed      # seed JSONL files from server/data/benchmark.json
 npm run db:reseed    # force re-seed (clears and reloads)
 npm run check        # TypeScript type-check
 ```
@@ -105,12 +111,13 @@ client/                 React app (Vite)
 server/                  Express API
   index.ts               Server entrypoint
   routes.ts              API routes (prefixed with /api)
-  storage.ts             Database CRUD operations
-  db.ts                  Database connection
-  seed.ts                Seeds DB from benchmark.json
-  config.ts              Env / DATABASE_URL resolution
-  data/benchmark.json    Canonical benchmark data
-shared/schema.ts         Drizzle schema (models, results, leaderboard, tasks)
+  storage.ts             JSONL-backed CRUD operations
+  jsonl.ts               JSONL read/write helpers
+  seed.ts                Seeds JSONL files from benchmark.json
+  config.ts              Env configuration
+  data/*.jsonl           Runtime data store
+  data/benchmark.json    Canonical import source for benchmark data
+shared/schema.ts         Zod schemas and types
 docs/                    Docker + appendix/data-source notes
 ```
 
@@ -131,7 +138,7 @@ Admin routes require `x-admin-token: <ADMIN_API_TOKEN>` or
 
 ## Updating benchmark data
 
-Edit `server/data/benchmark.json`, then reload it into the database:
+Edit `server/data/benchmark.json`, then reload it into JSONL files:
 
 ```bash
 npm run db:reseed

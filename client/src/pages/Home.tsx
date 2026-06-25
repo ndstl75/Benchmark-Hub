@@ -710,17 +710,17 @@ export default function Home() {
                 <Card className="shadow-sm border-slate-200/60 rounded-2xl bg-white hover:border-slate-300 transition-colors">
                   <CardContent className="p-5 flex flex-col h-[110px] justify-between">
                     <div className="flex items-center justify-between">
-                      <p className="text-[12px] font-semibold text-slate-500">Rx-LLM (CMM)</p>
+                      <p className="text-[12px] font-semibold text-slate-500">Rx-Bench (CMM)</p>
                       <BookOpen size={14} className="text-slate-400" />
                     </div>
                     <div>
                       <p className="text-[28px] font-extrabold text-slate-900 tracking-tight" data-testid="text-rx-llm">
-                        {activeModel ? formatDashboardMetric("Rx-LLM (CMM)", getDashboardMetricValue("Rx-LLM (CMM)", activeModel.id)) : '—'}
+                        {activeModel ? formatDashboardMetric("Rx-Bench (CMM)", getDashboardMetricValue("Rx-Bench (CMM)", activeModel.id)) : '—'}
                       </p>
                       <p className="text-[10px] font-medium text-emerald-500 mt-0.5">
-                        {getDashboardMetricValue("Rx-LLM (CMM)", activeModel?.id) === 'N/A'
+                        {getDashboardMetricValue("Rx-Bench (CMM)", activeModel?.id) === 'N/A'
                           ? 'Not reported for this model'
-                          : metricDeltaLabel("Rx-LLM (CMM)", activeModel?.id) ?? '6 CMM benchmarks'}
+                          : metricDeltaLabel("Rx-Bench (CMM)", activeModel?.id) ?? '6 CMM benchmarks'}
                       </p>
                     </div>
                   </CardContent>
@@ -926,7 +926,7 @@ export default function Home() {
                 <div>
                   <p className="text-sm font-semibold text-slate-800">All projects · AIChemist-Lab</p>
                   <p className="text-[13px] text-slate-500 mt-1">
-                    MedMatch, LLM-DDI, LLM-Uncertainty-DDI, and Pokemon-Drugs-Names repos plus the Rx-LLM medRxiv preprint.
+                    MedMatch, LLM-DDI, LLM-Uncertainty-DDI, and Pokemon-Drugs-Names repos plus the Rx-Bench manuscript.
                   </p>
                 </div>
                 <Button variant="outline" className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 shrink-0" asChild>

@@ -1,7 +1,7 @@
-Task,Primary Metric,GPT-4o-mini,MedGemma-27B,LLaMA3-70B
-Formulation Matching,F1,53.1,40.9,54.0
-Drug Order Gen (Sig),Overall accuracy,83.2,81.2,88.0
-Route Matching,F1,67.7,69.1,74.3
-DDI ID,Accuracy,70.4,66.5,66.7
-Renal Dose ID,F1,83.3,76.9,83.2
-Drug-Indication,Accuracy,96.5,96.9,97.6
+Task,Primary Metric,GPT-5-Chat,GPT-4o-mini,MedGemma-27B,LLaMA3-70B,Qwen3-32B,DrugGPT
+Formulation Matching,F1,73.0,53.1,40.9,54.0,36.6,63.4
+Drug Order Gen (Sig),Overall accuracy,90.0,83.2,81.2,88.0,79.6,80.4
+Route Matching,F1,75.2,67.7,69.1,74.3,71.6,74.0
+DDI ID,Accuracy,84.8,70.4,66.5,66.7,75.6,77.7
+Renal Dose ID,F1,87.4,83.3,76.9,83.2,79.7,77.9
+Drug-Indication,Accuracy,99.3,96.5,96.9,97.6,94.0,98.4

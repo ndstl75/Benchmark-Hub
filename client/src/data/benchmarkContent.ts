@@ -11,8 +11,8 @@ import {
 /** Paper-grouped task taxonomy (keyed by task name) */
 export const TASK_TAXONOMY = [
   {
-    domain: "CMM Core (Rx-LLM)",
-    paper: "Rx-LLM: a benchmarking suite to evaluate safe LLM performance for medication-related tasks",
+    domain: "CMM Core (Rx-Bench)",
+    paper: "Rx-Bench: a benchmarking suite to evaluate safe LLM performance for medication-related tasks",
     url: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     githubUrl: "https://github.com/AIChemist-Lab",
     dataset: "250 clinician-annotated cases per benchmark",
@@ -20,7 +20,7 @@ export const TASK_TAXONOMY = [
       "Formulation Matching",
       "Drug Order Gen (Sig)",
       "Route Matching",
-      "Rx-LLM DDI ID",
+      "Rx-Bench DDI ID",
       "Renal Dose ID",
       "Drug-Indication",
     ],
@@ -71,10 +71,10 @@ export const TASK_TAXONOMY = [
 export const DATASET_PROJECTS = [
   {
     id: "rx-llm",
-    title: "Rx-LLM CMM Benchmark Suite",
+    title: "Rx-Bench CMM Benchmark Suite",
     category: "Comprehensive Medication Management",
     description:
-      "Six clinician-annotated CMM benchmarks with 250 cases each. Public scores use the primary metrics reported in Rx-LLM Tables 2-3.",
+      "Six clinician-annotated CMM benchmarks with 250 cases each. Public scores use the primary metrics reported in Rx-Bench Tables 2-3.",
     githubUrl: "https://github.com/AIChemist-Lab",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     tasks: 6,
@@ -129,8 +129,8 @@ export const LEADERBOARD_ACCURACY_METRICS = [
     highlight: true,
   },
   {
-    name: "Rx-LLM (CMM)",
-    subtitle: "6 primary CMM task metrics",
+    name: "Rx-Bench (CMM)",
+    subtitle: "Macro mean across 6 CMM tasks",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
   },
   {
@@ -158,7 +158,7 @@ export const PHAMDRUGBENCH_INTRO = {
   authors:
     "AIChemist-Lab · University of Colorado Anschutz Medical Campus · medication-safety LLM evaluation consortium",
   summary:
-    "PharmDrugBench aggregates clinician-annotated benchmarks from Rx-LLM (Comprehensive Medication Management), multi-format drug-drug interaction identification, the MedMatch structured formatting suite, and Drug-or-Pokémon adversarial confabulation tests. Public scores use source-backed study values only; unavailable performance is shown as N/A.",
+    "PharmDrugBench aggregates clinician-annotated benchmarks from Rx-Bench (Comprehensive Medication Management), multi-format drug-drug interaction identification, the MedMatch structured formatting suite, and Drug-or-Pokémon adversarial confabulation tests. Public scores use source-backed study values only; unavailable performance is shown as N/A.",
   stats: [
     { label: "Benchmark papers", value: "4", icon: BookOpen },
     { label: "CMM benchmarks", value: "6", icon: Activity },
@@ -167,7 +167,7 @@ export const PHAMDRUGBENCH_INTRO = {
     { label: "Models evaluated", value: "7", icon: BrainCircuit },
   ] as const,
   resources: [
-    { label: "Rx-LLM", href: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2", icon: BookOpen },
+    { label: "Rx-Bench", href: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2", icon: BookOpen },
     { label: "DDI Identification", href: "https://www.medrxiv.org/content/10.64898/2025.12.03.25341549v2", icon: ShieldCheck },
     { label: "MedMatch", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC12870651/", icon: Activity },
     { label: "Drug or Pokémon?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC12870567/", icon: Microscope },
@@ -197,7 +197,7 @@ export const TASK_GROUPS: {
 }[] = [
   {
     id: "cmm-rx-llm",
-    label: "CMM Rx-LLM",
+    label: "CMM Rx-Bench",
     paperUrl: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     taskNames: TASK_TAXONOMY[0].tasks,
   },
@@ -351,7 +351,7 @@ function defaultCheckpoints(group: PaperGroupId, taskName: string): TaskCheckpoi
       title: "Clinical reasoning",
       category: "Clinical Reasoning",
       grader: "hybrid",
-      description: "Apply medication-management reasoning aligned to Rx-LLM clinician rubric.",
+      description: "Apply medication-management reasoning aligned to Rx-Bench clinician rubric.",
       accent: "amber",
     },
     {
@@ -382,7 +382,7 @@ const DETAILED_TASK_BY_NAME: Partial<
     scenario:
       "Case #1842 · 68 yo F with CKD stage 4 on metformin — select appropriate formulation and dose given eGFR 22 mL/min",
     instruction:
-      "A 68-year-old female with type 2 diabetes and CKD stage 4 (eGFR 22 mL/min) is currently prescribed metformin 1000 mg twice daily. Given her renal function, identify all FDA-approved metformin formulations and determine whether the current regimen is appropriate. List complete dosage forms with strengths and propose a renal-adjusted regimen if warranted. Output must match clinician-annotated Rx-LLM benchmark format.",
+      "A 68-year-old female with type 2 diabetes and CKD stage 4 (eGFR 22 mL/min) is currently prescribed metformin 1000 mg twice daily. Given her renal function, identify all FDA-approved metformin formulations and determine whether the current regimen is appropriate. List complete dosage forms with strengths and propose a renal-adjusted regimen if warranted. Output must match clinician-annotated Rx-Bench benchmark format.",
     evaluationCheckpoints: [
       {
         id: "CP1",
@@ -448,7 +448,7 @@ const DETAILED_TASK_BY_NAME: Partial<
         title: "Exact match",
         category: "Structured Output",
         grader: "exact-match",
-        description: "Yes/No response matches clinician annotation across 250 Rx-LLM renal-dose cases.",
+        description: "Yes/No response matches clinician annotation across 250 Rx-Bench renal-dose cases.",
         accent: "violet",
       },
     ],
@@ -788,7 +788,7 @@ export const METHODOLOGY_STEPS = [
     step: "02",
     title: "Paper-aligned evaluation suites",
     description:
-      "Scores are grouped by source publication — Rx-LLM CMM, DDI identification, MedMatch formatting, and Drug-or-Pokémon adversarial safety where public values are available.",
+      "Scores are grouped by source publication — Rx-Bench CMM, DDI identification, MedMatch formatting, and Drug-or-Pokémon adversarial safety where public values are available.",
   },
   {
     step: "03",
@@ -807,10 +807,10 @@ export const METHODOLOGY_STEPS = [
 export const PAPER_CITATIONS = [
   {
     id: "rx-llm",
-    title: "Rx-LLM: a benchmarking suite to evaluate safe large language model performance for medication-related tasks",
+    title: "Rx-Bench: a benchmarking suite to evaluate safe large language model performance for medication-related tasks",
     url: "https://www.medrxiv.org/content/10.64898/2025.12.01.25341004v2",
     bibtex: `@article{rxllm2025,
-  title   = {Rx-LLM: a benchmarking suite to evaluate safe large language model performance for medication-related tasks},
+  title   = {Rx-Bench: a benchmarking suite to evaluate safe large language model performance for medication-related tasks},
   author  = {Zhao, Xingmeng and Blotske, Kaitlin and Cargile, Moriah and Tilley, Adeleine and Murray, Brian and Gao, Yanjun and Henry, Kelli and Smith, Susan E. and Barreto, Erin F. and Bauer, Seth and Sohn, Sunghwan and Liu, Tianming and Bennett, Tell and Cohen, Mitch and Sikora, Andrea},
   year    = {2025},
   journal = {medRxiv},
@@ -875,7 +875,7 @@ export const CITATION_BIBTEX = PAPER_CITATIONS.map((c) => c.bibtex).join("\n\n")
 
 /** Domain columns for subgroup heatmap */
 export const SUBGROUP_COLUMNS = [
-  { key: "Rx-LLM (CMM)", label: "Rx-LLM", n: 6 },
+  { key: "Rx-Bench (CMM)", label: "Rx-Bench", n: 6 },
   { key: "DDI Identification", label: "DDI ID", n: 3 },
   { key: "MedMatch", label: "MedMatch", n: 7 },
   { key: "Drug or Pokémon?", label: "Adversarial", n: 2 },
